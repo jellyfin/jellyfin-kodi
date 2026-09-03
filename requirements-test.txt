@@ -1,4 +1,3 @@
-setuptools >= 44.1.1  # Old setuptools causes script.module.addon.signals to fail installing
 python-dateutil >= 2.8.1
 requests >= 2.22
 PyYAML >= 6.0
@@ -7,8 +6,6 @@ backports.zoneinfo; python_version < "3.9"
 tzdata; platform_system == "Windows"
 
 Kodistubs ~=21.0
-
-git+https://github.com/ruuk/script.module.addon.signals
 
 pytest >= 4.6.11
 coverage >= 5.2
