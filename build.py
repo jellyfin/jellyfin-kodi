@@ -30,7 +30,7 @@ def indent(elem: ET.Element, level: int = 0) -> None:
             elem.tail = i
 
 
-def create_addon_xml(config: dict, source: str, py_version: str) -> None:
+def create_addon_xml(config: dict, source: str) -> None:
     """
     Create addon.xml from template file
     """
@@ -40,13 +40,13 @@ def create_addon_xml(config: dict, source: str, py_version: str) -> None:
         root = tree.getroot()
 
     # Populate dependencies in template
-    dependencies = config["dependencies"].get(py_version)
+    dependencies = config["dependencies"]
     for dep in dependencies:
         ET.SubElement(root.find("requires"), "import", attrib=dep)
 
     # Populate version string
     addon_version = config.get("version")
-    root.attrib["version"] = "{}+{}".format(addon_version, py_version)
+    root.attrib["version"] = "{}+py3".format(addon_version)
 
     # Populate Changelog
     date = datetime.today().strftime("%Y-%m-%d")
@@ -63,11 +63,11 @@ def create_addon_xml(config: dict, source: str, py_version: str) -> None:
     tree.write("{}/addon.xml".format(source), encoding="utf-8", xml_declaration=True)
 
 
-def zip_files(py_version: str, source: str, target: str, dev: bool) -> None:
+def zip_files(source: str, target: str, dev: bool) -> None:
     """
     Create installable addon zip archive
     """
-    archive_name = "plugin.video.jellyfin+{}.zip".format(py_version)
+    archive_name = "plugin.video.jellyfin+py3.zip"
 
     with zipfile.ZipFile("{}/{}".format(target, archive_name), "w") as z:
         for root, dirs, files in os.walk(args.source):
@@ -116,7 +116,6 @@ def folder_filter(folder_name: str) -> bool:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Build flags:")
-    parser.add_argument("--version", type=str, choices=("py2", "py3"), default="py3")
 
     parser.add_argument("--source", type=Path, default=Path(__file__).absolute().parent)
 
@@ -132,6 +131,6 @@ if __name__ == "__main__":
     with open(config_path, "r") as fh:
         release_config = yaml.safe_load(fh)
 
-    create_addon_xml(release_config, args.source, args.version)
+    create_addon_xml(release_config, args.source)
 
-    zip_files(args.version, args.source, args.target, args.dev)
+    zip_files(args.source, args.target, args.dev)

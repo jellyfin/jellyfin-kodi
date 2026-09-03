@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
@@ -16,7 +15,7 @@ LOG = LazyLogger(__name__)
 
 
 def translate(string):
-    """Get add-on string. Returns in unicode."""
+    """Get add-on string. Returns a string."""
     if not isinstance(string, int):
         string = STRINGS[string]
 

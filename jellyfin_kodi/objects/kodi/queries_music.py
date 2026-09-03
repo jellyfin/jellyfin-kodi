@@ -1,4 +1,3 @@
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 create_artist = """
 SELECT      coalesce(max(idArtist), 1)

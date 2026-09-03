@@ -35,7 +35,7 @@
   <thead>
     <tr>
       <td align="left">
-        :warning: Python 2 deprecation (Kodi 18 Leia and older)
+        :warning: Python 2 unsupported (Kodi 18 Leia and older)
       </td>
     </tr>
   </thead>
@@ -44,12 +44,9 @@
     <tr>
       <td>
         <p>
-          Kodi installs based on Python 2 are no longer supported
-          going forward.
-          <br/>
-          This means that Kodi v18 (Leia) and earlier
-          (Krypton, Jarvis...) is no longer supported,
-          and will cease receiving updates.
+          Python 2 is unsupported. Kodi installs based on
+          Python 2 cannot receive builds or updates. This includes Kodi v18 (Leia)
+          and earlier (Krypton, Jarvis...).
         </p>
         <p>
           Our informal support target is current release±1,
@@ -58,9 +55,6 @@
           Please note that next release is a moving target,
           has a relatively low priority,
           and is unlikely to receive active work before the release candidate stage.
-        </p>
-        <p>
-          The major version of Jellyfin for Kodi will be bumped for the first release without Python 2 support.
         </p>
       </td>
     </tr>

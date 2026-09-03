@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -36,10 +35,7 @@ def addon_id():
 def kodi_version():
     # Kodistubs returns empty string, causing Python 3 tests to choke on int()
     # TODO: Make Kodistubs version configurable for testing purposes
-    if sys.version_info.major == 2:
-        default_versionstring = "18"
-    else:
-        default_versionstring = "19.1 (19.1.0) Git:20210509-85e05228b4"
+    default_versionstring = "19.1 (19.1.0) Git:20210509-85e05228b4"
 
     version_string = xbmc.getInfoLabel("System.BuildVersion") or default_versionstring
     return int(version_string.split(" ", 1)[0].split(".", 1)[0])
@@ -79,7 +75,7 @@ def window(key, value=None, clear=False, window_id=10000):
 
 def settings(setting, value=None):
     """Get or add add-on settings.
-    getSetting returns unicode object.
+    getSetting returns a string.
     """
     addon = xbmcaddon.Addon(addon_id())
 
@@ -429,9 +425,10 @@ def convert_to_local(date, timezone=tz.tzlocal()):
         date = parser.parse(date) if isinstance(date, str) else date
         date = date.replace(tzinfo=tz.tzutc())
         date = date.astimezone(timezone)
-        # Bad metadata defaults to date 1-1-1.  Catch it and don't throw errors
-        if date.year < 1900:
-            # FIXME(py2): strftime don't like dates below 1900
+        if date.year < 1000:
+            # %Y does not reliably zero-pad years below 1000 across platforms
+            # Python versions 3.7 to 3.9 are affected
+            # https://bugs.python.org/issue13305
             return "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}".format(
                 date.year,
                 date.month,

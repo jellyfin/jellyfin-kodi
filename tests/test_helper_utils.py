@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 import sys
 
-# Python 2
-if sys.version_info < (3, 0):
-    zoneinfo = None
-# Python 3.0 - 3.8
-elif sys.version_info < (3, 9):
+if sys.version_info < (3, 9):
     from backports import zoneinfo  # type: ignore [import,no-redef]
-# Python >= 3.9
 else:
     import zoneinfo
 
@@ -32,7 +26,6 @@ def test_values(item, keys, expected):
     assert list(values(item, keys)) == expected
 
 
-@pytest.mark.skipif(zoneinfo is None, reason="zoneinfo not available in py2")
 @pytest.mark.parametrize(
     "utctime,timezone,expected",
     [
