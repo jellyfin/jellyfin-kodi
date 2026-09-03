@@ -60,11 +60,7 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         else:
             duration_text = translate(33265).format(seconds)
 
-        # Get short segment type label
-        segment_label_id = SEGMENT_LABEL_IDS.get(segment_type)
-        segment_label = (
-            translate(segment_label_id) if segment_label_id else translate(33269)
-        )
+        segment_label = translate(SEGMENT_LABEL_IDS[segment_type])
 
         # Set button label: "Skip Intro (1m 40s)"
         button_label = translate(33262).format(segment_label, duration_text)
