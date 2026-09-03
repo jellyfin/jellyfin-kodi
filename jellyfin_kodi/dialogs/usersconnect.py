@@ -5,7 +5,6 @@
 import xbmcgui
 
 from ..helper import LazyLogger
-from ..helper.utils import kodi_version
 
 ##################################################################################################
 
@@ -31,7 +30,6 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def __init__(self, *args, **kwargs):
 
-        self.kodi_version = kodi_version()
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):

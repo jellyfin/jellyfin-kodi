@@ -427,7 +427,6 @@ def convert_to_local(date, timezone=tz.tzlocal()):
         date = date.astimezone(timezone)
         if date.year < 1000:
             # %Y does not reliably zero-pad years below 1000 across platforms
-            # Python versions 3.7 to 3.9 are affected
             # https://bugs.python.org/issue13305
             return "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}".format(
                 date.year,
@@ -569,12 +568,5 @@ def find_library(server, item):
 
 
 def translate_path(path):
-    """
-    Use new library location for translate path starting in Kodi 19
-    """
-    version = kodi_version()
-
-    if version > 18:
-        return xbmcvfs.translatePath(path)
-    else:
-        return xbmc.translatePath(path)
+    """Translate an add-on virtual filesystem path."""
+    return xbmcvfs.translatePath(path)

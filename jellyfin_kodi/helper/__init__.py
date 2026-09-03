@@ -1,4 +1,3 @@
-
 from .lazylogger import LazyLogger
 
 from .translate import translate

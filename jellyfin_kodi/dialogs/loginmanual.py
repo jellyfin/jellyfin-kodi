@@ -4,7 +4,7 @@
 
 import xbmcgui
 
-from ..helper import translate, LazyLogger, kodi_version
+from ..helper import translate, LazyLogger
 
 ##################################################################################################
 
@@ -103,10 +103,6 @@ class LoginManual(xbmcgui.WindowXMLDialog):
             noFocusTexture="-",
         )
 
-        # TODO: Kodi 17 compat removal cleanup
-        if kodi_version() < 18:
-            kwargs["isPassword"] = password
-
         control = xbmcgui.ControlEdit(0, 0, 0, 0, **kwargs)
 
         control.setPosition(x, y)
@@ -116,8 +112,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.addControl(control)
 
         # setType has no effect before the control is added to a window
-        # TODO: Kodi 17 compat removal cleanup
-        if password and not kodi_version() < 18:
+        if password:
             control.setType(xbmcgui.INPUT_TYPE_PASSWORD, "Please enter password")
 
         return control

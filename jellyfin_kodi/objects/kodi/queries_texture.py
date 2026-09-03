@@ -1,4 +1,3 @@
-
 get_cache = """
 SELECT      cachedurl
 FROM        texture

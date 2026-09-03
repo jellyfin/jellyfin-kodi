@@ -1,4 +1,3 @@
-
 get_item = """
 SELECT      kodi_id, kodi_fileid, kodi_pathid, parent_id, media_type,
             jellyfin_type, media_folder, jellyfin_parent_id

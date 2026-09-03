@@ -1,8 +1,8 @@
-
-""" Queries for the Kodi database. obj reflect key/value to retrieve from jellyfin items.
-    Some functions require additional information, therefore obj do not always reflect
-    the Kodi database query values.
+"""Queries for the Kodi database. obj reflect key/value to retrieve from jellyfin items.
+Some functions require additional information, therefore obj do not always reflect
+the Kodi database query values.
 """
+
 create_path = """
 SELECT      coalesce(max(idPath), 0)
 FROM        path

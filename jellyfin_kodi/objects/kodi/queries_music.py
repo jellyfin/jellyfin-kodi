@@ -1,4 +1,3 @@
-
 create_artist = """
 SELECT      coalesce(max(idArtist), 1)
 FROM        artist

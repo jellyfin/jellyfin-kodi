@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 def test_import_main_module():
     import jellyfin_kodi  # noqa: F401
 

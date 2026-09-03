@@ -1,4 +1,3 @@
-
 import threading
 import xbmc
 from .helper import LazyLogger, settings
