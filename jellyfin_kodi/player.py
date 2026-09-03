@@ -597,7 +597,7 @@ class Player(xbmc.Player):
                 continue
 
             start, end = bounds
-            
+
             LOG.debug(
                 "Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
                 segment_id,
