@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import os
+import re
 from uuid import uuid4
 
 import requests
@@ -555,8 +556,13 @@ class PlayUtils(object):
                 LOG.info("[ subtitles/%s ] %s", index, url)
 
                 if "Language" in stream:
-                    filename = "%s.%s.%s" % (
-                        source["Id"],
+                    title = re.sub(r"[^A-Za-z0-9]+", "", stream.get("Title") or "")
+                    display_title = re.sub(
+                        r"[^A-Za-z0-9]+", "", stream.get("DisplayTitle") or ""
+                    )
+                    filename = "%s.%s.%s.%s" % (
+                        title or display_title or "sub",
+                        f'{source["Id"]}-{index}',
                         stream["Language"],
                         stream["Codec"],
                     )
