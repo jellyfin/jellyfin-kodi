@@ -95,6 +95,21 @@ def get_movies_by_boxset(boxset_id):
         yield items
 
 
+def get_extra_by_movie(movie_id):
+
+    query = {
+        "url": "Items/%s/SpecialFeatures" % movie_id,
+        "params": {
+            "EnableUserData": True,
+            "EnableImages": True,
+            "UserId": "{UserId}",
+            "Fields": api.info(),
+        },
+    }
+    for items in _get_items(query):
+        yield items
+
+
 def get_episode_by_show(show_id):
 
     query = {
@@ -213,9 +228,16 @@ def _get_items(query, server_id=None):
         test_params["Limit"] = 1
         test_params["EnableTotalRecordCount"] = True
 
-        items["TotalRecordCount"] = _get(url, test_params, server_id=server_id)[
-            "TotalRecordCount"
-        ]
+        response = _get(url, test_params, server_id=server_id)
+
+        if "TotalRecordCount" in response:
+            items["TotalRecordCount"] = response["TotalRecordCount"]
+        elif isinstance(response, list):
+            yield {
+                "Items": response,
+                "TotalRecordCount": len(response),
+                "StartIndex": 0,
+            }
 
     except Exception as error:
         LOG.exception(
