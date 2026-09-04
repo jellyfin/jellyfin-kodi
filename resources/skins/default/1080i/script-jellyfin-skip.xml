@@ -64,7 +64,7 @@
 						</control>
 						<!-- Close button -->
 						<control type="button" id="3013">
-							<label>Close</label>
+							<label>$LOCALIZE[33263]</label>
 							<height>56</height>
 							<width min="60">auto</width>
 							<font>font13</font>

@@ -12,7 +12,7 @@ from .helper import translate, api, window, settings, dialog, event, JSONRPC
 from .jellyfin import Jellyfin
 from .helper import LazyLogger
 from .helper.utils import translate_path
-from .segments import SegmentChecker
+from .segments import SegmentChecker, SEGMENT_TYPES_MAP
 
 #################################################################################################
 
@@ -532,17 +532,9 @@ class Player(xbmc.Player):
         if not response or "Items" not in response:
             return None
 
-        type_map = {
-            "Intro": "Introduction",
-            "Outro": "Credits",
-            "Recap": "Recap",
-            "Preview": "Preview",
-            "Commercial": "Commercial",
-        }
-
         segments = {}
         for item in response["Items"]:
-            seg_type = type_map.get(item.get("Type"))
+            seg_type = SEGMENT_TYPES_MAP.get(item.get("Type"))
             if seg_type:
                 segments[item.get("Id")] = {
                     "EpisodeId": item.get("ItemId"),

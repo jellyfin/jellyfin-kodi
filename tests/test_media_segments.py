@@ -2,6 +2,9 @@
 from unittest.mock import Mock
 
 import jellyfin_kodi.player as player_module
+from jellyfin_kodi.dialogs.skip import SEGMENT_LABEL_IDS
+from jellyfin_kodi.segments import SEGMENT_TYPES_MAP
+
 import pytest
 
 
@@ -40,6 +43,37 @@ class TestMediaSegmentsConversion:
         assert segments["id-1"]["End"] == pytest.approx(122.0)
         assert segments["id-2"]["Start"] == pytest.approx(2458.0)
         assert segments["id-2"]["End"] == pytest.approx(2520.0)
+
+    def test_convert_media_segments_drops_unknown_type_and_matches_labels(self, player):
+        response = {
+            "Items": [
+                {
+                    "Id": segment_type,
+                    "ItemId": "test-item-id",
+                    "Type": segment_type,
+                    "StartTicks": 0,
+                    "EndTicks": 10000000,
+                }
+                for segment_type in SEGMENT_TYPES_MAP
+            ]
+            + [
+                {
+                    "Id": "unknown",
+                    "ItemId": "test-item-id",
+                    "Type": "Unknown",
+                    "StartTicks": 0,
+                    "EndTicks": 10000000,
+                }
+            ]
+        }
+
+        segments = player._convert_media_segments(response)
+
+        assert set(SEGMENT_TYPES_MAP.values()) == set(SEGMENT_LABEL_IDS)
+        assert set(segment["Type"] for segment in segments.values()) == set(
+            SEGMENT_LABEL_IDS
+        )
+        assert "unknown" not in segments
 
     def test_convert_media_segments_response_allows_multiple_of_same_type(self, player):
         media_segments_response = {

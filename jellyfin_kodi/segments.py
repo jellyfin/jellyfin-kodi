@@ -4,6 +4,14 @@ from .helper import LazyLogger, settings
 
 LOG = LazyLogger(__name__)
 
+SEGMENT_TYPES_MAP = {
+    "Intro": "Introduction",
+    "Outro": "Credits",
+    "Recap": "Recap",
+    "Preview": "Preview",
+    "Commercial": "Commercial",
+}
+
 
 class SegmentChecker(threading.Thread):
     stop_thread = False
