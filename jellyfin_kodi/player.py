@@ -268,6 +268,8 @@ class Player(xbmc.Player):
             item["SubtitleStreamIndex"] = subs + tracks + 1
 
     def next_up(self):
+        if not settings("enableUpNext.bool"):
+            return
 
         item = self.get_file_info(self.get_playing_file())
         objects = Objects()
