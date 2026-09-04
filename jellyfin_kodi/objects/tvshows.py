@@ -401,7 +401,9 @@ class TVShows(KodiDb):
         obj["Audio"] = API.audio_streams(obj["Audio"] or [])
         obj["Streams"] = API.media_streams(obj["Video"], obj["Audio"], obj["Subtitles"])
 
-        self.get_episode_path_filename(obj)
+        if not self.get_episode_path_filename(obj):
+            # This item doesn't belong to a whitelisted library
+            return
 
         if obj["Premiere"]:
             obj["Premiere"] = Local(obj["Premiere"]).split(".")[0].replace("T", " ")
@@ -518,7 +520,10 @@ class TVShows(KodiDb):
         )
 
     def get_episode_path_filename(self, obj):
-        """Get the path and build it into protocol://path"""
+        """Get the path and build it into protocol://path
+
+        Returns False when the item belongs to no whitelisted library.
+        """
         if "\\" in obj["Path"]:
             obj["Filename"] = obj["Path"].rsplit("\\", 1)[1]
         else:
@@ -548,6 +553,10 @@ class TVShows(KodiDb):
         else:
             # We need LibraryId
             library = self.library or find_library(self.server, obj)
+            if not library:
+                # This item doesn't belong to a whitelisted library
+                return False
+
             obj["LibraryId"] = library["Id"]
             obj["Path"] = "plugin://plugin.video.jellyfin/%s/%s/" % (
                 obj["LibraryId"],
@@ -561,6 +570,8 @@ class TVShows(KodiDb):
             }
             obj["Filename"] = "%s?%s" % (obj["Path"], urlencode(params))
             obj["FullFilePath"] = obj["Filename"]
+
+        return True
 
     def get_show_id(self, obj):
         obj["ShowId"] = self.jellyfin_db.get_item_by_id(
