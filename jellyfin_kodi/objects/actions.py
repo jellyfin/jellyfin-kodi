@@ -574,11 +574,21 @@ class Actions(object):
                 listitem.setProperty("StartOffset", "0")
                 listitem.setProperty("StartPercent", "0")
 
+            primary_hdr_type = ""
+
             for track in obj["Streams"]["video"]:
+                hdr_type = (track.get("hdrtype") or "").lower().strip()
+
+                if hdr_type and not primary_hdr_type:
+                    primary_hdr_type = hdr_type
+                    listitem.setProperty("hdrtype", primary_hdr_type)
+                    listitem.setProperty("HdrType", primary_hdr_type)
+                    listitem.setProperty("hdr_type", primary_hdr_type)
+
                 listitem.addStreamInfo(
                     "video",
                     {
-                        "hdrtype": track["hdrtype"],
+                        "hdrtype": hdr_type,
                         "duration": obj["Runtime"],
                         "aspect": track["aspect"],
                         "codec": track["codec"],
@@ -587,13 +597,55 @@ class Actions(object):
                     },
                 )
 
+                try:
+                    video_detail = xbmc.VideoStreamDetail()
+                    video_detail.setCodec(track.get("codec") or "")
+                    video_detail.setWidth(int(track.get("width") or 0))
+                    video_detail.setHeight(int(track.get("height") or 0))
+                    video_detail.setDuration(int(obj["Runtime"] or 0))
+
+                    try:
+                        video_detail.setAspect(float(track.get("aspect") or 0))
+                    except Exception as error:
+                        LOG.debug("Unable to set video aspect: %s", error)
+
+                    try:
+                        video_detail.setStereoMode(track.get("3d") or "")
+                    except Exception as error:
+                        LOG.debug("Unable to set video stereo mode: %s", error)
+
+                    if hdr_type:
+                        try:
+                            video_detail.setHDRType(hdr_type)
+                        except Exception as error:
+                            LOG.debug("Unable to set video HDR type: %s", error)
+
+                    tag.addVideoStream(video_detail)
+                except Exception as error:
+                    LOG.debug("Unable to add video stream details: %s", error)
+
             for track in obj["Streams"]["audio"]:
                 listitem.addStreamInfo(
                     "audio", {"codec": track["codec"], "channels": track["channels"]}
                 )
 
+                try:
+                    audio_detail = xbmc.AudioStreamDetail()
+                    audio_detail.setCodec(track.get("codec") or "")
+                    audio_detail.setChannels(int(track.get("channels") or 0))
+                    tag.addAudioStream(audio_detail)
+                except Exception as error:
+                    LOG.debug("Unable to add audio stream details: %s", error)
+
             for track in obj["Streams"]["subtitle"]:
                 listitem.addStreamInfo("subtitle", {"language": track})
+
+                try:
+                    subtitle_detail = xbmc.SubtitleStreamDetail()
+                    subtitle_detail.setLanguage(track or "")
+                    tag.addSubtitleStream(subtitle_detail)
+                except Exception as error:
+                    LOG.debug("Unable to add subtitle stream details: %s", error)
 
         listitem.setLabel(obj["Title"])
         listitem.setInfo("video", metadata)
