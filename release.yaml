@@ -37,11 +37,12 @@ changelog: |-
   + Update release-drafter/release-drafter action to v6.4.0 (#1102) @[renovate[bot]](https://github.com/apps/renovate)
   + Update github/codeql-action action to v4.34.1 (#1099) @[renovate[bot]](https://github.com/apps/renovate)
 dependencies:
-  - addon: 'xbmc.python'
-    version: '3.0.0'
-  - addon: 'script.module.requests'
-    version: '2.22.0+matrix.1'
-  - addon: 'script.module.dateutil'
-    version: '2.8.1+matrix.1'
-  - addon: 'script.module.websocket'
-    version: '1.6.4'
+  py3:
+    - addon: 'xbmc.python'
+      version: '3.0.0'
+    - addon: 'script.module.requests'
+      version: '2.22.0+matrix.1'
+    - addon: 'script.module.dateutil'
+      version: '2.8.1+matrix.1'
+    - addon: 'script.module.websocket'
+      version: '1.6.4'
