@@ -61,6 +61,15 @@ class JellyfinDatabase:
 
         return self.cursor.fetchall()
 
+    def get_item_by_file_id(self, *args):
+
+        try:
+            self.cursor.execute(QU.get_item_by_file_id, args)
+
+            return self.cursor.fetchone()[0]
+        except TypeError:
+            return
+
     def get_item_by_kodi_id(self, *args):
 
         try:

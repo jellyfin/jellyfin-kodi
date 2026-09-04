@@ -16,6 +16,7 @@ from ..helper import (
     jellyfin_item,
     values,
     Local,
+    settings,
 )
 from ..helper import LazyLogger
 from ..helper.utils import find_library
@@ -66,6 +67,11 @@ class Movies(KodiDb):
             obj["PathId"] = e_item[2]
             obj["LibraryId"] = e_item[6]
             obj["LibraryName"] = self.jellyfin_db.get_view_name(obj["LibraryId"])
+
+            if settings("useVersions") == "true":
+                # Only process primary movie files, not versions and extras; those are processed in add_versions.
+                if not self.check_movie_file_primary(obj["MovieId"], obj["FileId"]):
+                    return
         except TypeError:
             update = False
             LOG.debug("MovieId %s not found", obj["Id"])
@@ -127,6 +133,7 @@ class Movies(KodiDb):
             tags.append("Favorite movies")
 
         obj["Tags"] = tags
+        obj["media_sources"] = item.get("MediaSources")
 
         if update:
             self.movie_update(obj)
@@ -142,9 +149,79 @@ class Movies(KodiDb):
         self.add_people(*values(obj, QU.add_people_movie_obj))
         self.add_streams(*values(obj, QU.add_streams_obj))
         self.artwork.add(obj["Artwork"], obj["MovieId"], "movie")
+        self.artwork.add(obj["Artwork"], obj["FileId"], "videoversion")
         self.item_ids.append(obj["Id"])
+        self.current_type_ids = set()
+        self.add_versions(API, obj)
+        self.add_versions(API, obj, True) # Add extras as versions
+        self.cleanup_versions(obj)
 
         return not update
+
+    def add_versions(self, API, obj, extra=False):
+        """Add all additional media sources as Kodi versions."""
+        if settings("useVersions") != "true" or (extra and settings("useExtras") != "true"):
+            return
+
+        sources = self.server.jellyfin.get_extras(obj["Id"]) if extra else obj["media_sources"]
+        for source in sources:
+            if obj["Id"] == source["Id"]:
+                # Found primary version, so skip
+                continue
+
+            # Extras already in the right format from get_extras, but versions need to be pulled
+            jfitem = source if extra else self.server.jellyfin.get_item(source["Id"])
+            version = self.objects.map(jfitem, "Movie")
+            version["MovieId"] = obj["MovieId"]
+            version["LibraryId"] = obj["LibraryId"]
+            version["JellyfinParentId"] = obj["Id"]
+
+            # Version specific metadata
+            version["DateAdded"] = Local(version["DateAdded"]).split(".")[0].replace("T", " ")
+            version["Resume"] = API.adjust_resume((version["Resume"] or 0) / 10000000.0)
+            version["Runtime"] = round(float((version["Runtime"] or 0) / 10000000.0), 6)
+            version["PlayCount"] = API.get_playcount(version["Played"], version["PlayCount"])
+            version["Video"] = API.video_streams(version["Video"] or [], version["Container"])
+            version["Audio"] = API.audio_streams(version["Audio"] or [])
+            version["Streams"] = API.media_streams(version["Video"], version["Audio"], version["Subtitles"])
+            version["Artwork"] = API.get_all_artwork(self.objects.map(jfitem, "Artwork"))
+            if version["DatePlayed"]:
+                version["DatePlayed"] = Local(version["DatePlayed"]).split(".")[0].replace("T", " ")
+
+            version["Path"] = API.get_file_path(version["Path"])
+            self.get_path_filename(version)
+            version["PathId"] = self.add_path(*values(version, QU.add_path_obj))
+
+            # Find the correct version name for this source
+            version_type_id = self.get_or_create_videoversiontype(source.get("Name"), version["SourceFilename"], extra)
+            version["VideoVersionTypeId"] = version_type_id
+            version["VideoVersionItemType"] = self.itemtype + 1 if extra else self.itemtype
+            self.current_type_ids.add(version_type_id)
+
+            version["FileId"] = self.get_file(*values(version, QU.get_file_obj))
+            if version["FileId"]:
+                # Version already exists
+                self.update_videoversion(*values(version, QU.update_video_version_obj))
+                self.jellyfin_db.update_reference(*values(version, QUEM.update_reference_obj))
+            else:
+                # Add the version file and version type
+                version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
+                self.add_videoversion(*values(version, QU.add_video_version_obj))
+                self.jellyfin_db.add_reference(*values(version, QUEM.add_reference_movie_obj))
+
+            self.update_file(*values(version, QU.update_file_obj))
+            self.add_playstate(*values(version, QU.add_bookmark_obj))
+            self.add_streams(*values(version, QU.add_streams_obj))
+            self.artwork.add(version["Artwork"], version["FileId"], "videoversion")
+
+    def cleanup_versions(self, obj):
+        """Cleanup versions that are no longer in Jellyfin"""
+        versions = self.get_videoversions(obj["MovieId"])
+        for row in versions:
+            type_id = row[0]
+            file_id = row[1]
+            if file_id != obj["FileId"] and type_id not in self.current_type_ids:
+                self.delete_video_version(file_id, type_id)
 
     def movie_add(self, obj):
         """Add object to kodi."""
@@ -157,6 +234,15 @@ class Movies(KodiDb):
         obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
         obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
         obj["VideoVersionItemType"] = self.itemtype
+
+        version_name = None
+        for source in obj["media_sources"]:
+            # First media source isn't always the main version, so find the correct version name for the primary
+            if obj["Id"] == source["Id"]:
+                version_name = source.get("Name")
+                break
+        version_type_id = self.get_or_create_videoversiontype(version_name, obj["SourceFilename"])
+        obj["VideoVersionTypeId"] = version_type_id
 
         self.add(*values(obj, QU.add_movie_obj))
         self.add_videoversion(*values(obj, QU.add_video_version_obj))
@@ -217,6 +303,7 @@ class Movies(KodiDb):
             if "\\" in obj["Path"]
             else obj["Path"].rsplit("/", 1)[1]
         )
+        obj["SourceFilename"] = obj["Filename"]
 
         if self.direct_path:
 
@@ -225,18 +312,20 @@ class Movies(KodiDb):
 
             obj["Path"] = obj["Path"].replace(obj["Filename"], "")
 
+            sl = "\\" if "\\" in obj["Path"] else "/"
             """check dvd directories and point it to ./VIDEO_TS/VIDEO_TS.IFO"""
             if validate_dvd_dir(obj["Path"] + obj["Filename"]):
-                obj["Path"] = obj["Path"] + obj["Filename"] + "/VIDEO_TS/"
+                obj["Path"] = obj["Path"] + obj["Filename"] + sl + "VIDEO_TS" + sl
                 obj["Filename"] = "VIDEO_TS.IFO"
                 LOG.debug("DVD directory %s", obj["Path"])
 
             """check bluray directories and point it to ./BDMV/index.bdmv"""
             if validate_bluray_dir(obj["Path"] + obj["Filename"]):
-                obj["Path"] = obj["Path"] + obj["Filename"] + "/BDMV/"
+                obj["Path"] = obj["Path"] + obj["Filename"] + sl + "BDMV" + sl
                 obj["Filename"] = "index.bdmv"
                 LOG.debug("Bluray directory %s", obj["Path"])
 
+            obj["SourceFilename"] = obj["Filename"]
         else:
             obj["Path"] = "plugin://plugin.video.jellyfin/%s/" % obj["LibraryId"]
             params = {
