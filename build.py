@@ -91,6 +91,10 @@ def file_filter(file_name: str) -> bool:
         and not file_name.endswith(".pyo")
         and not file_name.endswith(".pyc")
         and not file_name.endswith(".pyd")
+        and not file_name.startswith(".env")
+        and not file_name.endswith(".log")
+        and file_name != ".DS_Store"
+        and file_name != "Thumbs.db"
     )
 
 
@@ -106,6 +110,9 @@ def folder_filter(folder_name: str) -> bool:
         ".mypy_cache",
         ".pytest_cache",
         "__pycache__",
+        ".venv",
+        ".tox",
+        ".nox",
     ]
     for f in filters:
         if f in folder_name.split(os.path.sep):
