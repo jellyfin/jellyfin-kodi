@@ -2,8 +2,10 @@
 
 import sys
 
+# Python 3.0 to 3.8
 if sys.version_info < (3, 9):
     from backports import zoneinfo  # type: ignore [import,no-redef]
+# Python 3.9 and onwards
 else:
     import zoneinfo
 
