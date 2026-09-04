@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
@@ -11,7 +10,7 @@ import xbmc
 import xbmcaddon
 
 from .. import database
-from . import settings, kodi_version
+from . import settings
 from .utils import translate_path
 
 ##################################################################################################
@@ -48,10 +47,7 @@ class LogHandler(logging.StreamHandler):
 
         self.mask_info = settings("maskInfo.bool")
 
-        if kodi_version() > 18:
-            self.level = xbmc.LOGINFO
-        else:
-            self.level = xbmc.LOGNOTICE
+        self.level = xbmc.LOGINFO
 
     def emit(self, record):
 

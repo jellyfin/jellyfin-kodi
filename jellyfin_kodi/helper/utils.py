@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -36,10 +35,7 @@ def addon_id():
 def kodi_version():
     # Kodistubs returns empty string, causing Python 3 tests to choke on int()
     # TODO: Make Kodistubs version configurable for testing purposes
-    if sys.version_info.major == 2:
-        default_versionstring = "18"
-    else:
-        default_versionstring = "19.1 (19.1.0) Git:20210509-85e05228b4"
+    default_versionstring = "19.1 (19.1.0) Git:20210509-85e05228b4"
 
     version_string = xbmc.getInfoLabel("System.BuildVersion") or default_versionstring
     return int(version_string.split(" ", 1)[0].split(".", 1)[0])
@@ -79,7 +75,7 @@ def window(key, value=None, clear=False, window_id=10000):
 
 def settings(setting, value=None):
     """Get or add add-on settings.
-    getSetting returns unicode object.
+    getSetting returns a string.
     """
     addon = xbmcaddon.Addon(addon_id())
 
@@ -572,12 +568,5 @@ def find_library(server, item):
 
 
 def translate_path(path):
-    """
-    Use new library location for translate path starting in Kodi 19
-    """
-    version = kodi_version()
-
-    if version > 18:
-        return xbmcvfs.translatePath(path)
-    else:
-        return xbmc.translatePath(path)
+    """Translate an add-on virtual filesystem path."""
+    return xbmcvfs.translatePath(path)

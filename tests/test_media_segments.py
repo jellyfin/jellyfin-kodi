@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 from unittest.mock import Mock
 
 import jellyfin_kodi.player as player_module
