@@ -425,9 +425,9 @@ def convert_to_local(date, timezone=tz.tzlocal()):
         date = parser.parse(date) if isinstance(date, str) else date
         date = date.replace(tzinfo=tz.tzutc())
         date = date.astimezone(timezone)
-        if date.year < 1000:
-            # %Y does not reliably zero-pad years below 1000 across platforms
-            # https://bugs.python.org/issue13305
+        # Bad metadata defaults to date 1-1-1.  Catch it and don't throw errors
+        if date.year < 1900:
+            # FIXME(py2): strftime don't like dates below 1900
             return "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}".format(
                 date.year,
                 date.month,
