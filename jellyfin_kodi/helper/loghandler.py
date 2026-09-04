@@ -28,6 +28,10 @@ def getLogger(name=None):
     return __LOGGER.getChild(name)
 
 
+def getHandler():
+    return __HANDLER
+
+
 class LogHandler(logging.StreamHandler):
 
     def __init__(self):
@@ -45,13 +49,29 @@ class LogHandler(logging.StreamHandler):
             if server.get("address"):
                 self.sensitive["Server"].append(server["address"].split("://", 1)[-1])
 
-        self.mask_info = settings("maskInfo.bool")
+        try:
+            value = settings("logLevel")
+        except RuntimeError:
+            value = "2"
+        self.setJellyfinLevel(value)
+
+        try:
+            self.mask_info = settings("maskInfo.bool")
+        except RuntimeError:
+            self.mask_info = True
 
         self.level = xbmc.LOGINFO
 
+    @classmethod
+    def setJellyfinLevel(cls, jellyfin_level):
+        try:
+            cls.jellyfin_level = int(jellyfin_level)
+        except (ValueError, TypeError):
+            cls.jellyfin_level = 2
+
     def emit(self, record):
 
-        if self._get_log_level(record.levelno):
+        if self._getLogLevel(record.levelno):
             string = self.format(record)
 
             if self.mask_info:
@@ -68,23 +88,14 @@ class LogHandler(logging.StreamHandler):
             xbmc.log(string, level=self.level)
 
     @classmethod
-    def _get_log_level(cls, level):
-
+    def _getLogLevel(cls, level):
         levels = {
             logging.ERROR: 0,
             logging.WARNING: 0,
             logging.INFO: 1,
             logging.DEBUG: 2,
         }
-        try:
-            log_level = int(settings("logLevel"))
-        except (ValueError, RuntimeError):
-            # If getting settings fail, we probably want debug logging.
-            # ValueError happens if the result is not a number
-            # RuntimeError happens if the addon is being re-installed
-            log_level = 2
-
-        return log_level >= levels[level]
+        return cls.jellyfin_level >= levels[level]
 
 
 class MyFormatter(logging.Formatter):
@@ -127,5 +138,6 @@ __LOGGER = logging.getLogger("JELLYFIN")
 for handler in __LOGGER.handlers:
     __LOGGER.removeHandler(handler)
 
-__LOGGER.addHandler(LogHandler())
+__HANDLER = LogHandler()
+__LOGGER.addHandler(__HANDLER)
 __LOGGER.setLevel(logging.DEBUG)

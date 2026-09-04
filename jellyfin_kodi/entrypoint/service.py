@@ -424,6 +424,7 @@ class Service(xbmc.Monitor):
 
             log_level = settings("logLevel")
             self.settings["log_level"] = log_level
+            LOG.setJellyfinLevel(log_level)
             LOG.info("New log level: %s", log_level)
 
         if settings("enableContext.bool") != self.settings["enable_context"]:
