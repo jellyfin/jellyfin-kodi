@@ -4,7 +4,7 @@ from typing_extensions import deprecated
 #################################################################################################
 
 
-@deprecated()
+@deprecated("Jellyfin-specific http exception class should be phased out")
 class HTTPException(Exception):
     # Jellyfin HTTP exception
     def __init__(self, status, message):
