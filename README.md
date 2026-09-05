@@ -31,41 +31,12 @@
 <a href="https://github.com/jellyfin/jellyfin-kodi/actions/workflows/codeql.yaml"><img alt="CodeQL Analysis" src="https://github.com/jellyfin/jellyfin-kodi/actions/workflows/codeql.yaml/badge.svg" /></a>
 </p>
 
-<table>
-  <thead>
-    <tr>
-      <td align="left">
-        :warning: Python 2 deprecation (Kodi 18 Leia and older)
-      </td>
-    </tr>
-  </thead>
+Our informal Kodi support target is current release±1,
+which currently translates to Nexus (old), Omega (current) and Piers (next).
 
-  <tbody>
-    <tr>
-      <td>
-        <p>
-          Kodi installs based on Python 2 are no longer supported
-          going forward.
-          <br/>
-          This means that Kodi v18 (Leia) and earlier
-          (Krypton, Jarvis...) is no longer supported,
-          and will cease receiving updates.
-        </p>
-        <p>
-          Our informal support target is current release±1,
-          which currently translates to Nexus (old), Omega (current) and Piers (next).
-          <br />
-          Please note that next release is a moving target,
-          has a relatively low priority,
-          and is unlikely to receive active work before the release candidate stage.
-        </p>
-        <p>
-          The major version of Jellyfin for Kodi will be bumped for the first release without Python 2 support.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+Please note that next release is a moving target,
+has a relatively low priority,
+and is unlikely to receive active work before the release candidate stage.
 
 ---
 
