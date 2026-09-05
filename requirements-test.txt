@@ -20,3 +20,6 @@ types-setuptools >= 44.1.1
 
 types-Pygments
 types-colorama
+
+# Follows available Kodi addon version
+typing_extensions == 4.7.1
