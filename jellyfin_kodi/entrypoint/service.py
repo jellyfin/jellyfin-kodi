@@ -6,6 +6,7 @@ import json
 import sys
 from datetime import datetime
 from importlib import reload
+import threading
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
@@ -501,6 +502,9 @@ class Service(xbmc.Monitor):
         LOG.info("---[ objects reloaded ]")
 
     def shutdown(self):
+        LOG.debug("Running threads:")
+        for t in threading.enumerate():
+            LOG.debug("- %s: %s", t.name, t)
 
         LOG.info("---<[ EXITING ]")
         window("jellyfin_should_stop.bool", True)
@@ -533,3 +537,7 @@ class Service(xbmc.Monitor):
             self.monitor.listener.stop()
 
         LOG.info("---<<<[ JELLYFIN ]")
+
+        LOG.debug("Running threads:")
+        for t in threading.enumerate():
+            LOG.debug("- %s: %s", t.name, t)

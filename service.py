@@ -77,3 +77,12 @@ if __name__ == "__main__":
         break
 
     LOG.info("--<[ service ]")
+
+    import traceback
+    import sys
+
+    LOG.debug("Running threads:")
+    for t in threading.enumerate():
+        LOG.debug("- %s: %s", t.name, t)
+        if t.ident is not None:
+            LOG.debug("".join(traceback.format_stack(sys._current_frames()[t.ident])))
