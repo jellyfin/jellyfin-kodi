@@ -22,6 +22,11 @@ class LazyLogger(object):
             self.__logger = getLogger(self.__logger_name)
         return getattr(self.__logger, name)
 
+    def setJellyfinLevel(self, level):
+        from .loghandler import getHandler
+
+        getHandler().setJellyfinLevel(level)
+
     #####################################################################
     # Following are stubs of methods provided by `logging.Logger`.      #
     # Please ensure any actually functional code is above this comment. #
