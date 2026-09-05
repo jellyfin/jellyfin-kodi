@@ -6,14 +6,17 @@ files row before remove_path() is called.  If that was the last file
 referencing the shared path, the path gets deleted — orphaning every other
 video that shares it and making musicvideo_view return 0 rows.
 
-These tests exercise the full delete() → remove_path() pipeline, not just
-remove_path() in isolation (which test_remove_path_guard.py already covers).
+These tests exercise the full delete() → remove_path() pipeline using the
+REAL jellyfin_kodi.objects.kodi.kodi.Kodi.remove_path, not a local
+re-implementation of the guard — so they actually fail against an unpatched
+checkout instead of always passing regardless of which commit is checked out.
 """
 
 import sqlite3
 import unittest
 
 from jellyfin_kodi.objects.kodi import queries as QU
+from jellyfin_kodi.objects.kodi.kodi import Kodi
 
 
 def _make_db(num_videos=3):
@@ -49,23 +52,24 @@ def _make_db(num_videos=3):
     return conn
 
 
-class _FakeKodiDb:
-    """Minimal stand-in that replicates the delete() + remove_path() methods."""
+class _RealKodiDb:
+    """delete() mirrors musicvideos.py's real query usage; remove_path is the
+    ACTUAL, unmodified Kodi.remove_path bound method (Kodi.__init__ bypassed —
+    it only sets up artwork/people-cache state irrelevant to this bug)."""
 
     def __init__(self, cursor):
         self.cursor = cursor
         self.direct_path = True  # remove_path is only called when direct_path is True
+        self._kodi = object.__new__(Kodi)
+        self._kodi.cursor = cursor
 
     def delete(self, kodi_id, file_id):
         self.cursor.execute(QU.delete_musicvideo, (kodi_id,))
         self.cursor.execute(QU.delete_file, (file_id,))
 
     def remove_path(self, path_id):
-        self.cursor.execute(
-            "SELECT count(*) FROM files WHERE idPath = ?", (path_id,)
-        )
-        if self.cursor.fetchone()[0] == 0:
-            self.cursor.execute(QU.delete_path, (path_id,))
+        self._kodi.cursor = self.cursor
+        Kodi.remove_path(self._kodi, path_id)
 
 
 def _view_count(conn):
@@ -82,7 +86,7 @@ class TestSharedPathRemoveIntegration(unittest.TestCase):
 
     def setUp(self):
         self.conn = _make_db(num_videos=147)
-        self.db = _FakeKodiDb(self.conn.cursor())
+        self.db = _RealKodiDb(self.conn.cursor())
 
     def tearDown(self):
         self.conn.close()

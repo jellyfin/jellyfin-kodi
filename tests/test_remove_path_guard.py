@@ -4,11 +4,16 @@ When multiple items (e.g. all music videos) share a single path record,
 removing any one of them must NOT delete the path while other files still
 reference it.  Previously remove_path deleted unconditionally, causing the
 entire musicvideo_view JOIN to return 0 rows.
+
+These tests import the real jellyfin_kodi.objects.kodi.kodi.Kodi.remove_path
+directly, rather than a local re-implementation of the guard -- so they
+actually fail against an unpatched checkout instead of always passing.
 """
 
 import sqlite3
 import unittest
-import unittest.mock
+
+from jellyfin_kodi.objects.kodi.kodi import Kodi
 
 
 def _make_kodi_cursor():
@@ -29,28 +34,20 @@ def _make_kodi_cursor():
     return conn
 
 
+def _make_real_kodi_db(cursor):
+    """Real Kodi instance with only .cursor wired up. Bypasses __init__ (artwork
+    setup, people cache -- irrelevant to remove_path) so only the actual,
+    unmodified remove_path method is exercised."""
+    kodi = object.__new__(Kodi)
+    kodi.cursor = cursor
+    return kodi
+
+
 class TestRemovePathGuard(unittest.TestCase):
-
-    def _make_obj(self, cursor):
-        """Return a minimal KodiDb-like object with only remove_path wired up."""
-        from jellyfin_kodi.objects.kodi import queries as QU
-
-        class _KodiDb:
-            def __init__(self, cur):
-                self.cursor = cur
-
-            def remove_path(self, path_id):
-                self.cursor.execute(
-                    "SELECT count(*) FROM files WHERE idPath = ?", (path_id,)
-                )
-                if self.cursor.fetchone()[0] == 0:
-                    self.cursor.execute(QU.delete_path, (path_id,))
-
-        return _KodiDb(cursor)
 
     def setUp(self):
         self.conn = _make_kodi_cursor()
-        self.db = self._make_obj(self.conn.cursor())
+        self.db = _make_real_kodi_db(self.conn.cursor())
 
     def tearDown(self):
         self.conn.close()
