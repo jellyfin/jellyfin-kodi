@@ -1261,10 +1261,6 @@ msgctxt "#33262"
 msgid "Skip {0} ({1})"
 msgstr "Skip {0} ({1})"
 
-msgctxt "#33263"
-msgid "Close"
-msgstr "Close"
-
 msgctxt "#33264"
 msgid "{0}m {1}s"
 msgstr "{0}m {1}s"

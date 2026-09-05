@@ -17,16 +17,26 @@
 			</animation>
 			<!-- Position bottom right -->
 			<left>1420</left>
-			<top>920</top>
-			<control type="group">
+			<top>685</top>
+			<!-- Expanded panel, shown only if eligible artwork is available. -->
+			<control type="group" id="4010">
 				<width>460</width>
-				<height>80</height>
-				<!-- Background -->
+				<height>355</height>
+				<visible>
+					!String.IsEmpty(Player.Art(tvshow.fanart))
+					| !String.IsEmpty(Player.Art(tvshow.landscape))
+					| !String.IsEmpty(Player.Art(season.fanart))
+					| !String.IsEmpty(Player.Art(season.landscape))
+					| !String.IsEmpty(Player.Art(fanart))
+					| !String.IsEmpty(Player.Art(landscape))
+					| !String.IsEmpty(Player.Art(thumb))
+				</visible>
+				<!-- Expanded panel background -->
 				<control type="image">
 					<left>0</left>
 					<top>0</top>
 					<width>460</width>
-					<height>80</height>
+					<height>355</height>
 					<texture colordiffuse="E6000000">white.png</texture>
 					<aspectratio>stretch</aspectratio>
 				</control>
@@ -35,49 +45,198 @@
 					<left>0</left>
 					<top>0</top>
 					<width>4</width>
-					<height>80</height>
+					<height>355</height>
 					<texture colordiffuse="FF00A4DC">white.png</texture>
 				</control>
-				<!-- Button group -->
-				<control type="group">
+				<!-- Artwork, ordered by preference -->
+				<control type="image">
 					<left>15</left>
-					<top>12</top>
-					<control type="grouplist">
-						<orientation>horizontal</orientation>
+					<top>40</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(tvshow.fanart)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>
+						!String.IsEmpty(Player.Art(tvshow.fanart))
+					</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>40</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(tvshow.landscape)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>
+						String.IsEmpty(Player.Art(tvshow.fanart))
+						+ !String.IsEmpty(Player.Art(tvshow.landscape))
+					</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>40</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(season.fanart)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>
+						String.IsEmpty(Player.Art(tvshow.fanart))
+						+ String.IsEmpty(Player.Art(tvshow.landscape))
+						+ !String.IsEmpty(Player.Art(season.fanart))
+					</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>40</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(season.landscape)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>
+						String.IsEmpty(Player.Art(tvshow.fanart))
+						+ String.IsEmpty(Player.Art(tvshow.landscape))
+						+ String.IsEmpty(Player.Art(season.fanart))
+						+ !String.IsEmpty(Player.Art(season.landscape))
+					</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>40</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(fanart)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>
+						String.IsEmpty(Player.Art(tvshow.fanart))
+						+ String.IsEmpty(Player.Art(tvshow.landscape))
+						+ String.IsEmpty(Player.Art(season.fanart))
+						+ String.IsEmpty(Player.Art(season.landscape))
+						+ !String.IsEmpty(Player.Art(fanart))
+					</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>40</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(landscape)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>
+						String.IsEmpty(Player.Art(tvshow.fanart))
+						+ String.IsEmpty(Player.Art(tvshow.landscape))
+						+ String.IsEmpty(Player.Art(season.fanart))
+						+ String.IsEmpty(Player.Art(season.landscape))
+						+ String.IsEmpty(Player.Art(fanart))
+						+ !String.IsEmpty(Player.Art(landscape))
+					</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>40</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(thumb)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>
+						String.IsEmpty(Player.Art(tvshow.fanart))
+						+ String.IsEmpty(Player.Art(tvshow.landscape))
+						+ String.IsEmpty(Player.Art(season.fanart))
+						+ String.IsEmpty(Player.Art(season.landscape))
+						+ String.IsEmpty(Player.Art(fanart))
+						+ String.IsEmpty(Player.Art(landscape))
+						+ !String.IsEmpty(Player.Art(thumb))
+					</visible>
+				</control>
+				<control type="label">
+					<left>15</left>
+					<top>10</top>
+					<width>430</width>
+					<height>20</height>
+					<label>$INFO[Window.Property(skip_detail)]</label>
+					<font>font13</font>
+					<textcolor>FFB3B3B3</textcolor>
+					<shadowcolor>66000000</shadowcolor>
+					<align>left</align>
+					<aligny>center</aligny>
+				</control>
+			</control>
+			<!-- Compact background when no eligible image is available. -->
+			<control type="group">
+				<top>250</top>
+				<width>460</width>
+				<height>100</height>
+				<visible>!Control.IsVisible(4010)</visible>
+				<control type="image">
+					<left>0</left>
+					<top>0</top>
+					<width>460</width>
+					<height>100</height>
+					<texture colordiffuse="E6000000">white.png</texture>
+					<aspectratio>stretch</aspectratio>
+				</control>
+				<!-- Accent bar on left -->
+				<control type="image">
+					<left>0</left>
+					<top>0</top>
+					<width>4</width>
+					<height>100</height>
+					<texture colordiffuse="FF00A4DC">white.png</texture>
+				</control>
+			</control>
+			<control type="label">
+				<left>15</left>
+				<top>260</top>
+				<width>430</width>
+				<height>20</height>
+				<label>$INFO[Window.Property(skip_detail)]</label>
+				<font>font13</font>
+				<textcolor>FFB3B3B3</textcolor>
+				<shadowcolor>66000000</shadowcolor>
+				<align>left</align>
+				<aligny>center</aligny>
+				<visible>!Control.IsVisible(4010)</visible>
+			</control>
+			<!-- Buttons are always visible -->
+			<control type="group">
+				<left>15</left>
+				<top>289</top>
+				<!-- Move buttons into the compact dialog when no image is available. -->
+				<animation effect="slide" end="0,-4" time="0" condition="!Control.IsVisible(4010)">Conditional</animation>
+				<control type="grouplist">
+					<orientation>horizontal</orientation>
+					<height>56</height>
+					<itemgap>10</itemgap>
+					<!-- Skip button -->
+					<control type="button" id="3012">
+						<label>$ADDON[plugin.video.jellyfin 33256]</label>
 						<height>56</height>
-						<itemgap>10</itemgap>
-						<!-- Skip button -->
-						<control type="button" id="3012">
-							<label>$INFO[Window.Property(skip_label)]</label>
-							<height>56</height>
-							<width min="250">auto</width>
-							<font>font13</font>
-							<textoffsetx>20</textoffsetx>
-							<textcolor>FFFFFFFF</textcolor>
-							<focusedcolor>FF000000</focusedcolor>
-							<shadowcolor>66000000</shadowcolor>
-							<aligny>center</aligny>
-							<align>center</align>
-							<texturefocus colordiffuse="FF00A4DC">white.png</texturefocus>
-							<texturenofocus colordiffuse="33FFFFFF">white.png</texturenofocus>
-							<pulseonselect>no</pulseonselect>
-						</control>
-						<!-- Close button -->
-						<control type="button" id="3013">
-							<label>$LOCALIZE[33263]</label>
-							<height>56</height>
-							<width min="60">auto</width>
-							<font>font13</font>
-							<textoffsetx>15</textoffsetx>
-							<textcolor>FFFFFFFF</textcolor>
-							<focusedcolor>FF000000</focusedcolor>
-							<shadowcolor>66000000</shadowcolor>
-							<aligny>center</aligny>
-							<align>center</align>
-							<texturefocus colordiffuse="FF00A4DC">white.png</texturefocus>
-							<texturenofocus colordiffuse="33FFFFFF">white.png</texturenofocus>
-							<pulseonselect>no</pulseonselect>
-						</control>
+						<width>210</width>
+						<font>font13</font>
+						<textoffsetx>20</textoffsetx>
+						<textcolor>FFB3B3B3</textcolor>
+						<focusedcolor>FF000000</focusedcolor>
+						<shadowcolor>66000000</shadowcolor>
+						<aligny>center</aligny>
+						<align>center</align>
+						<texturefocus colordiffuse="FF00A4DC">white.png</texturefocus>
+						<texturenofocus colordiffuse="33FFFFFF">white.png</texturenofocus>
+						<pulseonselect>no</pulseonselect>
+					</control>
+					<!-- Close button -->
+					<control type="button" id="3013">
+						<label>$LOCALIZE[15067]</label>
+						<height>56</height>
+						<width>210</width>
+						<font>font13</font>
+						<textoffsetx>15</textoffsetx>
+						<textcolor>FFB3B3B3</textcolor>
+						<focusedcolor>FF000000</focusedcolor>
+						<shadowcolor>66000000</shadowcolor>
+						<aligny>center</aligny>
+						<align>center</align>
+						<texturefocus colordiffuse="FF00A4DC">white.png</texturefocus>
+						<texturenofocus colordiffuse="33FFFFFF">white.png</texturenofocus>
+						<pulseonselect>no</pulseonselect>
 					</control>
 				</control>
 			</control>
