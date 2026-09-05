@@ -61,31 +61,16 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
 
         segment_label = translate(SEGMENT_LABEL_IDS[segment_type])
 
-        # Set button label: "Skip Intro (1m 40s)"
-        button_label = translate(33262).format(segment_label, duration_text)
+        skip_detail = "{} ({})".format(segment_label, duration_text)
 
-        # Use setProperty so it's available to the skin
-        self.setProperty("skip_label", button_label)
+        # Use setProperty so detail text is available to the skin.
+        self.setProperty("skip_detail", skip_detail)
         self.setProperty("segment_type", segment_type or "")
         self.setProperty("duration", duration_text)
 
         LOG.debug(
-            "SkipDialog: set_skip_info segment=%s, label=%s", segment_type, button_label
+            "SkipDialog: set_skip_info segment=%s, detail=%s", segment_type, skip_detail
         )
-
-    def onInit(self):
-        """Initialize the dialog controls."""
-        LOG.debug("SkipDialog.onInit called")
-
-        # Try to set button label directly as well
-        try:
-            button = self.getControl(SKIP_BUTTON)
-            label = self.getProperty("skip_label")
-            if label:
-                button.setLabel(label)
-                LOG.debug("SkipDialog.onInit: set button label to '%s'", label)
-        except Exception as e:
-            LOG.debug("Could not set skip button label: %s", e)
 
     def onAction(self, action):
         """Handle user actions."""
