@@ -81,3 +81,23 @@ Detailed installation instructions can be found in the [Jellyfin Client Document
 
 - Chapter images are missing unless native playback mode is used.
 - Certain add-ons that depend on seeing where your content is located will not work unless native playback mode is selected.
+
+### Contributing
+
+#### Dev environment
+
+The project use the following tools:
+
+- [black](https://black.readthedocs.io/en/stable/) auto-formats the Python code (mandatory)
+- [flake8](https://flake8.pycqa.org/en/latest/) to highlight potential issues
+- [EditorConfig](https://editorconfig.org/) to ensure consistency in editor indentation and similar
+- [pytest](https://docs.pytest.org/en/stable/) for code regression testing
+- [pre-commit](https://pre-commit.com/) helps run the most important ones before commiting
+
+[Visual Studio Code](https://code.visualstudio.com/) is my current editor of choice,
+and as such the project is configured around this.
+A [devcontainer](https://containers.dev/) config is available for consistency's sake
+and quick setup, but I often don't use it myself.
+
+[mypy](https://mypy.readthedocs.io/en/stable/index.html) is planned,
+but there is a lot of work needed to properly implemet type-checking.
