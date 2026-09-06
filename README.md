@@ -91,7 +91,7 @@ Please see [Jellyfin's official LLM policy](https://jellyfin.org/docs/general/co
 Any PR, issue or comment that is primarily LLM generated will be rejected outright on principle.
 
 Machine translation as a communication aid is allowed,
-but do include the original language text in addition.
+but requires disclosure and that you also include the original language text.
 
 LLM generated code has a high probability of getting rejected.
 Relatively low effort AI contributions put an unsustainable
