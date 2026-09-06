@@ -88,7 +88,7 @@ Detailed installation instructions can be found in the [Jellyfin Client Document
 
 Please see [Jellyfin's official LLM policy](https://jellyfin.org/docs/general/contributing/llm-policies).
 
-Any PR, issue or comment that is primarily LLM generated will be rejected outright on principe.
+Any PR, issue or comment that is primarily LLM generated will be rejected outright on principle.
 
 Machine translation as a communication aid is allowed,
 but do include the original language text in addition.
