@@ -18,11 +18,11 @@ CLOSE_BUTTON = 3013
 
 # Localized short label IDs for known segment types
 SEGMENT_LABEL_IDS = {
-    "Introduction": 33266,
-    "Credits": 33267,
+    "Introduction": 33252,
+    "Credits": 33253,
     "Recap": 33254,
     "Preview": 33255,
-    "Commercial": 33268,
+    "Commercial": 33259,
 }
 
 
@@ -61,7 +61,7 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
 
         segment_label = translate(SEGMENT_LABEL_IDS[segment_type])
 
-        skip_detail = "{} ({})".format(segment_label, duration_text)
+        skip_detail = "{} • {}".format(segment_label, duration_text)
 
         # Use setProperty so detail text is available to the skin.
         self.setProperty("skip_detail", skip_detail)
