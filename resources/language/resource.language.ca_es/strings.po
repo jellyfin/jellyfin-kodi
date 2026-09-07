@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-02 18:29+0000\n"
+"PO-Revision-Date: 2026-09-07 09:46+0000\n"
 "Last-Translator: Gargotaire <gargots@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
@@ -1275,3 +1275,31 @@ msgstr "Entreu aquest codi a l'aplicació de Jellyfin o a la interfície web:"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "S'ha esgotat el temps d'espera de Quick Connect. Torneu-ho a provar."
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Salta {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Introducció"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Final"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Anunci"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Activa la integració del complement UpNext"
