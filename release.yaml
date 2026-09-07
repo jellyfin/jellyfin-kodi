@@ -1,41 +1,46 @@
-version: '2.1.0'
+version: '2.1.1'
 changelog: |-
   :tada: New features and improvements
   ------------------------------------
-  + fix(music): populate album duration on sync (#1147) @kontell
-  + Decouple segment checking from playback reporting (#1116) @CeruleanRed
-  + feat(entrypoint): accept timestamp (#1133) @Rijul-A
-  + Add support for TV show trailers (#1138) @bossanova808
-  + fix(browse): add sort methods inside collections (#1134) @Rijul-A
-  + Add Quick Connect support (#1117) @mkopec
-  + Support "GuestStar" person type in TV episode actors (#1111) @ErwinBr
+  + Make UpNext integration optional (#1178) @Rijul-A
 
   Bug Fixes
   ---------
-  + Honor the cast command's StartPositionTicks as the resume position (#1154) @jeremiahrose
-  + Report a track's start position as 0, not the stale player clock (#1153) @jeremiahrose
-  + Honor StartIndex in remote Play commands so the selected track plays (#1152) @jeremiahrose
-  + Fix: Only transcode with mp4 container when the preferred codec is av1 to avoid seeking failure (#1136) @nkestrel
-  + fix(monitor): skip server_instance setup when get_device returns no sessions (#1141) @SAY-5
-  + Clamp media segment skip targets before EOF (#1114) @penggongkui-job
-  + Fix websocket authentication (#1121) @mcarlton00
-  + Fix: Correct missing thumbnails for Guest Star actors in TV Shows (#1124) @ErwinBr
-  + fix(player): re-detect audio and subs (#1115) @Rijul-A
-  + queries_music: update album title when album updated in jellyfin (#1108) @csaavedra
-  + music.py: fix addition of song artist different from album artist (#1107) @csaavedra
+  + Ensure that the segment skipper works when there are multiple segments of the same type (#1177) @akaMagisk
+  + Fix hang on sigterm (#1172) @phly95
+  + Avoid errors at upgrade/uninstall (#1185) @Rijul-A
+  + Use correct key for log level (#1189) @Rijul-A
+  + Keep server order as collection default, honor sort titles (#1160) @pannal
 
   Code or Repo Maintenance
   ------------------------
-  + Run the black formatter (#1127) @oddstr13
+  + Update readme: py2, dev, llm (#1206) @oddstr13
+  + Use correct localization method (#1202) @Rijul-A
+  + Cache and reload log level (#1192) @Rijul-A
+  + Localize segment skip dialog (#1195) @Rijul-A
+  + Remove unsupported Python and Kodi code (#1197) @Rijul-A
+  + Update devcontainer python version (#1199) @Rijul-A
+  + Remove unused dep script.module.addon.signals (#1193) @Rijul-A
+  + Add *.zip to .gitignore (#1190) @Rijul-A
+
+  Documentation updates
+  ---------------------
+  + Update readme: py2, dev, llm (#1206) @oddstr13
 
   CI & build changes
   ------------------
-  + Update github/codeql-action action to v4.35.1 (#1120) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update codecov/codecov-action action to v6 (#1119) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update actions/upload-artifact action to v7 (#1101) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update codecov/codecov-action action to v5.5.3 (#1112) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update release-drafter/release-drafter action to v6.4.0 (#1102) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update github/codeql-action action to v4.34.1 (#1099) @[renovate[bot]](https://github.com/apps/renovate)
+  + Avoid potential script injection in the changelog (#1207) @oddstr13
+  + Expand deny list of files in build zip (#1188) @Rijul-A
+  + Update github/codeql-action action to v4.37.9 (#1171) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v4.37.4 (#1167) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v4.37.2 (#1166) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/upload-artifact action to v7.0.1 (#1128) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/setup-python action to v7 (#1165) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v4.37.1 (#1130) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update burnett01/rsync-deployments action to v9 (#1149) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v7 (#1143) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/checkout action to v7 (#1148) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/setup-python action to v6.3.0 (#1150) @[renovate[bot]](https://github.com/apps/renovate)
 dependencies:
   py3:
     - addon: 'xbmc.python'
