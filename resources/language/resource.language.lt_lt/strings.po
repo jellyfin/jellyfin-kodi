@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-01 14:41+0000\n"
+"PO-Revision-Date: 2026-09-07 09:46+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -1270,3 +1270,27 @@ msgstr "Paspauskite Pasirinkti, kad praleistumėte"
 msgctxt "#33259"
 msgid "Commercial"
 msgstr "Reklama"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Praleisti {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Įžangos"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Pabaigos"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Įgalinti UpNext priedo integraciją"
