@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-09 15:05+0000\n"
-"Last-Translator: Anrijs Vitolins <salixzs@gmail.com>\n"
+"PO-Revision-Date: 2026-09-07 08:34+0000\n"
+"Last-Translator: \"ℂ𝕠𝕠𝕠𝕝 (𝕘𝕚𝕥𝕙𝕦𝕓.𝕔𝕠𝕞/ℂ𝕠𝕠𝕠𝕝)\" "
+"<translate.jellyfin.org@coool.id.lv>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
 "Language: lv_lv\n"
@@ -1204,4 +1205,32 @@ msgstr "Ievadiet šo kodu Jellyfin programmā vai Web vietnē:"
 
 msgctxt "#30618"
 msgid "Quick Connect"
-msgstr "Quick Connect"
+msgstr "Ātrā savienošana"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Jautāt katru reizi"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Titri"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Īss atstāsts / kopsavilkums / pārskats"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Izlaist"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Vai izlaist titrus?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklāma"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Izslēgts"
