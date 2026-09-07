@@ -24,12 +24,14 @@ jobs:
         uses: actions/checkout@v7.0.1
 
       - name: Parse Changelog
+        env:
+          TAG: ${{ steps.draft.outputs.tag_name }}
+          BODY: ${{ steps.draft.outputs.body }}
         run: |
           pip install emoji
           cat << EOF >> cl.md
-          ${{ steps.draft.outputs.body }}
+          ${BODY}
           EOF
-          TAG="${{ steps.draft.outputs.tag_name }}"
           echo "VERSION=${TAG#v}" >> $GITHUB_ENV
           echo "YAML_CHANGELOG<<EOF" >> $GITHUB_ENV
           cat cl.md | python .github/tools/reformat_changelog.py --no-emoji >> $GITHUB_ENV
