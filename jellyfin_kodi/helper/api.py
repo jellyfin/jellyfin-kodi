@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import json
+import xbmcvfs
 
 ##################################################################################################
 
 from . import settings, LazyLogger
-from .utils import translate_path
 
 ##################################################################################################
 
@@ -22,7 +22,7 @@ class API(object):
         self.item = item
         self.server = server
 
-        addon_data = translate_path(
+        addon_data = xbmcvfs.translatePath(
             "special://profile/addon_data/plugin.video.jellyfin/data.json"
         )
         try:

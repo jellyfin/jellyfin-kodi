@@ -8,7 +8,6 @@ import xml.etree.ElementTree as etree
 import xbmc
 import xbmcvfs
 
-from .utils import translate_path
 from . import translate, dialog, settings, LazyLogger
 
 #################################################################################################
@@ -43,7 +42,7 @@ def advanced_settings():
     if settings("useDirectPaths") != "0":
         return
 
-    path = translate_path("special://profile/")
+    path = xbmcvfs.translatePath("special://profile/")
     file = os.path.join(path, "advancedsettings.xml")
 
     try:
@@ -73,8 +72,8 @@ def advanced_settings():
 def verify_kodi_defaults():
     """Make sure we have the kodi default folder in place."""
 
-    source_base_path = translate_path("special://xbmc/system/library/video")
-    dest_base_path = translate_path("special://profile/library/video")
+    source_base_path = xbmcvfs.translatePath("special://xbmc/system/library/video")
+    dest_base_path = xbmcvfs.translatePath("special://profile/library/video")
 
     if not os.path.exists(source_base_path):
         LOG.error("XMLs source path `%s` not found.", source_base_path)
@@ -131,7 +130,7 @@ def verify_kodi_defaults():
                 with xbmcvfs.File(file_name, "w") as f:
                     f.write(etree.tostring(tree.getroot()))
 
-    playlist_path = translate_path("special://profile/playlists/video")
+    playlist_path = xbmcvfs.translatePath("special://profile/playlists/video")
 
     if not xbmcvfs.exists(playlist_path):
         xbmcvfs.mkdirs(playlist_path)

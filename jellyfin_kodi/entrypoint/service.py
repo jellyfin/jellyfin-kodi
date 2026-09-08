@@ -12,6 +12,7 @@ import _strptime  # noqa:F401
 
 import xbmc
 import xbmcgui
+import xbmcvfs
 
 from .. import objects
 from .. import connect
@@ -28,7 +29,7 @@ from ..helper import (
     set_addon_mode,
     LazyLogger,
 )
-from ..helper.utils import JsonDebugPrinter, translate_path
+from ..helper.utils import JsonDebugPrinter
 from ..helper.xmls import verify_kodi_defaults
 from ..jellyfin import Jellyfin
 
@@ -56,7 +57,7 @@ class Service(xbmc.Monitor):
         window("jellyfin_should_stop", clear=True)
 
         self.settings["addon_version"] = client.get_version()
-        self.settings["profile"] = translate_path("special://profile")
+        self.settings["profile"] = xbmcvfs.translatePath("special://profile")
         self.settings["mode"] = settings("useDirectPaths")
         self.settings["log_level"] = settings("logLevel") or "1"
         self.settings["auth_check"] = True

@@ -8,15 +8,15 @@ import traceback
 
 import xbmc
 import xbmcaddon
+import xbmcvfs
 
 from .. import database
 from . import settings
-from .utils import translate_path
 
 ##################################################################################################
 
 __addon__ = xbmcaddon.Addon(id="plugin.video.jellyfin")
-__pluginpath__ = translate_path(__addon__.getAddonInfo("path"))
+__pluginpath__ = xbmcvfs.translatePath(__addon__.getAddonInfo("path"))
 
 ##################################################################################################
 

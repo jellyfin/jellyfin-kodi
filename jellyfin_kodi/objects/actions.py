@@ -11,12 +11,12 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
+import xbmcvfs
 
 from ..helper import translate, playutils, api, window, settings, dialog
 from ..dialogs import resume
 from ..helper import LazyLogger
 from ..jellyfin import Jellyfin
-from ..helper.utils import translate_path
 
 from .obj import Objects
 
@@ -36,7 +36,7 @@ class Actions(object):
             LOG.debug("No api client provided, attempting to use config file")
             jellyfin_client = Jellyfin(server_id).get_client()
             api_client = jellyfin_client.jellyfin
-            addon_data = translate_path(
+            addon_data = xbmcvfs.translatePath(
                 "special://profile/addon_data/plugin.video.jellyfin/data.json"
             )
             try:
