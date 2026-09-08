@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import xbmc
 import xbmcgui
 
 from ..helper import LazyLogger, translate
@@ -24,6 +25,20 @@ SEGMENT_LABEL_IDS = {
     "Preview": 33255,
     "Commercial": 33259,
 }
+
+
+def get_player_art():
+    for art in [
+        "thumb",
+        "landscape",
+        "fanart",
+    ]:
+        # Always returns a string.
+        artwork = xbmc.getInfoLabel("Player.Art(%s)" % art)
+        # actions.py uses a whitespace sentinel for missing artwork.
+        if artwork.strip():
+            return artwork
+    return ""
 
 
 class SkipDialog(xbmcgui.WindowXMLDialog):
@@ -67,6 +82,7 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         self.setProperty("skip_detail", skip_detail)
         self.setProperty("segment_type", segment_type or "")
         self.setProperty("duration", duration_text)
+        self.setProperty("segment_image", get_player_art())
 
         LOG.debug(
             "SkipDialog: set_skip_info segment=%s, detail=%s", segment_type, skip_detail
