@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-20 19:15+0000\n"
+"PO-Revision-Date: 2026-09-08 15:09+0000\n"
 "Last-Translator: kscop-n1 <karpenko.serhii@outlook.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
@@ -1255,7 +1255,7 @@ msgstr "Пропустити титри?"
 
 msgctxt "#33259"
 msgid "Commercial"
-msgstr "Реклама"
+msgstr "Комерція"
 
 msgctxt "#33260"
 msgid "Press SELECT to skip"
@@ -1264,3 +1264,31 @@ msgstr "Натисніть ВИБРАТИ, щоб пропустити"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Виключити"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Пропуск {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}хв {1}с"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}с"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Вступ"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Завершення"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Реклама"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Увімкнути інтеграцію доповнення UpNext"
