@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-07 09:46+0000\n"
+"PO-Revision-Date: 2026-09-08 15:09+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -1293,4 +1293,8 @@ msgstr "Pabaigos"
 
 msgctxt "#33269"
 msgid "Enable UpNext add-on integration"
-msgstr "Įgalinti UpNext priedo integraciją"
+msgstr "Įjungti UpNext priedo integraciją"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Reklama"
