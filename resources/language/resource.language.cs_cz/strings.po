@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-07 20:29+0000\n"
+"PO-Revision-Date: 2026-09-08 23:24+0000\n"
 "Last-Translator: Fjuro <fjuro@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
@@ -1264,3 +1264,31 @@ msgstr "Rychlé připojení není na tomto serveru k dispozici"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "Rychlé připojení vypršelo. Zkuste to prosím znovu."
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Přeskočit {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0} min {1} s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0} s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Úvod"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Závěr"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Reklama"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Povolit doplněk integrace UpNext"
