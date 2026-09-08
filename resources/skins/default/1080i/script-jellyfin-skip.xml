@@ -210,7 +210,7 @@
 					<control type="button" id="3012">
 						<label>$ADDON[plugin.video.jellyfin 33256]</label>
 						<height>56</height>
-						<width min="250">auto</width>
+						<width>210</width>
 						<font>font13</font>
 						<textcolor>FFB3B3B3</textcolor>
 						<focusedcolor>FF000000</focusedcolor>
@@ -225,7 +225,7 @@
 						<control type="button" id="3013">
 							<label>$LOCALIZE[15067]</label>
 							<height>56</height>
-							<width min="60">auto</width>
+							<width>210</width>
 							<font>font13</font>
 							<textcolor>FFB3B3B3</textcolor>
 							<focusedcolor>FF000000</focusedcolor>
