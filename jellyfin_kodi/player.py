@@ -11,7 +11,6 @@ from .objects.obj import Objects
 from .helper import translate, api, window, settings, dialog, event, JSONRPC
 from .jellyfin import Jellyfin
 from .helper import LazyLogger
-from .helper.utils import translate_path
 from .segments import SegmentChecker, SEGMENT_TYPES_MAP
 
 #################################################################################################
@@ -474,7 +473,7 @@ class Player(xbmc.Player):
                     item["DeviceId"], item["PlaySessionId"]
                 )
 
-            path = translate_path(
+            path = xbmcvfs.translatePath(
                 "special://profile/addon_data/plugin.video.jellyfin/temp/"
             )
 

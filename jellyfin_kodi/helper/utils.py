@@ -565,8 +565,3 @@ def find_library(server, item):
 
     LOG.error("No ancestor found, not syncing item with ID: {}".format(item["Id"]))
     return {}
-
-
-def translate_path(path):
-    """Translate an add-on virtual filesystem path."""
-    return xbmcvfs.translatePath(path)

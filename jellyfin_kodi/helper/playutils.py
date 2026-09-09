@@ -10,7 +10,6 @@ import xbmc
 import xbmcvfs
 
 from .. import client
-from .utils import translate_path
 
 from . import translate, settings, window, dialog, api, LazyLogger
 
@@ -579,7 +578,7 @@ class PlayUtils(object):
         """Download external subtitles to temp folder
         to be able to have proper names to streams.
         """
-        temp = translate_path(
+        temp = xbmcvfs.translatePath(
             "special://profile/addon_data/plugin.video.jellyfin/temp/"
         )
 

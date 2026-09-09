@@ -7,11 +7,11 @@ import sys
 
 import xbmc
 import xbmcaddon
+import xbmcvfs
 
 from .. import database
 from ..dialogs import context
 from ..helper import translate, settings, dialog, LazyLogger
-from ..helper.utils import translate_path
 from ..jellyfin import Jellyfin
 
 #################################################################################################
@@ -56,7 +56,7 @@ class Context(object):
                 self.media = xbmc.getInfoLabel("ListItem.DBTYPE")
                 item_id = None
 
-        addon_data = translate_path(
+        addon_data = xbmcvfs.translatePath(
             "special://profile/addon_data/plugin.video.jellyfin/data.json"
         )
         with open(addon_data, "rb") as infile:
