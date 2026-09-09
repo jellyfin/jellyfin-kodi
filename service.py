@@ -82,7 +82,10 @@ if __name__ == "__main__":
     import sys
 
     LOG.debug("Running threads:")
+    frames = sys._current_frames()
     for t in threading.enumerate():
         LOG.debug("- %s: %s", t.name, t)
         if t.ident is not None:
-            LOG.debug("".join(traceback.format_stack(sys._current_frames()[t.ident])))
+            stack = frames.get(t.ident)
+            if stack is not None:
+                LOG.debug("".join(traceback.format_stack(stack)))
