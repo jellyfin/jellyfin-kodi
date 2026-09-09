@@ -7,17 +7,55 @@ happens to be the shared jellyfin_parent_id of every item in a library section.
 Real-world trigger: Jellyfin reports a media subfolder (Type=Folder, not in the
 view table) as removed. The old code fell through to get_media_by_parent_id,
 which returned every item in that section and wiped the entire library.
+
+These tests run the REAL jellyfin_kodi.library.SortWorker.run() end to end
+(only the Database context manager is monkeypatched to an in-memory sqlite
+connection, since it otherwise depends on xbmcvfs paths that don't exist in a
+test environment) -- not a hand-copied reimplementation of the dispatch
+if/else. A previous version of this file reimplemented the guarded dispatch
+logic inline, which meant it passed on any commit regardless of whether the
+guard was actually present in SortWorker.run() (confirmed empirically: it
+passed unmodified against a96b2fd1808b211f8d604f5957ce56c38d19a5be, the
+unpatched commit this PR fixes).
 """
 
 import queue
 import sqlite3
 import unittest
+from unittest.mock import patch
 
-from jellyfin_kodi.database import jellyfin_db
+from jellyfin_kodi import library
 
 
-def _make_db():
-    """Return an in-memory SQLite connection with the jellyfin schema."""
+MEDIA_TYPES = [
+    "Movie",
+    "BoxSet",
+    "MusicVideo",
+    "MusicAlbum",
+    "MusicArtist",
+    "Audio",
+    "Episode",
+    "Season",
+    "Show",
+]
+
+
+class _FakeDatabaseContext:
+    """Stand-in for jellyfin_kodi.database.Database("jellyfin") -- wraps a
+    plain sqlite3 cursor instead of opening a real Kodi/xbmcvfs-backed file."""
+
+    def __init__(self, cursor):
+        self.cursor = cursor
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return False
+
+
+def _make_conn():
+    """In-memory DB with the real jellyfin.db schema (view + jellyfin tables)."""
     conn = sqlite3.connect(":memory:")
     conn.execute(
         """
@@ -58,49 +96,36 @@ def _make_db():
     return conn
 
 
-def _dispatch(item_id, db):
-    """Run the SortWorker dispatch logic for one ID and return queued items."""
-    media_types = [
-        "Movie",
-        "BoxSet",
-        "MusicVideo",
-        "MusicAlbum",
-        "MusicArtist",
-        "Audio",
-        "Episode",
-        "Season",
-        "Show",
-    ]
-    output = {m: queue.Queue() for m in media_types}
-
-    media = db.get_media_by_id(item_id)
-    if media:
-        output[media].put({"Id": item_id, "Type": media})
-    else:
-        view = db.get_view(item_id)
-        if view is not None:
-            for item in db.get_media_by_parent_id(item_id):
-                output[item[1]].put({"Id": item[0], "Type": item[1]})
-
-    result = []
-    for q in output.values():
-        while not q.empty():
-            result.append(q.get_nowait())
-    return result
-
-
 class TestSortWorkerDeletion(unittest.TestCase):
 
     def setUp(self):
-        self.conn = _make_db()
-        self.db = jellyfin_db.JellyfinDatabase(self.conn.cursor())
+        self.conn = _make_conn()
 
     def tearDown(self):
         self.conn.close()
 
+    def _dispatch(self, item_id):
+        """Feed one id through the REAL SortWorker.run(), return queued items."""
+        in_queue = queue.Queue()
+        in_queue.put(item_id)
+        output = {media: queue.Queue() for media in MEDIA_TYPES}
+        worker = library.SortWorker(in_queue, output)
+
+        cursor = self.conn.cursor()
+        with patch.object(
+            library, "Database", return_value=_FakeDatabaseContext(cursor)
+        ):
+            worker.run()
+
+        result = []
+        for q in output.values():
+            while not q.empty():
+                result.append(q.get_nowait())
+        return result
+
     def test_direct_item_found(self):
         """A known item ID routes only that one item, no cascade."""
-        queued = _dispatch("item-001", self.db)
+        queued = self._dispatch("item-001")
         self.assertEqual(len(queued), 1)
         self.assertEqual(queued[0]["Id"], "item-001")
         self.assertEqual(queued[0]["Type"], "Movie")
@@ -111,14 +136,14 @@ class TestSortWorkerDeletion(unittest.TestCase):
         Before the fix, get_media_by_parent_id('subfolder-id') returned all 5
         items and wiped the entire library section. The guard must block this.
         """
-        queued = _dispatch("subfolder-id", self.db)
+        queued = self._dispatch("subfolder-id")
         self.assertEqual(
             queued, [], "Subfolder ID must not cascade when not in view table"
         )
 
     def test_unknown_id_not_a_view_queues_nothing(self):
         """A completely unrecognized ID must not cascade."""
-        queued = _dispatch("totally-unknown-id", self.db)
+        queued = self._dispatch("totally-unknown-id")
         self.assertEqual(queued, [])
 
     def test_view_id_cascades_children(self):
@@ -136,9 +161,8 @@ class TestSortWorkerDeletion(unittest.TestCase):
             "UPDATE jellyfin SET jellyfin_parent_id = 'lib-view-id' WHERE jellyfin_id = 'item-001'"
         )
         self.conn.commit()
-        self.db = jellyfin_db.JellyfinDatabase(self.conn.cursor())
 
-        queued = _dispatch("lib-view-id", self.db)
+        queued = self._dispatch("lib-view-id")
         self.assertEqual(len(queued), 1)
         self.assertEqual(queued[0]["Id"], "item-001")
 
