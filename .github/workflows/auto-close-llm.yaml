@@ -1,0 +1,43 @@
+name: Auto-close LLM generated PR/Issue
+
+on:
+  pull_request_target:
+    types:
+      - labeled
+  issues:
+    types:
+      - labeled
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          LABEL: ${{ github.event.label.name }}
+        run: "echo Label: ${LABEL}"
+  # detect:
+  close:
+    name: Close PR/Issue
+    if: "${{ github.event.label.name == 'invalid: llm' }}"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Close with comment
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.JF_BOT_TOKEN }}
+          script: |
+            const {issue:{number:issue_number}, repo:{owner, repo}} = context
+
+            github.rest.issues.createComment({owner, repo, issue_number, body:`Hi, thank you for your contribution!
+
+            We do not currently accept pure LLM contributions.
+
+            Please see the [relevant readme section](README.md#aillm) and the [Jellyfin LLM Policies](https://jellyfin.org/docs/general/contributing/llm-policies/).
+
+            🤖 This is a CI-automated message.`})
+
+            github.rest.issues.update({owner, repo, issue_number, state:"closed", state_reason:"not_planned"})
+
+      - name: Change base branch
+        run: exit 1
