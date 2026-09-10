@@ -9,12 +9,6 @@ on:
       - labeled
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - env:
-          LABEL: ${{ github.event.label.name }}
-        run: "echo Label: ${LABEL}"
   # detect:
   close:
     name: Close PR/Issue
