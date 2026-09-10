@@ -38,6 +38,3 @@ jobs:
             🤖 This is a CI-automated message.`})
 
             github.rest.issues.update({owner, repo, issue_number, state:"closed", state_reason:"not_planned"})
-
-      - name: Change base branch
-        run: exit 1
