@@ -47,6 +47,7 @@ def set_properties(item, method, server_id=None):
             "PlaySessionId": info.get("PlaySessionId", str(uuid4()).replace("-", "")),
             "ServerId": server_id,
             "DeviceId": client.get_device_id(),
+            "KodiAudioStreamIndexes": info.get("KodiAudioStreamIndexes"),
             "SubsMapping": info.get("Subtitles"),
             "AudioStreamIndex": info.get("AudioStreamIndex"),
             "SubtitleStreamIndex": info.get("SubtitleStreamIndex"),
@@ -179,6 +180,12 @@ class PlayUtils(object):
         prop: jellyfinfilename for ?? I thought it was to pass the real path to subtitle add-ons but it's not working?
         """
         self.info["MediaSourceId"] = source["Id"]
+        # Map Kodi's audio stream ordinal to the Jellyfin media stream index.
+        self.info["KodiAudioStreamIndexes"] = [
+            stream["Index"]
+            for stream in source.get("MediaStreams", [])
+            if stream["Type"] == "Audio"
+        ]
 
         if source.get("RequiresClosing"):
 

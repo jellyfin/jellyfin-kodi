@@ -106,6 +106,8 @@ class Player(xbmc.Player):
         window("jellyfin_play.json", items)
 
         self.set_item(current_file, item)
+        requested_audio = item["AudioStreamIndex"]
+        requested_subtitle = item["SubtitleStreamIndex"]
         # Detect current audio/subtitle state from Kodi player
         self.detect_audio_subs(item)
         data = {
@@ -141,7 +143,7 @@ class Player(xbmc.Player):
             return
 
         if item["PlayOption"] == "Addon":
-            self.set_audio_subs(item["AudioStreamIndex"], item["SubtitleStreamIndex"])
+            self.set_audio_subs(requested_audio, requested_subtitle)
 
     def set_item(self, file, item):
         """Set playback information."""
@@ -188,7 +190,7 @@ class Player(xbmc.Player):
         LOG.info("-->[ play/%s ] %s", item["Id"], item)
 
     def set_audio_subs(self, audio=None, subtitle=None):
-        if audio:
+        if audio is not None:
             audio = int(audio)
         if subtitle:
             subtitle = int(subtitle)
@@ -202,9 +204,14 @@ class Player(xbmc.Player):
 
             item = self.get_file_info(current_file)
             mapping = item["SubsMapping"]
+            kodi_audio_stream_indexes = item.get("KodiAudioStreamIndexes") or []
 
-            if audio and len(self.getAvailableAudioStreams()) > 1:
-                self.setAudioStream(audio - 1)
+            if (
+                audio is not None
+                and len(self.getAvailableAudioStreams()) > 1
+                and audio in kodi_audio_stream_indexes
+            ):
+                self.setAudioStream(kodi_audio_stream_indexes.index(audio))
 
             if subtitle is None or subtitle == -1:
                 self.showSubtitles(False)
@@ -237,7 +244,7 @@ class Player(xbmc.Player):
         try:  # Audio tracks
             audio = result["currentaudiostream"]["index"]
         except (KeyError, TypeError):
-            audio = 0
+            audio = None
 
         try:  # Subtitles tracks
             subs = result["currentsubtitle"]["index"]
@@ -249,7 +256,12 @@ class Player(xbmc.Player):
         except (KeyError, TypeError):
             subs_enabled = False
 
-        item["AudioStreamIndex"] = audio + 1
+        kodi_audio_stream_indexes = item.get("KodiAudioStreamIndexes") or []
+        item["AudioStreamIndex"] = (
+            kodi_audio_stream_indexes[audio]
+            if audio is not None and 0 <= audio < len(kodi_audio_stream_indexes)
+            else None
+        )
 
         if not subs_enabled or not len(self.getAvailableSubtitleStreams()):
             item["SubtitleStreamIndex"] = None
