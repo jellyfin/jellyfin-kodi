@@ -7,9 +7,8 @@ from jellyfin_kodi.helper import playutils as playutils_module
 def test_audio_stream_indexes_are_stored_for_playback(monkeypatch):
     # Validate that KodiAudioStreamIndexes is set, given the
     # Audio streams in the source file
-    class ApiClient:
-        class config:
-            data = {"auth.token": ""}
+    api_client = Mock()
+    api_client.config.data = {"auth.token": ""}
 
     item = {
         "Id": "item",
@@ -42,19 +41,24 @@ def test_audio_stream_indexes_are_stored_for_playback(monkeypatch):
 
     monkeypatch.setattr(playutils_module, "window", fake_window)
     monkeypatch.setattr(playutils_module.client, "get_device_id", lambda: "device")
+
+    class Api:
+        def get_file_path(self, _):
+            return "movie"
+
     monkeypatch.setattr(
         playutils_module.api,
         "API",
-        lambda *_args, **_kwargs: Mock(get_file_path=Mock(return_value="movie")),
+        lambda *_args, **_kwargs: Api(),
     )
 
     play_utils = playutils_module.PlayUtils(
         item,
         server="http://server",
-        api_client=ApiClient,
+        api_client=api_client,
     )
     play_utils.info["Path"] = "movie"
-    play_utils.direct_url = Mock()
+    play_utils.direct_url = lambda _source: None
 
     play_utils.get(source)
     playutils_module.set_properties(item, "DirectStream", "server")
@@ -64,17 +68,15 @@ def test_audio_stream_indexes_are_stored_for_playback(monkeypatch):
 
 
 def test_detect_audio_stream_maps_kodi_ordinal_to_jellyfin_index(monkeypatch):
-    # Verify that the Kodi audio ordinal that is currently set
-    # maps back correctly to the AudioStreamIndex on the server
-    # This is used in report_playback to detect which audio
-    # is currently playing
+    # Kodi reports audio stream ordinals
+    # Jellyfin uses MediaStream indexes.
     player = object.__new__(player_module.Player)
     item = {
         "KodiAudioStreamIndexes": [3, 4],
         "SubsMapping": {},
     }
 
-    class JsonRpc:
+    class JSONRPC:
         def __init__(self, _):
             pass
 
@@ -87,7 +89,7 @@ def test_detect_audio_stream_maps_kodi_ordinal_to_jellyfin_index(monkeypatch):
                 }
             }
 
-    monkeypatch.setattr(player_module, "JSONRPC", JsonRpc)
+    monkeypatch.setattr(player_module, "JSONRPC", JSONRPC)
 
     player.detect_audio_subs(item)
 
@@ -95,8 +97,8 @@ def test_detect_audio_stream_maps_kodi_ordinal_to_jellyfin_index(monkeypatch):
 
 
 def test_set_audio_stream_maps_jellyfin_index_to_kodi_ordinal():
-    # Verify that calling set_audio_subs with a Jellyfin
-    # index maps to the correct Kodi ordinal
+    # Jellyfin uses MediaStream indexes
+    # Kodi expects audio ordinals.
     player = object.__new__(player_module.Player)
     item = {
         "KodiAudioStreamIndexes": [3, 4],
@@ -108,7 +110,6 @@ def test_set_audio_stream_maps_jellyfin_index_to_kodi_ordinal():
     player.is_playing_file = lambda _: True
     player.getAvailableAudioStreams = lambda: [{}, {}]
     player.setAudioStream = Mock()
-    player.showSubtitles = Mock()
 
     player.set_audio_subs(audio=4)
 
@@ -116,9 +117,9 @@ def test_set_audio_stream_maps_jellyfin_index_to_kodi_ordinal():
 
 
 def test_playback_started_preserves_requested_audio_stream(monkeypatch):
-    # Assert that starting playback does not set the
-    # requested Jellyfin server audio index to None or
-    # even 0
+    # Kodi may not report the current audio stream
+    # immediately after playback starts. Preserve
+    # the requested stream while detecting it.
     player = object.__new__(player_module.Player)
 
     server = Mock()
@@ -152,7 +153,7 @@ def test_playback_started_preserves_requested_audio_stream(monkeypatch):
     monkeypatch.setattr(player_module.xbmc, "Monitor", Mock(return_value=monitor))
     monkeypatch.setattr(player_module, "settings", Mock(return_value=False))
 
-    class JsonRpc:
+    class JSONRPC:
         def __init__(self, _):
             pass
 
@@ -165,7 +166,7 @@ def test_playback_started_preserves_requested_audio_stream(monkeypatch):
                 }
             }
 
-    monkeypatch.setattr(player_module, "JSONRPC", JsonRpc)
+    monkeypatch.setattr(player_module, "JSONRPC", JSONRPC)
 
     def fake_window(name, value=None, **kwargs):
         if name == "jellyfin_play.json" and value is None:
