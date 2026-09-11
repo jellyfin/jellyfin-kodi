@@ -257,11 +257,9 @@ class Player(xbmc.Player):
             subs_enabled = False
 
         kodi_audio_stream_indexes = item.get("KodiAudioStreamIndexes") or []
-        item["AudioStreamIndex"] = (
-            kodi_audio_stream_indexes[audio]
-            if audio is not None and 0 <= audio < len(kodi_audio_stream_indexes)
-            else None
-        )
+        item["AudioStreamIndex"] = None
+        if audio is not None and 0 <= audio < len(kodi_audio_stream_indexes):
+            item["AudioStreamIndex"] = kodi_audio_stream_indexes[audio]
 
         if not subs_enabled or not len(self.getAvailableSubtitleStreams()):
             item["SubtitleStreamIndex"] = None
