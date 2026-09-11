@@ -38,6 +38,9 @@ def test_audio_stream_indexes_are_stored_for_playback(monkeypatch):
             if value is None:
                 return windows.get(name)
             windows[name] = value
+            return None
+        else:
+            return None
 
     monkeypatch.setattr(playutils_module, "window", fake_window)
     monkeypatch.setattr(playutils_module.client, "get_device_id", lambda: "device")
@@ -63,7 +66,7 @@ def test_audio_stream_indexes_are_stored_for_playback(monkeypatch):
     play_utils.get(source)
     playutils_module.set_properties(item, "DirectStream", "server")
 
-    playback_item = windows["jellyfin_play.json"][0]
+    playback_item = fake_window("jellyfin_play.json")[0]
     assert playback_item["KodiAudioStreamIndexes"] == [3, 4]
 
 
