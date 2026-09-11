@@ -22,4 +22,4 @@ types-Pygments
 types-colorama
 
 # Follows available Kodi addon version
-typing_extensions == 4.7.1
+typing_extensions ==4.16.0
