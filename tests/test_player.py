@@ -174,6 +174,7 @@ def test_playback_started_preserves_requested_audio_stream(monkeypatch):
     def fake_window(name, value=None, **kwargs):
         if name == "jellyfin_play.json" and value is None:
             return [item]
+        return None
 
     monkeypatch.setattr(player_module, "window", fake_window)
 
