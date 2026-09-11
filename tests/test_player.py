@@ -176,5 +176,5 @@ def test_playback_started_preserves_requested_audio_stream(monkeypatch):
 
     player.onPlayBackStarted()
 
-    assert item["AudioStreamIndex"] is None
+    assert item["AudioStreamIndex"] == 4
     player.set_audio_subs.assert_called_once_with(4, None)

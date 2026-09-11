@@ -106,8 +106,6 @@ class Player(xbmc.Player):
         window("jellyfin_play.json", items)
 
         self.set_item(current_file, item)
-        requested_audio = item["AudioStreamIndex"]
-        requested_subtitle = item["SubtitleStreamIndex"]
         # Detect current audio/subtitle state from Kodi player
         self.detect_audio_subs(item)
         data = {
@@ -143,7 +141,7 @@ class Player(xbmc.Player):
             return
 
         if item["PlayOption"] == "Addon":
-            self.set_audio_subs(requested_audio, requested_subtitle)
+            self.set_audio_subs(item["AudioStreamIndex"], item["SubtitleStreamIndex"])
 
     def set_item(self, file, item):
         """Set playback information."""
@@ -256,8 +254,10 @@ class Player(xbmc.Player):
         except (KeyError, TypeError):
             subs_enabled = False
 
+        # When playback is started, the audiostream is not available
+        # In such a case, audio is None and we must not overwrite the
+        # item level value
         kodi_audio_stream_indexes = item.get("KodiAudioStreamIndexes") or []
-        item["AudioStreamIndex"] = None
         if audio is not None and 0 <= audio < len(kodi_audio_stream_indexes):
             item["AudioStreamIndex"] = kodi_audio_stream_indexes[audio]
 
