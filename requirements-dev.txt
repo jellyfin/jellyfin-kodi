@@ -2,3 +2,7 @@
 
 pre-commit >= 3.7.1
 black >= 26.1.0
+
+# vscode integrations of flake8, black etc breaks due to the
+# default (newer) cattrs extension expect newer versions of typing_extensions
+cattrs~=23.2

@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
-
-import warnings
+from typing_extensions import deprecated
 
 #################################################################################################
 
 
+@deprecated("Jellyfin-specific http exception class should be phased out")
 class HTTPException(Exception):
     # Jellyfin HTTP exception
     def __init__(self, status, message):
-        warnings.warn(
-            f"{self.__class__.__name__} will be deprecated.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
         self.status = status
         self.message = message
 
