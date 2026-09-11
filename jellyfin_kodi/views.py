@@ -279,7 +279,7 @@ class Views(object):
             etree.SubElement(rule, "value").text = view["Tag"]
 
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def add_nodes(self, path, view, mixed=False):
         """Create or update the video node file."""
@@ -353,7 +353,7 @@ class Views(object):
             self.node_all(xml)
 
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def node_root(self, root, index):
         """Create the root element"""
@@ -395,7 +395,7 @@ class Views(object):
         )
 
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def node(self, folder, view):
 
@@ -459,7 +459,7 @@ class Views(object):
 
         getattr(self, "node_" + node)(xml)  # get node function based on node type
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def add_dynamic_node(self, index, file, view, node, name, path):
 
@@ -485,7 +485,7 @@ class Views(object):
 
         getattr(self, "node_" + node)(xml, path)
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def node_all(self, root):
 
