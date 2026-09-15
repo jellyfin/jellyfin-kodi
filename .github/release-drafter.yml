@@ -16,15 +16,9 @@ categories:
     labels:
       - revert
       - reverted
-  - title: ":rocket: Major features and improvements"
-    labels:
-      - major-enhancement
-      - major-feature
-  - title: ":ambulance: Major bug fixes"
-    labels:
-      - major-bug
   - title: ":wastebasket: Deprecated"
-    label: deprecated
+    labels:
+      - deprecated
   - title: ":tada: New features and improvements"
     labels:
       - enhancement
@@ -32,12 +26,10 @@ categories:
   - title: ":bug: Bug Fixes"
     labels:
       - bug
-      - fix
       - bugfix
       - regression
   - title: ":white_check_mark: Tests"
     labels:
-      - test
       - tests
   - title: ":gear: Code or Repo Maintenance"
     labels:
@@ -49,13 +41,12 @@ categories:
   - title: ":arrow_up: Dependency updates"
     labels:
       - dependencies # Default label used by Dependabot
-      - dependency
   - title: ":construction_worker: CI & build changes"
     labels:
       - ci
       - build
+
 exclude-labels:
-  - no-changelog
   - skip-changelog
   - invalid
 
