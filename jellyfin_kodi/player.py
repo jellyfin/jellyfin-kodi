@@ -187,7 +187,7 @@ class Player(xbmc.Player):
         LOG.info("-->[ play/%s ] %s", item["Id"], item)
 
     def set_audio_subs(self, audio=None, subtitle=None):
-        if audio:
+        if audio is not None:
             audio = int(audio)
         if subtitle:
             subtitle = int(subtitle)
@@ -201,9 +201,14 @@ class Player(xbmc.Player):
 
             item = self.get_file_info(current_file)
             mapping = item["SubsMapping"]
+            kodi_audio_stream_indexes = item.get("KodiAudioStreamIndexes") or []
 
-            if audio and len(self.getAvailableAudioStreams()) > 1:
-                self.setAudioStream(audio - 1)
+            if (
+                audio is not None
+                and len(self.getAvailableAudioStreams()) > 1
+                and audio in kodi_audio_stream_indexes
+            ):
+                self.setAudioStream(kodi_audio_stream_indexes.index(audio))
 
             if subtitle is None or subtitle == -1:
                 self.showSubtitles(False)
@@ -236,7 +241,7 @@ class Player(xbmc.Player):
         try:  # Audio tracks
             audio = result["currentaudiostream"]["index"]
         except (KeyError, TypeError):
-            audio = 0
+            audio = None
 
         try:  # Subtitles tracks
             subs = result["currentsubtitle"]["index"]
@@ -248,7 +253,12 @@ class Player(xbmc.Player):
         except (KeyError, TypeError):
             subs_enabled = False
 
-        item["AudioStreamIndex"] = audio + 1
+        # When playback is started, the audiostream is not available
+        # In such a case, audio is None and we must not overwrite the
+        # item level value
+        kodi_audio_stream_indexes = item.get("KodiAudioStreamIndexes") or []
+        if audio is not None and 0 <= audio < len(kodi_audio_stream_indexes):
+            item["AudioStreamIndex"] = kodi_audio_stream_indexes[audio]
 
         if not subs_enabled or not len(self.getAvailableSubtitleStreams()):
             item["SubtitleStreamIndex"] = None
