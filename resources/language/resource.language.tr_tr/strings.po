@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-08 03:19+0000\n"
-"Last-Translator: queeup <queeup@zoho.com>\n"
+"PO-Revision-Date: 2026-09-16 10:37+0000\n"
+"Last-Translator: brtc <boratici.acc@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -133,7 +133,7 @@ msgstr "Bağlantıyı doğrula"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "Kod dönüştürme"
+msgstr "Biçim dönüştürmek"
 
 msgctxt "#30410"
 msgid "Refresh this item"
@@ -177,7 +177,7 @@ msgstr "Favori Albümler"
 
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr "Favori Resimler"
+msgstr "Favori Görseller"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
@@ -297,7 +297,7 @@ msgstr "Kodi için Jellyfin"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr "Resimlerin önbelleğe alınmasını etkinleştir"
+msgstr "Kapak görsellerinin önbelleğe alınmasını etkinleştir"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
@@ -586,7 +586,7 @@ msgstr "Tüm Jellyfin eklenti ayarları sıfırlansın mı?"
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
-msgstr "Önbelleğe alınmış tüm resimler kaldırılsın mı?"
+msgstr "Önbelleğe alınmış tüm görseller kaldırılsın mı?"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -700,7 +700,7 @@ msgstr "Oynatma"
 
 msgctxt "#33201"
 msgid "Max artwork resolution"
-msgstr "Maksimum resim çözünürlüğü"
+msgstr "Azami görsel çözünürlüğü"
 
 msgctxt "#33200"
 msgid "Select the libraries to remove"
@@ -1212,11 +1212,11 @@ msgstr "Her seferinde sor"
 
 msgctxt "#33252"
 msgid "Introduction"
-msgstr "Açılış"
+msgstr "Sunuş"
 
 msgctxt "#33253"
 msgid "Credits"
-msgstr "Jenerik"
+msgstr "Katkıda bulunanlar"
 
 msgctxt "#33254"
 msgid "Recap"
@@ -1240,7 +1240,7 @@ msgstr "Jeneriği atla?"
 
 msgctxt "#33259"
 msgid "Commercial"
-msgstr "Reklam"
+msgstr "Reklam filmi"
 
 msgctxt "#33260"
 msgid "Press SELECT to skip"
@@ -1277,3 +1277,23 @@ msgstr "{0}dk {1}sn"
 msgctxt "#33265"
 msgid "{0}s"
 msgstr "{0}sn"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "{0} ({1})'i atla"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Açılış"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Reklam"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "UpNext eklenti bütünleşmesini etkinleştir"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Kapanış"
