@@ -556,10 +556,12 @@ class PlayUtils(object):
                 LOG.info("[ subtitles/%s ] %s", index, url)
 
                 if "Language" in stream:
-                    title = re.sub(r"[^A-Za-z0-9]+", "", stream.get("Title") or "")
+                    title = re.sub(
+                        r'[\\/:*?"<>|\x00-\x1f]+', "", stream.get("Title") or ""
+                    ).strip()
                     display_title = re.sub(
-                        r"[^A-Za-z0-9]+", "", stream.get("DisplayTitle") or ""
-                    )
+                        r'[\\/:*?"<>|\x00-\x1f]+', "", stream.get("DisplayTitle") or ""
+                    ).strip()
                     filename = "%s.%s.%s.%s" % (
                         title or display_title or "sub",
                         f'{source["Id"]}-{index}',
