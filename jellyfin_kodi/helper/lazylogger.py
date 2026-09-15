@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 from typing import TYPE_CHECKING
 
@@ -22,6 +21,11 @@ class LazyLogger(object):
 
             self.__logger = getLogger(self.__logger_name)
         return getattr(self.__logger, name)
+
+    def setJellyfinLevel(self, level):
+        from .loghandler import getHandler
+
+        getHandler().setJellyfinLevel(level)
 
     #####################################################################
     # Following are stubs of methods provided by `logging.Logger`.      #

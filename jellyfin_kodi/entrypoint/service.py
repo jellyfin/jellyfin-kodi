@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -7,12 +6,14 @@ import json
 import sys
 from datetime import datetime
 from importlib import reload
+import threading
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
 
 import xbmc
 import xbmcgui
+import xbmcvfs
 
 from .. import objects
 from .. import connect
@@ -29,7 +30,7 @@ from ..helper import (
     set_addon_mode,
     LazyLogger,
 )
-from ..helper.utils import JsonDebugPrinter, translate_path
+from ..helper.utils import JsonDebugPrinter
 from ..helper.xmls import verify_kodi_defaults
 from ..jellyfin import Jellyfin
 
@@ -57,7 +58,7 @@ class Service(xbmc.Monitor):
         window("jellyfin_should_stop", clear=True)
 
         self.settings["addon_version"] = client.get_version()
-        self.settings["profile"] = translate_path("special://profile")
+        self.settings["profile"] = xbmcvfs.translatePath("special://profile")
         self.settings["mode"] = settings("useDirectPaths")
         self.settings["log_level"] = settings("logLevel") or "1"
         self.settings["auth_check"] = True
@@ -74,7 +75,7 @@ class Service(xbmc.Monitor):
         if self.settings["enable_context_transcode"]:
             window("jellyfin_context_transcode.bool", True)
 
-        LOG.info("--->>>[ %s ]", client.get_addon_name())
+        LOG.info("--->>>[ JELLYFIN ]")
         LOG.info("Version: %s", client.get_version())
         LOG.info("KODI Version: %s", xbmc.getInfoLabel("System.BuildVersion"))
         LOG.info("Platform: %s", settings("platformDetected"))
@@ -424,7 +425,8 @@ class Service(xbmc.Monitor):
         if settings("logLevel") != self.settings["log_level"]:
 
             log_level = settings("logLevel")
-            self.settings["logLevel"] = log_level
+            self.settings["log_level"] = log_level
+            LOG.setJellyfinLevel(log_level)
             LOG.info("New log level: %s", log_level)
 
         if settings("enableContext.bool") != self.settings["enable_context"]:
@@ -501,6 +503,9 @@ class Service(xbmc.Monitor):
         LOG.info("---[ objects reloaded ]")
 
     def shutdown(self):
+        LOG.debug("Running threads:")
+        for t in threading.enumerate():
+            LOG.debug("- %s: %s", t.name, t)
 
         LOG.info("---<[ EXITING ]")
         window("jellyfin_should_stop.bool", True)
@@ -532,4 +537,8 @@ class Service(xbmc.Monitor):
 
             self.monitor.listener.stop()
 
-        LOG.info("---<<<[ %s ]", client.get_addon_name())
+        LOG.info("---<<<[ JELLYFIN ]")
+
+        LOG.debug("Running threads:")
+        for t in threading.enumerate():
+            LOG.debug("- %s: %s", t.name, t)

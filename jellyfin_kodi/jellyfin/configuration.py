@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
-""" This will hold all configs from the client.
-    Configuration set here will be used for the HTTP client.
+"""This will hold all configs from the client.
+Configuration set here will be used for the HTTP client.
 """
 
 #################################################################################################

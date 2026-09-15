@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -12,8 +11,7 @@ from .objects.obj import Objects
 from .helper import translate, api, window, settings, dialog, event, JSONRPC
 from .jellyfin import Jellyfin
 from .helper import LazyLogger
-from .helper.utils import translate_path
-from .segments import SegmentChecker
+from .segments import SegmentChecker, SEGMENT_TYPES_MAP
 
 #################################################################################################
 
@@ -269,6 +267,8 @@ class Player(xbmc.Player):
             item["SubtitleStreamIndex"] = subs + tracks + 1
 
     def next_up(self):
+        if not settings("enableUpNext.bool"):
+            return
 
         item = self.get_file_info(self.get_playing_file())
         objects = Objects()
@@ -473,7 +473,7 @@ class Player(xbmc.Player):
                     item["DeviceId"], item["PlaySessionId"]
                 )
 
-            path = translate_path(
+            path = xbmcvfs.translatePath(
                 "special://profile/addon_data/plugin.video.jellyfin/temp/"
             )
 
@@ -533,20 +533,13 @@ class Player(xbmc.Player):
         if not response or "Items" not in response:
             return None
 
-        type_map = {
-            "Intro": "Introduction",
-            "Outro": "Credits",
-            "Recap": "Recap",
-            "Preview": "Preview",
-            "Commercial": "Commercial",
-        }
-
         segments = {}
         for item in response["Items"]:
-            seg_type = type_map.get(item.get("Type"))
+            seg_type = SEGMENT_TYPES_MAP.get(item.get("Type"))
             if seg_type:
-                segments[seg_type] = {
+                segments[item.get("Id")] = {
                     "EpisodeId": item.get("ItemId"),
+                    "Type": seg_type,
                     "Start": item.get("StartTicks", 0) / 10000000.0,
                     "End": item.get("EndTicks", 0) / 10000000.0,
                 }
@@ -581,7 +574,10 @@ class Player(xbmc.Player):
         if not segments:
             return
 
-        for segment_type, segment in segments.items():
+        for segment_id, segment in segments.items():
+
+            segment_type = segment.get("Type")
+
             skip_mode = self._get_segment_skip_mode(segment_type)
             if skip_mode == 0:  # Off
                 continue
@@ -593,16 +589,16 @@ class Player(xbmc.Player):
                 continue
 
             start, end = bounds
-            segment_key = "%s:%s" % (item_id, segment_type)
+
             LOG.debug(
                 "Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
-                segment_key,
-                segment_key in self.skip_prompted,
+                segment_id,
+                segment_id in self.skip_prompted,
             )
-            if segment_key in self.skip_prompted:
+            if segment_id in self.skip_prompted:
                 continue
 
-            self.skip_prompted.add(segment_key)
+            self.skip_prompted.add(segment_id)
             LOG.debug(
                 "Skip check: Triggering _handle_skip_segment for %s", segment_type
             )

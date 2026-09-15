@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-12 20:21+0000\n"
+"PO-Revision-Date: 2026-09-08 19:29+0000\n"
 "Last-Translator: Translation expert <eleceng4ever@hotmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
@@ -1250,3 +1250,31 @@ msgstr "الاتصال السريع غير متاح في هذا الخادم"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "انقضى وقت الاتصال السريع. يرجى المحاولة مجددا."
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "تجاوز {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}د {1}ث"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}ث"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "مقدمة"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "خاتمة"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "اعلان"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "تفعيل تضمين إضافة القادم"

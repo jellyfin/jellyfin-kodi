@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -13,7 +12,6 @@ from .database import Database, jellyfin_db, get_sync, save_sync
 from .helper import translate, api, window, event
 from .jellyfin import Jellyfin
 from .helper import LazyLogger
-from .helper.utils import translate_path
 
 #################################################################################################
 
@@ -183,8 +181,8 @@ class Views(object):
 
     def get_nodes(self):
         """Set up playlists, video nodes, window prop."""
-        node_path = translate_path("special://profile/library/video")
-        playlist_path = translate_path("special://profile/playlists/video")
+        node_path = xbmcvfs.translatePath("special://profile/library/video")
+        playlist_path = xbmcvfs.translatePath("special://profile/playlists/video")
         index = 0
 
         # Kodi 19 doesn't seem to create this directory on its own
@@ -281,7 +279,7 @@ class Views(object):
             etree.SubElement(rule, "value").text = view["Tag"]
 
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def add_nodes(self, path, view, mixed=False):
         """Create or update the video node file."""
@@ -355,7 +353,7 @@ class Views(object):
             self.node_all(xml)
 
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def node_root(self, root, index):
         """Create the root element"""
@@ -397,7 +395,7 @@ class Views(object):
         )
 
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def node(self, folder, view):
 
@@ -461,7 +459,7 @@ class Views(object):
 
         getattr(self, "node_" + node)(xml)  # get node function based on node type
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def add_dynamic_node(self, index, file, view, node, name, path):
 
@@ -487,7 +485,7 @@ class Views(object):
 
         getattr(self, "node_" + node)(xml, path)
         tree = etree.ElementTree(xml)
-        tree.write(file)
+        tree.write(file, encoding="utf-8", xml_declaration=True)
 
     def node_all(self, root):
 
@@ -1019,7 +1017,7 @@ class Views(object):
 
     def delete_playlists(self):
         """Remove all jellyfin playlists."""
-        path = translate_path("special://profile/playlists/video/")
+        path = xbmcvfs.translatePath("special://profile/playlists/video/")
         _, files = xbmcvfs.listdir(path)
         for file in files:
             if file.startswith("jellyfin"):
@@ -1027,7 +1025,7 @@ class Views(object):
 
     def delete_playlist_by_id(self, view_id):
         """Remove playlist based on view_id."""
-        path = translate_path("special://profile/playlists/video/")
+        path = xbmcvfs.translatePath("special://profile/playlists/video/")
         _, files = xbmcvfs.listdir(path)
         for file in files:
             file = file
@@ -1042,7 +1040,7 @@ class Views(object):
 
     def delete_nodes(self):
         """Remove node and children files."""
-        path = translate_path("special://profile/library/video/")
+        path = xbmcvfs.translatePath("special://profile/library/video/")
         dirs, files = xbmcvfs.listdir(path)
 
         for file in files:
@@ -1062,7 +1060,7 @@ class Views(object):
 
     def delete_node_by_id(self, view_id):
         """Remove node and children files based on view_id."""
-        path = translate_path("special://profile/library/video/")
+        path = xbmcvfs.translatePath("special://profile/library/video/")
         dirs, files = xbmcvfs.listdir(path)
 
         for directory in dirs:

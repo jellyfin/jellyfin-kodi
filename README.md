@@ -31,41 +31,12 @@
 <a href="https://github.com/jellyfin/jellyfin-kodi/actions/workflows/codeql.yaml"><img alt="CodeQL Analysis" src="https://github.com/jellyfin/jellyfin-kodi/actions/workflows/codeql.yaml/badge.svg" /></a>
 </p>
 
-<table>
-  <thead>
-    <tr>
-      <td align="left">
-        :warning: Python 2 deprecation (Kodi 18 Leia and older)
-      </td>
-    </tr>
-  </thead>
+Our informal Kodi support target is current release±1,
+which currently translates to Nexus (old), Omega (current) and Piers (next).
 
-  <tbody>
-    <tr>
-      <td>
-        <p>
-          Kodi installs based on Python 2 are no longer supported
-          going forward.
-          <br/>
-          This means that Kodi v18 (Leia) and earlier
-          (Krypton, Jarvis...) is no longer supported,
-          and will cease receiving updates.
-        </p>
-        <p>
-          Our informal support target is current release±1,
-          which currently translates to Nexus (old), Omega (current) and Piers (next).
-          <br />
-          Please note that next release is a moving target,
-          has a relatively low priority,
-          and is unlikely to receive active work before the release candidate stage.
-        </p>
-        <p>
-          The major version of Jellyfin for Kodi will be bumped for the first release without Python 2 support.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+Please note that next release is a moving target,
+has a relatively low priority,
+and is unlikely to receive active work before the release candidate stage.
 
 ---
 
@@ -110,3 +81,44 @@ Detailed installation instructions can be found in the [Jellyfin Client Document
 
 - Chapter images are missing unless native playback mode is used.
 - Certain add-ons that depend on seeing where your content is located will not work unless native playback mode is selected.
+
+### Contributing
+
+#### AI/LLM
+
+Please see [Jellyfin's official LLM policy](https://jellyfin.org/docs/general/contributing/llm-policies).
+
+Any PR, issue or comment that is primarily LLM generated will be rejected outright on principle.
+
+Machine translation as a communication aid is allowed,
+but requires disclosure and that you also include the original language text.
+
+LLM generated code has a high probability of getting rejected.
+Relatively low effort AI contributions put an unsustainable
+and unproportional extra burden on project maintainers,
+which during the review process need to understand the suggested changes,
+and evaluate whether they are good changes, whether there are better alternatives and so on.
+
+LLM can be a decent tool to get up to speed and learn about the code-base,
+but is highly likely to generate subpar code.
+
+Fine for debugging, research and proof of concept,
+but not currently suitable for production code.
+
+#### Dev environment
+
+The project use the following tools:
+
+- [black](https://black.readthedocs.io/en/stable/) auto-formats the Python code (mandatory)
+- [flake8](https://flake8.pycqa.org/en/latest/) to highlight potential issues
+- [EditorConfig](https://editorconfig.org/) to ensure consistency in editor indentation and similar
+- [pytest](https://docs.pytest.org/en/stable/) for code regression testing
+- [pre-commit](https://pre-commit.com/) helps run the most important ones before commiting
+
+[Visual Studio Code](https://code.visualstudio.com/) is my current editor of choice,
+and as such the project is configured around this.
+A [devcontainer](https://containers.dev/) config is available for consistency's sake
+and quick setup, but I often don't use it myself.
+
+[mypy](https://mypy.readthedocs.io/en/stable/index.html) is planned,
+but there is a lot of work needed to properly implemet type-checking.

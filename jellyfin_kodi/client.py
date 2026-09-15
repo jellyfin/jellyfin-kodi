@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -10,7 +9,7 @@ import xbmcaddon
 import xbmcvfs
 
 from .helper import translate, window, settings, addon_id, dialog, LazyLogger
-from .helper.utils import create_id, translate_path
+from .helper.utils import create_id
 
 ##################################################################################################
 
@@ -80,7 +79,9 @@ def get_device_id(reset=False):
     if client_id:
         return client_id
 
-    directory = translate_path("special://profile/addon_data/plugin.video.jellyfin/")
+    directory = xbmcvfs.translatePath(
+        "special://profile/addon_data/plugin.video.jellyfin/"
+    )
 
     if not xbmcvfs.exists(directory):
         xbmcvfs.mkdir(directory)

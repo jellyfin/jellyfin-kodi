@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
@@ -9,15 +8,15 @@ import traceback
 
 import xbmc
 import xbmcaddon
+import xbmcvfs
 
 from .. import database
-from . import settings, kodi_version
-from .utils import translate_path
+from . import settings
 
 ##################################################################################################
 
 __addon__ = xbmcaddon.Addon(id="plugin.video.jellyfin")
-__pluginpath__ = translate_path(__addon__.getAddonInfo("path"))
+__pluginpath__ = xbmcvfs.translatePath(__addon__.getAddonInfo("path"))
 
 ##################################################################################################
 
@@ -27,6 +26,10 @@ def getLogger(name=None):
         return __LOGGER
 
     return __LOGGER.getChild(name)
+
+
+def getHandler():
+    return __HANDLER
 
 
 class LogHandler(logging.StreamHandler):
@@ -46,16 +49,29 @@ class LogHandler(logging.StreamHandler):
             if server.get("address"):
                 self.sensitive["Server"].append(server["address"].split("://", 1)[-1])
 
-        self.mask_info = settings("maskInfo.bool")
+        try:
+            value = settings("logLevel")
+        except RuntimeError:
+            value = "2"
+        self.setJellyfinLevel(value)
 
-        if kodi_version() > 18:
-            self.level = xbmc.LOGINFO
-        else:
-            self.level = xbmc.LOGNOTICE
+        try:
+            self.mask_info = settings("maskInfo.bool")
+        except RuntimeError:
+            self.mask_info = True
+
+        self.level = xbmc.LOGINFO
+
+    @classmethod
+    def setJellyfinLevel(cls, jellyfin_level):
+        try:
+            cls.jellyfin_level = int(jellyfin_level)
+        except (ValueError, TypeError):
+            cls.jellyfin_level = 2
 
     def emit(self, record):
 
-        if self._get_log_level(record.levelno):
+        if self._getLogLevel(record.levelno):
             string = self.format(record)
 
             if self.mask_info:
@@ -72,20 +88,14 @@ class LogHandler(logging.StreamHandler):
             xbmc.log(string, level=self.level)
 
     @classmethod
-    def _get_log_level(cls, level):
-
+    def _getLogLevel(cls, level):
         levels = {
             logging.ERROR: 0,
             logging.WARNING: 0,
             logging.INFO: 1,
             logging.DEBUG: 2,
         }
-        try:
-            log_level = int(settings("logLevel"))
-        except ValueError:
-            log_level = 2  # If getting settings fail, we probably want debug logging.
-
-        return log_level >= levels[level]
+        return cls.jellyfin_level >= levels[level]
 
 
 class MyFormatter(logging.Formatter):
@@ -128,5 +138,6 @@ __LOGGER = logging.getLogger("JELLYFIN")
 for handler in __LOGGER.handlers:
     __LOGGER.removeHandler(handler)
 
-__LOGGER.addHandler(LogHandler())
+__HANDLER = LogHandler()
+__LOGGER.addHandler(__HANDLER)
 __LOGGER.setLevel(logging.DEBUG)

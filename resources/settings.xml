@@ -431,6 +431,11 @@
 					<default>true</default>
 					<control type="toggle"/>
 				</setting>
+				<setting id="enableUpNext" type="boolean" label="33269" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
 				<setting id="skipIntroductionMode" type="integer" label="33252" help="" parent="mediaSegmentsEnabled">
 					<level>0</level>
 					<default>2</default>

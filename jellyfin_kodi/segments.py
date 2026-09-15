@@ -1,10 +1,16 @@
-from __future__ import division, absolute_import, print_function, unicode_literals
-
 import threading
 import xbmc
 from .helper import LazyLogger, settings
 
 LOG = LazyLogger(__name__)
+
+SEGMENT_TYPES_MAP = {
+    "Intro": "Introduction",
+    "Outro": "Credits",
+    "Recap": "Recap",
+    "Preview": "Preview",
+    "Commercial": "Commercial",
+}
 
 
 class SegmentChecker(threading.Thread):
@@ -20,8 +26,9 @@ class SegmentChecker(threading.Thread):
 
     def run(self):
         LOG.info("--->[ segment checker ]")
+        monitor = xbmc.Monitor()
 
-        while not self.stop_thread:
+        while not self.stop_thread and not monitor.abortRequested():
             if self.player.isPlaying() and settings("mediaSegmentsEnabled.bool"):
                 try:
                     current_file = self.player.get_playing_file()
