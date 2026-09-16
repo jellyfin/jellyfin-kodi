@@ -9,6 +9,7 @@ category-template: "### $TITLE"
 # Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
   - title: ":boom: Breaking changes"
+    semver-increment: major
     labels:
       - breaking
   - title: ":fire: Removed"
@@ -22,25 +23,34 @@ categories:
     labels:
       - deprecated
   - title: ":tada: New features and improvements"
+    exclusive: true
+    semver-increment: minor
     labels:
       - enhancement
       - feature
   - title: ":bug: Bug Fixes"
+    exclusive: true
+    semver-increment: patch
     labels:
       - bug
       - bugfix
       - regression
   - title: ":white_check_mark: Tests"
+    exclusive: true
     labels:
       - tests
   - title: ":gear: Code or Repo Maintenance"
+    exclusive: true
     labels:
       - chore
       - cleanup
   - title: ":memo: Documentation updates"
+    exclusive: true
     labels:
       - documentation
   - title: ":arrow_up: Dependency updates"
+    exclusive: true
+    collapse-after: 3
     labels:
       - dependencies # Default label used by Dependabot
   - title: ":construction_worker: CI & build changes"
@@ -59,24 +69,30 @@ autolabeler:
       - ".github/dependabot.yml"
     branch:
       - '/ci\/.+/'
+      - "/ci-.+/"
   - label: documentation
     files:
       - "*.md"
     branch:
       - '/docs?\/.+/'
+      - "/docs?-.+/"
   - label: bug
     branch:
       - '/fix\/.+/'
-    title:
-      - "/fix/i"
+      - "/fix-.+/"
   - label: chore
     branch:
       - '/chore\/.+/'
-    title:
-      - "/chore/i"
+      - "/chore-.+/"
   - label: feature
     branch:
       - '/feature\/.+/'
+      - "/feature-.+/"
+      - '/feat\/.+/'
+      - "/feat-.+/"
+  - label: skip-changelog
+    branch:
+      - "/release-.*/"
 
 version-resolver:
   major:
