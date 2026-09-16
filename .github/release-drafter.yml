@@ -9,58 +9,91 @@ category-template: "### $TITLE"
 # Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
   - title: ":boom: Breaking changes"
-    semver-increment: major
-    labels:
-      - breaking
+    when:
+      labels:
+        - breaking
   - title: ":fire: Removed"
-    labels:
-      - removed
+    when:
+      labels:
+        - removed
   - title: ":rewind: Reverted Changes"
-    labels:
-      - revert
-      - reverted
+    when:
+      labels:
+        - revert
+        - reverted
   - title: ":wastebasket: Deprecated"
-    labels:
-      - deprecated
+    when:
+      labels:
+        - deprecated
   - title: ":tada: New features and improvements"
     exclusive: true
-    semver-increment: minor
-    labels:
-      - enhancement
-      - feature
+    when:
+      labels:
+        - enhancement
+        - feature
   - title: ":bug: Bug Fixes"
     exclusive: true
     semver-increment: patch
-    labels:
-      - bug
-      - bugfix
-      - regression
+    when:
+      labels:
+        - bug
+        - bugfix
+        - regression
   - title: ":white_check_mark: Tests"
     exclusive: true
-    labels:
-      - tests
+    when:
+      labels:
+        - tests
   - title: ":gear: Code or Repo Maintenance"
     exclusive: true
-    labels:
-      - chore
-      - cleanup
+    when:
+      labels:
+        - chore
+        - cleanup
   - title: ":memo: Documentation updates"
     exclusive: true
-    labels:
-      - documentation
+    when:
+      labels:
+        - documentation
   - title: ":arrow_up: Dependency updates"
     exclusive: true
     collapse-after: 3
-    labels:
-      - dependencies # Default label used by Dependabot
+    when:
+      labels:
+        - dependencies # Default label used by Dependabot
   - title: ":construction_worker: CI & build changes"
-    labels:
-      - ci
-      - build
+    when:
+      labels:
+        - ci
+        - build
 
-exclude-labels:
-  - skip-changelog
-  - invalid
+  - type: pre-exclude
+    when:
+      labels:
+        - skip-changelog
+        - invalid
+
+  - type: version-resolver
+    semver-increment: major
+    when:
+      labels:
+        - major
+        - breaking
+  - type: version-resolver
+    semver-increment: minor
+    when:
+      labels:
+        - minor
+        - enhancement
+        - feature
+  - type: version-resolver
+    semver-increment: patch
+    when:
+      labels:
+        - patch
+        - bug
+        - bugfix
+        - regression
 
 autolabeler:
   - label: ci
@@ -68,46 +101,37 @@ autolabeler:
       - ".github/workflows/*"
       - ".github/dependabot.yml"
     branch:
-      - '/ci\/.+/'
-      - "/ci-.+/"
+      - '/^ci\/.+/'
+      - "/^ci-.+/"
   - label: documentation
     files:
       - "*.md"
     branch:
-      - '/docs?\/.+/'
-      - "/docs?-.+/"
+      - '/^docs?\/.+/'
+      - "/^docs?-.+/"
   - label: bug
     branch:
-      - '/fix\/.+/'
-      - "/fix-.+/"
+      - '/^fix\/.+/'
+      - "/^fix-.+/"
   - label: chore
     branch:
-      - '/chore\/.+/'
-      - "/chore-.+/"
+      - '/^chore\/.+/'
+      - "/^chore-.+/"
   - label: cleanup
     branch:
-      - '/clean([ -]?up)?\/.+/'
-      - "/chore([ -]?up)?-.+/"
+      - '/^clean([ -]?up)?\/.+/'
+      - "/^clean([ -]?up)?-.+/"
   - label: feature
     branch:
-      - '/feature\/.+/'
-      - "/feature-.+/"
-      - '/feat\/.+/'
-      - "/feat-.+/"
+      - '/^feature\/.+/'
+      - "/^feature-.+/"
+      - '/^feat\/.+/'
+      - "/^feat-.+/"
   - label: skip-changelog
     branch:
-      - "/release-.*/"
+      - "/^release-.*/"
 
 version-resolver:
-  major:
-    labels:
-      - "major"
-  minor:
-    labels:
-      - "minor"
-  patch:
-    labels:
-      - "patch"
   default: patch
 
 template: |
