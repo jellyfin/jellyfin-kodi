@@ -101,35 +101,35 @@ autolabeler:
       - ".github/workflows/*"
       - ".github/dependabot.yml"
     branch:
-      - '/ci\/.+/'
-      - "/ci-.+/"
+      - '/^ci\/.+/'
+      - "/^ci-.+/"
   - label: documentation
     files:
       - "*.md"
     branch:
-      - '/docs?\/.+/'
-      - "/docs?-.+/"
+      - '/^docs?\/.+/'
+      - "/^docs?-.+/"
   - label: bug
     branch:
-      - '/fix\/.+/'
-      - "/fix-.+/"
+      - '/^fix\/.+/'
+      - "/^fix-.+/"
   - label: chore
     branch:
-      - '/chore\/.+/'
-      - "/chore-.+/"
+      - '/^chore\/.+/'
+      - "/^chore-.+/"
   - label: cleanup
     branch:
-      - '/clean([ -]?up)?\/.+/'
-      - "/chore([ -]?up)?-.+/"
+      - '/^clean([ -]?up)?\/.+/'
+      - "/^clean([ -]?up)?-.+/"
   - label: feature
     branch:
-      - '/feature\/.+/'
-      - "/feature-.+/"
-      - '/feat\/.+/'
-      - "/feat-.+/"
+      - '/^feature\/.+/'
+      - "/^feature-.+/"
+      - '/^feat\/.+/'
+      - "/^feat-.+/"
   - label: skip-changelog
     branch:
-      - "/release-.*/"
+      - "/^release-.*/"
 
 version-resolver:
   default: patch
