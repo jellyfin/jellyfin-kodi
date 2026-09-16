@@ -84,6 +84,10 @@ autolabeler:
     branch:
       - '/chore\/.+/'
       - "/chore-.+/"
+  - label: cleanup
+    branch:
+      - '/clean([ -]?up)?\/.+/'
+      - "/chore([ -]?up)?-.+/"
   - label: feature
     branch:
       - '/feature\/.+/'
