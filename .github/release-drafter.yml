@@ -1,4 +1,6 @@
 # Configuration for Release Drafter: https://github.com/release-drafter/release-drafter
+$schema: https://raw.githubusercontent.com/release-drafter/release-drafter/refs/tags/v7.7.0/schema.json
+
 name-template: "Release $RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
 version-template: "$MAJOR.$MINOR.$PATCH"
