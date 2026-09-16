@@ -561,17 +561,14 @@ class Actions(object):
             listitem.setProperty("IsPlayable", "true")
             listitem.setProperty("IsFolder", "false")
 
-            # setResumePoint records the resume metadata (replaces the deprecated
-            # resumetime/totaltime properties). StartOffset is what actually makes
-            # the player begin at the resume position: it feeds the player start
-            # time (CApplication) and is honored for playlist/cast playback too.
+            # Kodi forces a resume whenever the listitem we hand back carries a resume
+            # point, even a zero one, which overrides the start position the caller
+            # asked for. Listings have no resumePlayback at all and still need the point.
             tag = listitem.getVideoInfoTag()
-            tag.setResumePoint(obj["Resume"] or 0, obj["Runtime"] or 0)
+            if item.get("resumePlayback", True):
+                tag.setResumePoint(obj["Resume"] or 0, obj["Runtime"] or 0)
             if obj["Resume"] and item.get("resumePlayback"):
                 listitem.setProperty("StartOffset", str(obj["Resume"]))
-            else:
-                listitem.setProperty("StartOffset", "0")
-                listitem.setProperty("StartPercent", "0")
 
             for track in obj["Streams"]["video"]:
                 listitem.addStreamInfo(
