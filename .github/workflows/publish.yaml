@@ -8,11 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update Draft
-        uses: release-drafter/release-drafter@v6.4.0
+        uses: release-drafter/release-drafter@v7.7.0
         with:
           publish: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
+          token: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
@@ -42,7 +41,7 @@ jobs:
         uses: burnett01/rsync-deployments@v9
         with:
           switches: -vrptz
-          path: '*.zip'
+          path: "*.zip"
           remote_path: /srv/incoming/kodi
           remote_host: ${{ secrets.REPO_HOST }}
           remote_user: ${{ secrets.REPO_USER }}
