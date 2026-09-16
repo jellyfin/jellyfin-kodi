@@ -53,7 +53,7 @@ jobs:
           host: ${{ secrets.REPO_HOST  }}
           username: ${{ secrets.REPO_USER }}
           key: ${{ secrets.REPO_KEY }}
-          script_stop: true
           script: |
+            set -e
             sudo /usr/local/bin/kodirepo add /srv/incoming/kodi/plugin.video.jellyfin+py3.zip --datadir /srv/repository/main/client/kodi/py3
             rm /srv/incoming/kodi/plugin.video.jellyfin+py3.zip
