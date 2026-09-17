@@ -6,8 +6,8 @@ tag-template: "v$RESOLVED_VERSION"
 version-template: "$MAJOR.$MINOR.$PATCH"
 category-template: "### $TITLE"
 
-change-authors-separator: ","
-change-authors-final-separator: ","
+change-authors-separator: ", "
+change-authors-final-separator: ", "
 
 # Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
