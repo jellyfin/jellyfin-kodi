@@ -11,7 +11,7 @@ ITEM_FORMAT = "+ {title} (#{issue}) {usernames}"
 OUTPUT_EMOJI = False
 
 ITEM_PATTERN: Pattern = re.compile(
-    r"^\s*(?P<old_listchar>[-*+])\s*(?P<title>.*?)\s*\(#(?P<issue>[0-9]+)\)\s*(?P<usernames>(\[?@[^\s]+(\]\([^)]+\))?[, ]*)*)$"
+    r"^\s*(?P<old_listchar>[-*+])\s*(?P<title>.*?)\s*\(#(?P<issue>[0-9]+)\)\s*(?P<usernames>(\[?@[^\s,]+(\]\([^)]+\))?[, ]*)*)$"
 )
 USERNAME_PATTERN: Pattern = re.compile(
     r"(?:(?:\[@(?P<linked_username>[^\s]+)(?:\]\((?P<link>[^)]+)\)))|(?:@(?P<username>[^\s]+)))(?:,|$)"
