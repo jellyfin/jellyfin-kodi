@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.8
+#!/usr/bin/env python
 
 import argparse
 import sys
@@ -7,11 +7,14 @@ from typing import Dict, List, Pattern, Union, TypedDict
 
 from emoji.core import emojize, demojize, replace_emoji
 
-ITEM_FORMAT = "+ {title} (#{issue}) @{username}"
+ITEM_FORMAT = "+ {title} (#{issue}) {usernames}"
 OUTPUT_EMOJI = False
 
 ITEM_PATTERN: Pattern = re.compile(
-    r"^\s*(?P<old_listchar>[-*+])\s*(?P<title>.*?)\s*\(#(?P<issue>[0-9]+)\)\s*@(?P<username>[^\s]*)$"
+    r"^\s*(?P<old_listchar>[-*+])\s*(?P<title>.*?)\s*\(#(?P<issue>[0-9]+)\)\s*(?P<usernames>(\[?@[^\s]+(\]\([^)]+\))?[, ]*)*)$"
+)
+USERNAME_PATTERN: Pattern = re.compile(
+    r"(?:(?:\[@(?P<linked_username>[^\s]+)(?:\]\((?P<link>[^)]+)\)))|(?:@(?P<username>[^\s]+)))(?:,|$)"
 )
 
 
@@ -67,6 +70,20 @@ def reformat(item_format: str, output_emoji: bool) -> None:
         print("-" * len(title))
 
         for item in section["items"]:
+            usernames = []
+            for match in USERNAME_PATTERN.finditer(item["usernames"]):
+                gd = match.groupdict()
+
+                if gd["linked_username"]:
+                    if output_emoji:
+                        usernames.append("[@{linked_username}]({link})".format(**gd))
+                    else:
+                        usernames.append("@{linked_username}".format(**gd))
+
+                elif gd["username"]:
+                    usernames.append("@{username}".format(**gd))
+
+            item["usernames"] = ", ".join(usernames)
             formatted_item = item_format.format(**item)
             if not output_emoji:
                 formatted_item = demojize(formatted_item)
