@@ -36,7 +36,7 @@ jobs:
           cat cl.md | python .github/tools/reformat_changelog.py --no-emoji >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          cat cl.md | python .github/tools/reformat_changelog.py --emoji --format='+ #{issue} by @{username}' >> $GITHUB_ENV
+          cat cl.md | python .github/tools/reformat_changelog.py --emoji --format='+ #{issue} by {usernames}' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           rm cl.md
 
