@@ -6,6 +6,9 @@ tag-template: "v$RESOLVED_VERSION"
 version-template: "$MAJOR.$MINOR.$PATCH"
 category-template: "### $TITLE"
 
+change-authors-separator: ","
+change-authors-final-separator: ","
+
 # Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
   - title: ":boom: Breaking changes"
@@ -57,11 +60,13 @@ categories:
         - documentation
   - title: ":arrow_up: Dependency updates"
     exclusive: true
-    collapse-after: 3
+    collapse-after: 0
     when:
       labels:
         - dependencies # Default label used by Dependabot
   - title: ":construction_worker: CI & build changes"
+    exclusive: true
+    collapse-after: 0
     when:
       labels:
         - ci
