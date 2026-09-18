@@ -1237,29 +1237,13 @@ msgctxt "#33256"
 msgid "Skip"
 msgstr "Skip"
 
-msgctxt "#33257"
-msgid "Skip intro?"
-msgstr "Skip intro?"
-
-msgctxt "#33258"
-msgid "Skip credits?"
-msgstr "Skip credits?"
-
 msgctxt "#33259"
 msgid "Commercial"
 msgstr "Commercial"
 
-msgctxt "#33260"
-msgid "Press SELECT to skip"
-msgstr "Press SELECT to skip"
-
 msgctxt "#33261"
 msgid "Off"
 msgstr "Off"
-
-msgctxt "#33262"
-msgid "Skip {0} ({1})"
-msgstr "Skip {0} ({1})"
 
 msgctxt "#33264"
 msgid "{0}m {1}s"
@@ -1269,21 +1253,14 @@ msgctxt "#33265"
 msgid "{0}s"
 msgstr "{0}s"
 
-msgctxt "#33266"
-msgid "Intro"
-msgstr "Intro"
-
-msgctxt "#33267"
-msgid "Outro"
-msgstr "Outro"
-
-msgctxt "#33268"
-msgid "Ad"
-msgstr "Ad"
-
 msgctxt "#33269"
 msgid "Enable UpNext add-on integration"
 msgstr "Enable UpNext add-on integration"
 
-#. 33263 is currently unused
-# Please use it next.
+#. Reserved: 33257, 33258 and 33260
+#. These are currently translated and
+#. reusing them would require removal
+#. across all language files.
+#. Unused: 33262, 33263, 33266, 33267, 33268
+#. Please use these next and remove from
+#. this list.

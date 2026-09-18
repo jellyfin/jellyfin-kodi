@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import xbmc
 import xbmcgui
 
 from ..helper import LazyLogger, translate
@@ -18,12 +19,26 @@ CLOSE_BUTTON = 3013
 
 # Localized short label IDs for known segment types
 SEGMENT_LABEL_IDS = {
-    "Introduction": 33266,
-    "Credits": 33267,
+    "Introduction": 33252,
+    "Credits": 33253,
     "Recap": 33254,
     "Preview": 33255,
-    "Commercial": 33268,
+    "Commercial": 33259,
 }
+
+
+def get_player_art():
+    for art in [
+        "thumb",
+        "landscape",
+        "fanart",
+    ]:
+        # Always returns a string.
+        artwork = xbmc.getInfoLabel("Player.Art(%s)" % art)
+        # actions.py uses a whitespace sentinel for missing artwork.
+        if artwork.strip():
+            return artwork
+    return ""
 
 
 class SkipDialog(xbmcgui.WindowXMLDialog):
@@ -61,31 +76,17 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
 
         segment_label = translate(SEGMENT_LABEL_IDS[segment_type])
 
-        # Set button label: "Skip Intro (1m 40s)"
-        button_label = translate(33262).format(segment_label, duration_text)
+        skip_detail = "{} • {}".format(segment_label, duration_text)
 
-        # Use setProperty so it's available to the skin
-        self.setProperty("skip_label", button_label)
+        # Use setProperty so detail text is available to the skin.
+        self.setProperty("skip_detail", skip_detail)
         self.setProperty("segment_type", segment_type or "")
         self.setProperty("duration", duration_text)
+        self.setProperty("segment_image", get_player_art())
 
         LOG.debug(
-            "SkipDialog: set_skip_info segment=%s, label=%s", segment_type, button_label
+            "SkipDialog: set_skip_info segment=%s, detail=%s", segment_type, skip_detail
         )
-
-    def onInit(self):
-        """Initialize the dialog controls."""
-        LOG.debug("SkipDialog.onInit called")
-
-        # Try to set button label directly as well
-        try:
-            button = self.getControl(SKIP_BUTTON)
-            label = self.getProperty("skip_label")
-            if label:
-                button.setLabel(label)
-                LOG.debug("SkipDialog.onInit: set button label to '%s'", label)
-        except Exception as e:
-            LOG.debug("Could not set skip button label: %s", e)
 
     def onAction(self, action):
         """Handle user actions."""
