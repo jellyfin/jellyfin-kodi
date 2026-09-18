@@ -114,7 +114,7 @@ autolabeler:
     branch:
       - '/^docs?\/.+/'
       - "/^docs?-.+/"
-  - label: bug
+  - label: bugfix
     branch:
       - '/^fix\/.+/'
       - "/^fix-.+/"
