@@ -16,34 +16,17 @@
 				<effect type="slide" start="0,0" end="400,0" time="300" tween="cubic" easing="in"/>
 			</animation>
 			<!-- Position bottom right -->
-			<left>1420</left>
-			<top>920</top>
+			<left>900</left>
+			<top>932</top>
 			<control type="group">
-				<width>460</width>
-				<height>80</height>
-				<!-- Background -->
-				<control type="image">
-					<left>0</left>
-					<top>0</top>
-					<width>460</width>
-					<height>80</height>
-					<texture colordiffuse="E6000000">white.png</texture>
-					<aspectratio>stretch</aspectratio>
-				</control>
-				<!-- Accent bar on left -->
-				<control type="image">
-					<left>0</left>
-					<top>0</top>
-					<width>4</width>
-					<height>80</height>
-					<texture colordiffuse="FF00A4DC">white.png</texture>
-				</control>
+				<width>980</width>
+				<height>56</height>
 				<!-- Button group -->
 				<control type="group">
-					<left>15</left>
-					<top>12</top>
 					<control type="grouplist">
 						<orientation>horizontal</orientation>
+                                                <align>right</align>
+                                                <width>980</width>
 						<height>56</height>
 						<itemgap>10</itemgap>
 						<!-- Skip button -->
