@@ -91,7 +91,17 @@ class Jellyfin(object):
 
     def construct(self):
 
+        # Imported here to avoid a circular import at module load time.
+        from ..client import get_info
+
         self.client[self.server_id] = JellyfinClient()
+
+        # Without an app identity the HTTP layer falls back to placeholder
+        # values in the Authorization header.
+        info = get_info()
+        self.client[self.server_id].config.app(
+            "Kodi", info["Version"], info["DeviceName"], info["DeviceId"]
+        )
 
         if self.server_id == "default":
             LOG.info("---[ START JELLYFINCLIENT ]---")
