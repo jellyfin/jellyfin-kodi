@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-24 15:24+0000\n"
-"Last-Translator: Maltavius <marten@voxberg.se>\n"
+"PO-Revision-Date: 2026-09-19 11:40+0000\n"
+"Last-Translator: SIMBA <pontusosterlindh@gmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv_se\n"
@@ -1265,3 +1265,31 @@ msgstr "Snabbkoppling är inte tillgängligt på denna server"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "Snabbkopplingen fick slut på tid. Vänligen försök igen."
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Hoppa över {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Intro"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Outro"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Ad"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Aktivera integrering av UpNext-tillägget"
