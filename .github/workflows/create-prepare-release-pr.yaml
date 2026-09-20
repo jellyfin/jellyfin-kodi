@@ -8,12 +8,11 @@ jobs:
     name: "Create Pump Version PR"
     runs-on: ubuntu-latest
     steps:
-
       - name: Update Draft
-        uses: release-drafter/release-drafter@v6.4.0
+        uses: release-drafter/release-drafter@v7.7.0
         id: draft
-        env:
-          GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
+        with:
+          token: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Setup YQ
         uses: chrisdickinson/setup-yq@latest
@@ -37,7 +36,7 @@ jobs:
           cat cl.md | python .github/tools/reformat_changelog.py --no-emoji >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          cat cl.md | python .github/tools/reformat_changelog.py --emoji --format='+ #{issue} by @{username}' >> $GITHUB_ENV
+          cat cl.md | python .github/tools/reformat_changelog.py --emoji --format='+ #{issue} by {usernames}' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           rm cl.md
 
@@ -65,7 +64,7 @@ jobs:
           token: ${{ secrets.JF_BOT_TOKEN }}
           pr_title: Prepare for release ${{ steps.draft.outputs.tag_name }}
           pr_source: prepare-${{ env.VERSION }}
-          pr_labels: 'release-prep,skip-changelog'
+          pr_labels: "release-prep,skip-changelog"
           pr_body: |
             :robot: This is a generated PR to bump the `release.yaml` version and update the changelog.
 

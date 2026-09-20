@@ -1,19 +1,142 @@
-_extends: jellyfin/jellyfin-meta-plugins
+# Configuration for Release Drafter: https://github.com/release-drafter/release-drafter
+$schema: https://raw.githubusercontent.com/release-drafter/release-drafter/refs/tags/v7.7.0/schema.json
 
 name-template: "Release $RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
 version-template: "$MAJOR.$MINOR.$PATCH"
+category-template: "### $TITLE"
+
+change-authors-separator: ", "
+change-authors-final-separator: ", "
+
+# Emoji reference: https://gitmoji.carloscuesta.me/
+categories:
+  - title: ":boom: Breaking changes"
+    when:
+      labels:
+        - breaking
+  - title: ":fire: Removed"
+    when:
+      labels:
+        - removed
+  - title: ":rewind: Reverted Changes"
+    when:
+      labels:
+        - revert
+        - reverted
+  - title: ":wastebasket: Deprecated"
+    when:
+      labels:
+        - deprecated
+  - title: ":tada: New features and improvements"
+    exclusive: true
+    when:
+      labels:
+        - enhancement
+        - feature
+  - title: ":bug: Bug Fixes"
+    exclusive: true
+    semver-increment: patch
+    when:
+      labels:
+        - bug
+        - bugfix
+        - regression
+  - title: ":white_check_mark: Tests"
+    exclusive: true
+    when:
+      labels:
+        - tests
+  - title: ":gear: Code or Repo Maintenance"
+    exclusive: true
+    when:
+      labels:
+        - chore
+        - cleanup
+  - title: ":memo: Documentation updates"
+    exclusive: true
+    when:
+      labels:
+        - documentation
+  - title: ":arrow_up: Dependency updates"
+    exclusive: true
+    collapse-after: 0
+    when:
+      labels:
+        - dependencies # Default label used by Dependabot
+  - title: ":construction_worker: CI & build changes"
+    exclusive: true
+    collapse-after: 0
+    when:
+      labels:
+        - ci
+        - build
+
+  - type: pre-exclude
+    when:
+      labels:
+        - skip-changelog
+        - invalid
+
+  - type: version-resolver
+    semver-increment: major
+    when:
+      labels:
+        - major
+        - breaking
+  - type: version-resolver
+    semver-increment: minor
+    when:
+      labels:
+        - minor
+        - enhancement
+        - feature
+  - type: version-resolver
+    semver-increment: patch
+    when:
+      labels:
+        - patch
+        - bug
+        - bugfix
+        - regression
+
+autolabeler:
+  - label: ci
+    files:
+      - ".github/workflows/*"
+      - ".github/dependabot.yml"
+    branch:
+      - '/^ci\/.+/'
+      - "/^ci-.+/"
+  - label: documentation
+    files:
+      - "*.md"
+    branch:
+      - '/^docs?\/.+/'
+      - "/^docs?-.+/"
+  - label: bugfix
+    branch:
+      - '/^fix\/.+/'
+      - "/^fix-.+/"
+  - label: chore
+    branch:
+      - '/^chore\/.+/'
+      - "/^chore-.+/"
+  - label: cleanup
+    branch:
+      - '/^clean([ -]?up)?\/.+/'
+      - "/^clean([ -]?up)?-.+/"
+  - label: feature
+    branch:
+      - '/^feature\/.+/'
+      - "/^feature-.+/"
+      - '/^feat\/.+/'
+      - "/^feat-.+/"
+  - label: skip-changelog
+    branch:
+      - "/^release-.*/"
 
 version-resolver:
-  major:
-    labels:
-      - 'major'
-  minor:
-    labels:
-      - 'minor'
-  patch:
-    labels:
-      - 'patch'
   default: patch
 
 template: |
