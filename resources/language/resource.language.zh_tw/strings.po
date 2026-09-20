@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-20 09:06+0000\n"
+"PO-Revision-Date: 2026-09-20 10:04+0000\n"
 "Last-Translator: \"李恩霆 (Lee,EN-TING)\" <timothylee0802@outlook.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant/>\n"
@@ -880,7 +880,7 @@ msgstr "啟用音訊/字幕選擇"
 
 msgctxt "#33163"
 msgid "Disabled/Media default"
-msgstr "已禁用/媒體預設"
+msgstr "已停用/媒體預設"
 
 msgctxt "#33161"
 msgid "Update password"
