@@ -15,7 +15,7 @@ ACTION_NAV_BACK = 92
 
 # Control IDs
 SKIP_BUTTON = 3012
-CLOSE_BUTTON = 3013
+DISMISS_BUTTON = 3013
 
 # Localized short label IDs for known segment types
 SEGMENT_LABEL_IDS = {
@@ -110,8 +110,8 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
             LOG.debug("Skip button clicked for %s", self._segment_type)
             self.skip_requested = True
             self.close()
-        elif control_id == CLOSE_BUTTON:
-            LOG.debug("Close button clicked")
+        elif control_id == DISMISS_BUTTON:
+            LOG.debug("Dismiss button clicked")
             self.cancel_requested = True
             self.close()
 

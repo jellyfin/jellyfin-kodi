@@ -125,9 +125,9 @@
 						<texturenofocus colordiffuse="33FFFFFF">white.png</texturenofocus>
 						<pulseonselect>no</pulseonselect>
 					</control>
-					<!-- Close button -->
+					<!-- Dismiss button -->
 					<control type="button" id="3013">
-						<label>$LOCALIZE[15067]</label>
+						<label>$ADDON[plugin.video.jellyfin 33262]</label>
 						<height>56</height>
 						<width>210</width>
 						<font>font13</font>

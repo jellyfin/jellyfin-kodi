@@ -1245,6 +1245,10 @@ msgctxt "#33261"
 msgid "Off"
 msgstr "Off"
 
+msgctxt "#33262"
+msgid "Dismiss"
+msgstr "Dismiss"
+
 msgctxt "#33264"
 msgid "{0}m {1}s"
 msgstr "{0}m {1}s"
@@ -1261,6 +1265,6 @@ msgstr "Enable UpNext add-on integration"
 #. These are currently translated and
 #. reusing them would require removal
 #. across all language files.
-#. Unused: 33262, 33263, 33266, 33267, 33268
+#. Unused: 33263, 33266, 33267, 33268
 #. Please use these next and remove from
 #. this list.
