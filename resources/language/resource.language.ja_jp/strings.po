@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-09-21 11:20+0000\n"
+"PO-Revision-Date: 2026-09-21 11:21+0000\n"
 "Last-Translator: INOUE Daisuke <inoue.daisuke@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
@@ -517,7 +517,7 @@ msgstr "Kodi のローカル データベースをリセットします。よろ
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
-msgstr "すべてのキャッシュされたアートワークを削除しますか？"
+msgstr "キャッシュしたアートワークをすべて削除しますか？"
 
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
