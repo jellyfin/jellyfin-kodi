@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-09-21 10:46+0000\n"
+"PO-Revision-Date: 2026-09-21 10:49+0000\n"
 "Last-Translator: INOUE Daisuke <inoue.daisuke@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
@@ -71,7 +71,7 @@ msgstr "映画に"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "高度なアートワークを有効にする(カバーアートなど)"
+msgstr "拡張アートワークを有効に (カバーアートなど)"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -79,11 +79,11 @@ msgstr "映像品質"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "最近追加されたTV番組"
+msgstr "最近追加したテレビ番組"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "進行中のTV番組"
+msgstr "進行中テレビ番組"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
@@ -940,7 +940,7 @@ msgstr "オーディオビットレート"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
-msgstr "ストリームの最大ビットレート"
+msgstr "最大ストリームビットレート"
 
 msgctxt "#33115"
 msgid "Transcode options"
@@ -952,11 +952,11 @@ msgstr "H265/HEVC RExtをトランスコード"
 
 msgctxt "#30161"
 msgid "Preferred video codec"
-msgstr "優先する動画コーデック"
+msgstr "優先動画コーデック"
 
 msgctxt "#30162"
 msgid "Preferred audio codec"
-msgstr "優先する音声コーデック"
+msgstr "優先音声コーデック"
 
 msgctxt "#30164"
 msgid "Audio max channels"
@@ -964,7 +964,7 @@ msgstr "最大音声チャンネル"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "焼付き字幕を許容"
+msgstr "焼きこみ字幕を許可"
 
 msgctxt "#33125"
 msgid "Enable remote control"
