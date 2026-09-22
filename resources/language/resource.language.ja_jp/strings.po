@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-09-22 00:30+0000\n"
+"PO-Revision-Date: 2026-09-22 04:27+0000\n"
 "Last-Translator: INOUE Daisuke <inoue.daisuke@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
@@ -802,11 +802,11 @@ msgstr "字幕のみ"
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr "音声・字幕の選択を有効にする"
+msgstr "音声・字幕の選択を有効に"
 
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
-msgstr "問題を避けるためこちらのJellyfin for Kodiのバージョンに更新してください "
+msgstr "エラーを避けるため、Jellyfin for Kodi を更新してください。最新バージョン : "
 
 msgctxt "#33162"
 msgid "Reset the music library?"
@@ -814,11 +814,11 @@ msgstr "音楽ライブラリーをリセットしますか？"
 
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
-msgstr "ログにセンシティブな情報を伏せます(Kodiのログには適応しません)"
+msgstr "ログのセンシティブな情報をマスクする (Kodi のログには適用しません)"
 
 msgctxt "#33165"
 msgid "Failed to create backup"
-msgstr "バックアップ作成が失敗しました"
+msgstr "バックアップ作成に失敗"
 
 msgctxt "#33166"
 msgid "(dynamic)"
@@ -826,7 +826,7 @@ msgstr "(動的)"
 
 msgctxt "#33167"
 msgid "Recently added"
-msgstr "最近追加された"
+msgstr "最近追加"
 
 msgctxt "#33168"
 msgid "Favourites"
@@ -834,7 +834,7 @@ msgstr "お気に入り"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr "視聴中"
+msgstr "再生途中"
 
 msgctxt "#33170"
 msgid "Unwatched"
@@ -842,18 +842,18 @@ msgstr "未視聴"
 
 msgctxt "#33171"
 msgid "By first letter"
-msgstr "頭文字で"
+msgstr "最初の文字で"
 
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
 msgstr ""
 "{number} 件の更新を保留しています。新しいコンテンツの表示までに少し時間がかか"
-"る場合があります。より早く更新するには Jellyfin アドオン > ライブラリー更新を"
+"る場合があります。より速く更新するには Jellyfin アドオン > ライブラリー更新を"
 "起動してください。このまま更新を進めますか？"
 
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
-msgstr "前の同期を無視しますか？推奨はしません。"
+msgstr "前の同期を無視しますか？　推奨しません。"
 
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
@@ -861,8 +861,9 @@ msgstr "ページング - ダウンロード スレッド (デフォルト: 3)"
 
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
-msgstr "ページングのヒント: 各ダウンロード スレッドは、同時に Jellyfin "
-"にアイテムの最大値を要求します。"
+msgstr ""
+"ページングのヒント: 各ダウンロード スレッドは、同時に Jellyfin に最大アイテム"
+"数を要求します。"
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
@@ -870,7 +871,7 @@ msgstr "以下の変更を適用するには、ライブラリーを更新また
 
 msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
-msgstr "更新数が次の値を超えた場合に進行状況バーを表示します"
+msgstr "プログレスバーを表示する更新数のしきい値 :"
 
 msgctxt "#33178"
 msgid "Processing updates"
@@ -878,15 +879,15 @@ msgstr "更新を処理中"
 
 msgctxt "#33179"
 msgid "Force transcode"
-msgstr "トランスコードを強制する"
+msgstr "トランスコードを強制"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr "Jellyfin for Kodiを再起動"
+msgstr "Jellyfin for Kodi を再起動"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
-msgstr "修正パッチを適用するため再起動しています"
+msgstr "パッチを適用するため再起動中"
 
 msgctxt "#33182"
 msgid "Play with cinema mode"
@@ -894,7 +895,7 @@ msgstr "シネマモードで再生"
 
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
-msgstr "「シネマモードで再生」を有効にする"
+msgstr "「シネマモードで再生」設定を有効に"
 
 msgctxt "#33184"
 msgid "Remove libraries"
@@ -902,16 +903,17 @@ msgstr "ライブラリーを削除"
 
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
-msgstr "再生中の同期を有効にする(遅延が発生する場合がある)"
+msgstr "再生中の同期を有効に (ラグ発生の可能性あり)"
 
 msgctxt "#33186"
 msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
-msgstr "Kodi Sync Queueは起動時の同期を早くできます。その他の同期はサーバーのイベント"
-"で処理されます。"
+msgstr ""
+"Kodi Sync Queue は起動時の同期を速くします。それ以外の同期はサーバーの"
+"イベントで処理をはじめます。"
 
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
-msgstr "こちらの変更を適用するためにJellyfin for Kodiを再起動しますか？"
+msgstr "この変更を適用するために Jellyfin for Kodi を再起動しますか？"
 
 msgctxt "#33193"
 msgid "Restarting..."
@@ -923,15 +925,15 @@ msgstr "ライブラリー管理"
 
 msgctxt "#33195"
 msgid "Enable Jellyfin for Kodi"
-msgstr "Jellyfin for Kodiを有効にする"
+msgstr "Jellyfin for Kodi を有効に"
 
 msgctxt "#33196"
 msgid "Advanced options"
-msgstr "高度な設定"
+msgstr "詳細設定"
 
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
-msgstr "同期中です。完了後に再度お試しください。"
+msgstr "すでに同期中です。完了まで待って、再度実行してください。"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
@@ -955,7 +957,7 @@ msgstr "トランスコード設定"
 
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
-msgstr "H265/HEVC RExtをトランスコード"
+msgstr "H265/HEVC RExt をトランスコード"
 
 msgctxt "#30161"
 msgid "Preferred video codec"
@@ -979,7 +981,7 @@ msgstr "リモコンを有効に"
 
 msgctxt "#33163"
 msgid "Disabled/Media default"
-msgstr "無効、またはメディアのデフォルト"
+msgstr "無効・メディアのデフォルト"
 
 msgctxt "#33161"
 msgid "Update password"
@@ -1023,11 +1025,11 @@ msgstr "ローカルパス"
 
 msgctxt "#33203"
 msgid "Manage path replacements"
-msgstr "パスの置換を管理する"
+msgstr "パスの置き換え管理"
 
 msgctxt "#33205"
 msgid "New Path Replacement"
-msgstr "新しいパスの置換"
+msgstr "新しいパスの置き換え"
 
 msgctxt "#30538"
 msgid "Max days in next episodes"
@@ -1072,3 +1074,227 @@ msgstr "720"
 msgctxt "#33212"
 msgid "1080"
 msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "無制限 [デフォルト]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [デフォルト]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "最大"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "セグメント スキップ"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "セグメント スキップを有効に"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "スキップモード"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "自動スキップ"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "スキップボタンを表示"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "つねに確認"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "イントロ"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "クレジット"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "これまでのあらすじ"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "次回予告"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "スキップ"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "イントロをスキップ？"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "クレジットをスキップ？"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "CM"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "SELECT を押してスキップ"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "オフ"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "{0}をスキップ ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0} 分 {1} 秒"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0} 秒"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "イントロ"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "エンディング"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "広告"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "UpNext アドオンとの連携を有効に"
