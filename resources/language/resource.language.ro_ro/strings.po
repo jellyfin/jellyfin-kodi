@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-06-23 13:56+0000\n"
-"Last-Translator: Vasile Cristian-Ilie <ilievasilec@gmail.com>\n"
+"PO-Revision-Date: 2026-09-27 20:36+0000\n"
+"Last-Translator: Acrotos <alexandrufly@gmail.com>\n"
 "Language-Team: Romanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ro/>\n"
 "Language: ro_ro\n"
@@ -1279,3 +1279,31 @@ msgstr "Conectarea rapidă nu este disponibilă pe acest server"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "Conectarea rapidă a expirat. Vă rugăm să încercați din nou."
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Sari {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Introducere"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Finalul"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Adaugare"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Activeaza integrarea suplimentelor UpNext"
