@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 14:32+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"PO-Revision-Date: 2026-10-01 12:47+0000\n"
+"Last-Translator: SecularSteve <fairfull.playing@gmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
 "Language: hr_hr\n"
@@ -1267,3 +1267,31 @@ msgstr "Brzo povezivanje nije dostupno na ovom poslužitelju"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "Brzo povezivanje je predugo trajalo. Pokušaj ponovo."
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Preskoči {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Uvod"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Zavod"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Reklama"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Omogućite integraciju UpNext dodataka"
