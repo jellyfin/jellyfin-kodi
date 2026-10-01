@@ -263,6 +263,10 @@ def reset_kodi():
             if name not in ["version", "videoversiontype"]:
                 videodb.cursor.execute("DELETE FROM " + name)
 
+            # Delete the custom videoversiontype entries
+            if name == "videoversiontype":
+                videodb.cursor.execute("DELETE from videoversiontype WHERE id > 40800 AND owner = 1")
+
     if settings("enableMusic.bool") or dialog("yesno", "{jellyfin}", translate(33162)):
 
         with Database("music") as musicdb:
@@ -419,6 +423,20 @@ def get_item(kodi_id, media):
     with Database("jellyfin") as jellyfindb:
         item = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_full_item_by_kodi_id(
             kodi_id, media
+        )
+
+        if not item:
+            LOG.debug("Not an jellyfin item")
+
+            return
+
+    return item
+
+def get_item_by_file_id(file_id, media):
+    """Get jellyfin item based on kodi file id and media."""
+    with Database("jellyfin") as jellyfindb:
+        item = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_item_by_file_id(
+            file_id, media
         )
 
         if not item:
