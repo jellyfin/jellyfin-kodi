@@ -421,7 +421,7 @@ class FullSync(object):
         for x in list(items):
             items.extend(obj.get_child(x[0]))
 
-        current = obj.item_ids
+        current = set(obj.item_ids)
 
         for x in items:
             if x[0] not in current and x[1] == "Series":
