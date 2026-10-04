@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-17 12:45+0000\n"
+"PO-Revision-Date: 2026-10-01 12:47+0000\n"
 "Last-Translator: SecularSteve <fairfull.playing@gmail.com>\n"
 "Language-Team: Serbian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sr/>\n"
@@ -1274,3 +1274,31 @@ msgstr "Чекање на одобрење..."
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
 msgstr "Брзоспој није доступан на овом серверу"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Прескочи {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Увод"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Завод"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Реклама"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Омогућите интеграцију додатака UpNext"

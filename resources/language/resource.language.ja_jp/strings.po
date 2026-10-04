@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-09-26 14:02+0000\n"
+"PO-Revision-Date: 2026-10-04 09:46+0000\n"
 "Last-Translator: INOUE Daisuke <inoue.daisuke@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
@@ -67,7 +67,7 @@ msgstr "エピソードに"
 
 msgctxt "#30116"
 msgid "For Movies"
-msgstr "映画に"
+msgstr "ムービーに"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
@@ -79,15 +79,15 @@ msgstr "映像品質"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "最近追加した TV 番組"
+msgstr "最近追加したテレビ番組"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "再生途中の TV 番組"
+msgstr "再生途中のテレビ番組"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr "最近追加した映画"
+msgstr "最近追加したムービー"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
@@ -95,7 +95,7 @@ msgstr "最近追加したエピソード"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr "再生途中の映画"
+msgstr "再生途中のムービー"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
@@ -107,7 +107,7 @@ msgstr "次のエピソード"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr "お気に入り映画"
+msgstr "お気に入りムービー"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
@@ -179,11 +179,11 @@ msgstr "未視聴のミュージックビデオ"
 
 msgctxt "#30302"
 msgid "Movies"
-msgstr "映画"
+msgstr "ムービー"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "TV 番組"
+msgstr "テレビ番組"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
@@ -271,7 +271,7 @@ msgstr "削除の確認をスキップする (自己責任で)"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr "つづきを再生する際に戻す秒数"
+msgstr "つづきを再生時に戻す秒数"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
@@ -453,8 +453,8 @@ msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
 "ご注意！ : ネイティブモードを選択すると、Jellyfin の機能のうち、シネマモード"
-"、直ストリーム・トランスコード設定、ペアレンタルアクセススケジュールなどを使"
-"えなくなります。"
+"、ダイレクトストリーム・トランスコード設定、ペアレンタルアクセススケジュール"
+"などを使えなくなります。"
 
 msgctxt "#33036"
 msgid "Add-on (default)"
@@ -596,7 +596,7 @@ msgstr ""
 
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
-msgstr "動画再生中は通知を遅延します (放送中TVを除く)。"
+msgstr "動画再生中は通知を遅延します (放送中テレビ番組を除く)。"
 
 msgctxt "#33109"
 msgid "Plugin"
@@ -771,7 +771,7 @@ msgstr ""
 
 msgctxt "#33152"
 msgid "Unable to locate TV Tunes in Kodi."
-msgstr "Kodi に TV チューナーが見つかりません。"
+msgstr "Kodi にテレビチューナーが見つかりません。"
 
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
@@ -867,7 +867,7 @@ msgstr ""
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
-msgstr "以下の変更を適用するには、ライブラリーを更新または修復してください。"
+msgstr "以下の変更を反映するには、ライブラリーを更新または修復してください。"
 
 msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
@@ -913,7 +913,7 @@ msgstr ""
 
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
-msgstr "この変更を適用するために Jellyfin for Kodi を再起動しますか？"
+msgstr "この変更を反映するために Jellyfin for Kodi を再起動しますか？"
 
 msgctxt "#33193"
 msgid "Restarting..."
@@ -945,7 +945,7 @@ msgstr "MPEG2 をトランスコード"
 
 msgctxt "#30163"
 msgid "Audio bitrate"
-msgstr "オーディオビットレート"
+msgstr "音声ビットレート"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
