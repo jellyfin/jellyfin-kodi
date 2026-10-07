@@ -14,4 +14,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Runs Autolabeler.
-      - uses: release-drafter/release-drafter/autolabeler@v7.7.0
+      - uses: release-drafter/release-drafter/autolabeler@v7.10.0
