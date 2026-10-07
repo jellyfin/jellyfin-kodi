@@ -45,7 +45,15 @@ class FullSync(object):
         self.__dict__ = self._shared_state
 
         if self.running:
-            dialog("ok", "{jellyfin}", translate(33197))
+            # A non-blocking notification is enough here: this collision can
+            # happen without a deliberate "wait for my dialog" click -- a
+            # double-press on a laggy remote, a companion app or the HTTP API
+            # firing the same action, or a skin widget auto-refreshing a
+            # library node can all land here while the user is doing something
+            # else entirely (e.g. watching a video). An "ok" dialog is modal,
+            # so it steals the window and can stall the in-progress sync's own
+            # GUI-dependent steps until someone notices and dismisses it.
+            dialog("notification", "{jellyfin}", translate(33197))
 
             raise Exception("Sync is already running.")
 
