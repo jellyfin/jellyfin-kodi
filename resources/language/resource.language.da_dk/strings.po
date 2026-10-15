@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-25 01:53+0000\n"
-"Last-Translator: Centauri <lillelau4@gmail.com>\n"
+"PO-Revision-Date: 2026-10-16 02:02+0000\n"
+"Last-Translator: z33k90 <z33k@protonmail.com>\n"
 "Language-Team: Danish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/da/>\n"
 "Language: da_dk\n"
@@ -1264,3 +1264,31 @@ msgstr "Tryk VÆLG for at springe over"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Fra"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Spring over {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Intro"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Outro"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Reklame"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Aktiver UpNext tilføjelse integration"
