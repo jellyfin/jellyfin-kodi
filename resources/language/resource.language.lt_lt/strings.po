@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-16 10:37+0000\n"
+"PO-Revision-Date: 2026-10-16 02:02+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -558,7 +558,7 @@ msgstr "Atnaujinti rinkinius"
 
 msgctxt "#33102"
 msgid "Resume the previous sync?"
-msgstr "Atnaujinti ankstesnę sinchronizaciją?"
+msgstr "Ar tęsti ankstesnį sinchronizavimą?"
 
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
