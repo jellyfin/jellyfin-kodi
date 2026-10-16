@@ -119,6 +119,49 @@ def test_set_audio_stream_maps_jellyfin_index_to_kodi_ordinal():
     player.setAudioStream.assert_called_once_with(1)
 
 
+def _audio_player(monkeypatch, current_audio_stream):
+    player = object.__new__(player_module.Player)
+    item = {
+        "KodiAudioStreamIndexes": [3, 4],
+        "SubsMapping": {},
+    }
+
+    player.get_playing_file = lambda: "movie"
+    player.get_file_info = lambda _: item
+    player.is_playing_file = lambda _: True
+    player.getAvailableAudioStreams = lambda: [{}, {}]
+    player.setAudioStream = Mock()
+
+    class JSONRPC:
+        def __init__(self, _):
+            pass
+
+        def execute(self, _):
+            return {"result": {"currentaudiostream": {"index": current_audio_stream}}}
+
+    monkeypatch.setattr(player_module, "JSONRPC", JSONRPC)
+
+    return player
+
+
+def test_set_audio_stream_skips_active_stream(monkeypatch):
+    # Selecting the stream that is already playing makes Kodi
+    # reopen the audio stream and seek, stalling playback.
+    player = _audio_player(monkeypatch, current_audio_stream=1)
+
+    player.set_audio_subs(audio=4)
+
+    player.setAudioStream.assert_not_called()
+
+
+def test_set_audio_stream_switches_other_stream(monkeypatch):
+    player = _audio_player(monkeypatch, current_audio_stream=0)
+
+    player.set_audio_subs(audio=4)
+
+    player.setAudioStream.assert_called_once_with(1)
+
+
 def test_playback_started_preserves_requested_audio_stream(monkeypatch):
     # Kodi may not report the current audio stream
     # immediately after playback starts. Preserve
