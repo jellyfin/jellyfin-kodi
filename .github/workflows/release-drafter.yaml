@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update Release Draft
-        uses: release-drafter/release-drafter@v7.7.0
+        uses: release-drafter/release-drafter@v7.10.0
         with:
           token: ${{ secrets.JF_BOT_TOKEN }}
