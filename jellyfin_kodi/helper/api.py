@@ -236,6 +236,11 @@ class API(object):
             elif self.item["Container"] == "bluray":
                 path = "%s/BDMV/index.bdmv" % path
 
+        # Loop through configured path replacements searching for a match prior to slash correction
+        for local_path in self.path_data.keys():
+            if local_path in path:
+                path = path.replace(local_path, self.path_data[local_path])
+
         path = path.replace("\\\\", "\\")
 
         if "\\" in path:
@@ -244,11 +249,6 @@ class API(object):
         if "://" in path:
             protocol = path.split("://")[0]
             path = path.replace(protocol, protocol.lower())
-
-        # Loop through configured path replacements searching for a match
-        for local_path in self.path_data.keys():
-            if local_path in path:
-                path = path.replace(local_path, self.path_data[local_path])
 
         return path
 
