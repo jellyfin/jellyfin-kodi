@@ -236,7 +236,7 @@ class API(object):
         return self.user_items("/%s/Intros" % item_id)
 
     def get_additional_parts(self, item_id):
-        return self.videos("/%s/AdditionalParts" % item_id)
+        return self.videos("/%s/AdditionalParts" % item_id).get("Items", [])
 
     def delete_item(self, item_id):
         return self.items("/%s" % item_id, "DELETE")

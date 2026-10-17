@@ -150,15 +150,17 @@ class API(object):
 
         return tracks
 
-    def get_runtime(self):
+    def get_runtime(self, additional_parts=None):
+        runtime = self.item.get("RunTimeTicks")
+        if runtime is None:
+            runtime = self.item.get("CumulativeRunTimeTicks")
 
-        try:
-            runtime = self.item["RunTimeTicks"] / 10000000.0
+        if additional_parts:
+            runtime = (runtime or 0) + sum(
+                part.get("RunTimeTicks") or 0 for part in additional_parts
+            )
 
-        except KeyError:
-            runtime = self.item.get("CumulativeRunTimeTicks", 0) / 10000000.0
-
-        return runtime
+        return (runtime or 0) / 10000000.0
 
     @classmethod
     def adjust_resume(cls, resume_seconds):
