@@ -108,6 +108,19 @@
 					</constraints>
 					<control type="spinner" format="string"/>
 				</setting>
+				<setting id="useVersions" type="boolean" label="30900" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="useExtras" type="boolean" label="30901" help="" parent="useVersions">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="enable" setting="useVersions">true</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
 			</group>
 			<group id="3" label="33175">
 				<setting id="limitIndex" type="integer" label="30515" help="">
