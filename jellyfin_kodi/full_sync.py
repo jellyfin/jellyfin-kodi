@@ -403,6 +403,8 @@ class FullSync(object):
                                     obj.episode(episode)
                     processed_ids.append(show["Id"])
 
+                processed_ids.extend(obj.item_ids)
+
         with self.video_database_locks() as (videodb, jellyfindb):
             obj = TVShows(
                 self.server, jellyfindb, videodb, self.direct_path, library, True
@@ -419,7 +421,7 @@ class FullSync(object):
         for x in list(items):
             items.extend(obj.get_child(x[0]))
 
-        current = obj.item_ids
+        current = set(obj.item_ids)
 
         for x in items:
             if x[0] not in current and x[1] == "Series":
