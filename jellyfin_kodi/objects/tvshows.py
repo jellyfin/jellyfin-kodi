@@ -19,7 +19,7 @@ from ..helper import (
     Local,
 )
 from ..helper import LazyLogger
-from ..helper.utils import find_library
+from ..helper.utils import convert_to_date, find_library
 from ..helper.exceptions import PathValidationException
 
 from .obj import Objects
@@ -403,7 +403,7 @@ class TVShows(KodiDb):
         self.get_episode_path_filename(obj)
 
         if obj["Premiere"]:
-            obj["Premiere"] = Local(obj["Premiere"]).split(".")[0].replace("T", " ")
+            obj["Premiere"] = convert_to_date(obj["Premiere"])
 
         if obj["Season"] is None:
             if obj["AbsoluteNumber"]:
