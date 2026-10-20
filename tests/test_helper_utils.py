@@ -84,6 +84,7 @@ def test_convert_to_local(utctime, timezone, expected):
     [
         ("2023-10-31T00:00:00.0000000Z", "2023-10-31"),
         ("2023-10-31T00:00:00-07:00", "2023-10-31"),
+        ("18081222 183000+0105", "1808-12-22"),
     ],
 )
 def test_convert_to_date(timestamp, expected):
