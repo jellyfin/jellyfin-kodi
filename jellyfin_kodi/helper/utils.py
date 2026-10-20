@@ -444,6 +444,17 @@ def convert_to_local(date, timezone=tz.tzlocal()):
         return str(date)
 
 
+def convert_to_date(date):
+    """Return the source calendar date without timezone conversion."""
+    try:
+        date = parser.parse(date) if isinstance(date, str) else date
+        return "{:04d}-{:02d}-{:02d}".format(date.year, date.month, date.day)
+    except Exception as error:
+        LOG.exception("Item date: {} --- {}".format(str(date), error))
+
+        return str(date)
+
+
 def has_attribute(obj, name):
     try:
         object.__getattribute__(obj, name)
