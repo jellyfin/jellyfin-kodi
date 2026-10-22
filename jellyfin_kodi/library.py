@@ -433,7 +433,7 @@ class Library(threading.Thread):
 
                 return True
 
-            if settings("SyncInstallRunDone.bool") and settings("kodiCompanion.bool"):
+            if self.fast_sync_enabled():
                 # None == Unknown
                 if self.server.jellyfin.check_companion_enabled() is not False:
 
@@ -470,12 +470,15 @@ class Library(threading.Thread):
 
         return False
 
+    def fast_sync_enabled(self):
+        return settings("SyncInstallRunDone.bool") and settings("kodiCompanion.bool")
+
     def periodic_fast_sync(self):
         """Run fast_sync every FAST_SYNC_INTERVAL seconds while idle."""
         if time.monotonic() - self.last_fast_sync < FAST_SYNC_INTERVAL:
             return
 
-        if not (settings("SyncInstallRunDone.bool") and settings("kodiCompanion.bool")):
+        if not self.fast_sync_enabled():
             return
 
         if self.pending_refresh or self.player.isPlayingVideo():
