@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-05 14:15+0000\n"
+"PO-Revision-Date: 2026-10-22 06:55+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -1215,7 +1215,7 @@ msgstr "Jäta vahele"
 
 msgctxt "#33257"
 msgid "Skip intro?"
-msgstr "Jäta sissejuhatus vahele?"
+msgstr "Kas jätta sissejuhatus vahele?"
 
 msgctxt "#33258"
 msgid "Skip credits?"
@@ -1252,3 +1252,31 @@ msgstr "Kiirühendus pole selles serveris saadaval"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "Kiirühendus aegus. Palun proovi uuesti."
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Sissejuhatus"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Jäta vahele {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Lõpuosa"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Reklaam"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Luba 'Järgmiseks' lisamooduli integratsioon"
