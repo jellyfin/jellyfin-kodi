@@ -110,12 +110,19 @@ class Actions(object):
         if settings("enableCinema.bool") and not item["resumePlayback"]:
             self._set_intros(item)
 
-        self.set_listitem(item, listitem, db_id, None)
+        additional_parts = None
+
+        if (item.get("PartCount") or 0) > 1:
+            additional_parts = self.api_client.get_additional_parts(item["Id"])
+
+        self.set_listitem(
+            item, listitem, db_id, None, additional_parts=additional_parts
+        )
         playutils.set_properties(item, item["PlaybackInfo"]["Method"], self.server_id)
         self.stack.append([item["PlaybackInfo"]["Path"], listitem])
 
-        if item.get("PartCount"):
-            self._set_additional_parts(item["Id"])
+        if additional_parts is not None:
+            self._set_additional_parts(additional_parts)
 
     def _set_intros(self, item):
         """if we have any play them when the movie/show is not being resumed."""
@@ -201,10 +208,9 @@ class Actions(object):
         # Start playback from position 0 (the first intro)
         player.play(playlist, startpos=0)
 
-    def _set_additional_parts(self, item_id):
+    def _set_additional_parts(self, parts):
         """Create listitems and add them to the stack of playlist."""
-        parts = self.api_client.get_additional_parts(item_id)
-        for part in parts["Items"]:
+        for part in parts:
 
             listitem = xbmcgui.ListItem()
             LOG.info("[ part/%s ] %s", part["Id"], part["Name"])
@@ -302,10 +308,24 @@ class Actions(object):
             playlist.add(path, listitem, index)
             index += 1
 
-    def set_listitem(self, item, listitem, db_id=None, seektime=None, intro=False):
+    def set_listitem(
+        self,
+        item,
+        listitem,
+        db_id=None,
+        seektime=None,
+        intro=False,
+        additional_parts=None,
+    ):
 
         objects = Objects()
         API = api.API(item, self.server)
+        if (
+            additional_parts is None
+            and item["Type"] == "Movie"
+            and (item.get("PartCount") or 0) > 1
+        ):
+            additional_parts = self.api_client.get_additional_parts(item["Id"])
 
         if item["Type"] in ("MusicArtist", "MusicAlbum", "Audio"):
 
@@ -338,7 +358,7 @@ class Actions(object):
             if intro:
                 obj["Artwork"]["Primary"] = "&KodiCinemaMode=true"
 
-            self.listitem_video(obj, listitem, item, seektime, intro)
+            self.listitem_video(obj, listitem, item, intro, additional_parts)
 
             if "PlaybackInfo" in item:
 
@@ -365,7 +385,7 @@ class Actions(object):
 
         listitem.setContentLookup(False)
 
-    def listitem_video(self, obj, listitem, item, seektime=None, intro=False):
+    def listitem_video(self, obj, listitem, item, intro=False, additional_parts=None):
         """Set listitem for video content. That also include streams."""
         API = api.API(item, self.server)
         is_video = obj["MediaType"] in ("Video", "Audio")  # audiobook
@@ -387,7 +407,11 @@ class Actions(object):
         obj["FileDate"] = "%s.%s.%s" % tuple(
             reversed(obj["DateAdded"].split("T")[0].split("-"))
         )
-        obj["Runtime"] = round(float((obj["Runtime"] or 0) / 10000000.0), 6)
+        obj["Runtime"] = (
+            API.get_runtime(additional_parts)
+            if item["Type"] == "Movie"
+            else round(float((obj["Runtime"] or 0) / 10000000.0), 6)
+        )
         obj["Resume"] = API.adjust_resume((obj["Resume"] or 0) / 10000000.0)
         obj["PlayCount"] = API.get_playcount(obj["Played"], obj["PlayCount"]) or 0
         obj["Overlay"] = 7 if obj["Played"] else 6
