@@ -289,10 +289,10 @@ class PlayUtils(object):
             if settings("videoPreferredCodec") == "AV1":
                 params += "&SegmentContainer=mp4"
 
-            video_type = "live" if source["Protocol"] == "LiveTV" else "master"
-            base = base.replace(
-                "stream" if "stream" in base else "master", video_type, 1
-            )
+            if source["Protocol"] != "LiveTV":
+                base = base.replace(
+                    "stream" if "stream" in base else "master", "master", 1
+                )
             self.info["Path"] = "%s%s?%s" % (self.info["ServerAddress"], base, params)
             self.info["Path"] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
         else:
