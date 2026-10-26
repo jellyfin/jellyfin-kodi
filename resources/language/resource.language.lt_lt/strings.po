@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-26 22:06+0000\n"
+"PO-Revision-Date: 2026-10-26 22:44+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -23,7 +23,7 @@ msgstr "Išplėstiniai"
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr "Epizodams"
+msgstr "Serijoms"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -31,7 +31,7 @@ msgstr "Filmams"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Žiūrimos TV Laidos"
+msgstr "Žiūrimi TV serialai"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
@@ -39,7 +39,7 @@ msgstr "Neseniai pridėti filmai"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "Neseniai pridėti epizodai"
+msgstr "Neseniai pridėtos serijos"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
@@ -143,7 +143,7 @@ msgstr "Leisti įdiegtus subtitrus"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Neseniai pridėtos TV Laidos"
+msgstr "Neseniai pridėti TV serialai"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
@@ -163,7 +163,7 @@ msgstr "Mėgstami Filmai"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Mėgstamos TV Laidos"
+msgstr "Mėgstami serialai"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
@@ -215,7 +215,7 @@ msgstr "Nežiūrėti Muzikos klipai"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "TV Laidos"
+msgstr "TV serialai"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
