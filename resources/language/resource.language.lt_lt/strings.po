@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-23 09:20+0000\n"
+"PO-Revision-Date: 2026-10-26 22:06+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -155,7 +155,7 @@ msgstr "Žiūrimi Epizodai"
 
 msgctxt "#30179"
 msgid "Next Episodes"
-msgstr "Kiti Epizodai"
+msgstr "Sekantys epizodai"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
