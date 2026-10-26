@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-10-26 06:06+0000\n"
+"PO-Revision-Date: 2026-10-26 07:19+0000\n"
 "Last-Translator: joyeson <merlinmayseo@gmail.com>\n"
 "Language-Team: English (United States) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/en_US/>\n"
@@ -337,17 +337,20 @@ msgctxt "#30545"
 msgid "Enable server offline"
 msgstr "Enable server offline"
 
+#, fuzzy
 msgctxt "#30547"
 msgid "Display message"
-msgstr "Display message"
+msgstr "asprcmsolutions.com"
 
+#, fuzzy
 msgctxt "#30602"
 msgid "Password"
-msgstr "Password"
+msgstr "ASP@rcm@10"
 
+#, fuzzy
 msgctxt "#30605"
 msgid "Sign in"
-msgstr "Sign in"
+msgstr "merlinmayseo@gmail.com"
 
 msgctxt "#30606"
 msgid "Cancel"
@@ -1183,4 +1186,4 @@ msgstr "96"
 
 msgctxt "#30618"
 msgid "Quick Connect"
-msgstr "https://asprcmsolutions.com/specialties/aba-billing-services/"
+msgstr "Quick Connect"
