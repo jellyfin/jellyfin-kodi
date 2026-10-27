@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-27 18:31+0000\n"
+"PO-Revision-Date: 2026-10-27 18:36+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -530,7 +530,7 @@ msgstr "Pašalinti naudotoją"
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
-msgstr "Pašalinti visus į talpyklą įrašytus kūrinius?"
+msgstr "Pašalinti visas į talpyklą įrašytas iliustracijas?"
 
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
@@ -780,7 +780,7 @@ msgstr "Pasirinkite norimas pašalinti bibliotekas"
 
 msgctxt "#33201"
 msgid "Max artwork resolution"
-msgstr "Maksimali atvaizdo raiška"
+msgstr "Didžiausia iliustracijos raiška"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
@@ -930,7 +930,7 @@ msgstr "Transkodavimo parinktys"
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
-msgstr "Suspausti atvaizdą (sumažėja kokybė)"
+msgstr "Suspausti iliustraciją (sumažėja kokybė)"
 
 msgctxt "#33125"
 msgid "Enable remote control"
@@ -997,7 +997,7 @@ msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
 msgstr ""
 "Puslapiavimo patarimas: Kiekviena atsisiuntimo gija tuo pačiu metu iš "
-"Jellyfin prašo jūsų maksimalios elementų vertės."
+"Jellyfin prašo jūsų didžiausios elementų vertės."
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
