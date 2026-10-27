@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-27 11:32+0000\n"
+"PO-Revision-Date: 2026-10-27 18:29+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -127,7 +127,7 @@ msgstr "Pasiūlyti ištrinti po atkūrimo"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
-msgstr "Maksimali transliacijos sparta"
+msgstr "Didžiausia transliacijos sparta"
 
 msgctxt "#30163"
 msgid "Audio bitrate"
@@ -135,7 +135,7 @@ msgstr "Garso kokybė"
 
 msgctxt "#30164"
 msgid "Audio max channels"
-msgstr "Maksimalus garso kanalų skaičius"
+msgstr "Didžiausias garso kanalų skaičius"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
@@ -391,7 +391,7 @@ msgstr "Keisti Jellyfin prisijungimo naudotoją"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
-msgstr "Puslapiuojama - maksimalus elementų skaičius (numatyta: 15)"
+msgstr "Puslapiuojama - didžiausias elementų skaičius (numatyta: 15)"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
