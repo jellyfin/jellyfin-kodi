@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-27 18:36+0000\n"
+"PO-Revision-Date: 2026-10-27 18:47+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -1045,7 +1045,7 @@ msgstr "1000.0 Mbps [numatytasis]"
 
 msgctxt "#33238"
 msgid "Maximum"
-msgstr "Maksimalus"
+msgstr "Didžiausias"
 
 msgctxt "#30618"
 msgid "Quick Connect"
