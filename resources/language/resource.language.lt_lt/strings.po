@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-27 18:29+0000\n"
+"PO-Revision-Date: 2026-10-27 18:31+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -891,7 +891,7 @@ msgstr "Nuotolinis kelias"
 
 msgctxt "#30538"
 msgid "Max days in next episodes"
-msgstr "Maksimalus dienų skaičius skyriuje Tolesnės serijos"
+msgstr "Didžiausias dienų skaičius skyriuje Tolesnės serijos"
 
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
