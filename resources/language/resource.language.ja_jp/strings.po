@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-10-25 11:49+0000\n"
+"PO-Revision-Date: 2026-10-28 12:54+0000\n"
 "Last-Translator: INOUE Daisuke <inoue.daisuke@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
@@ -67,11 +67,11 @@ msgstr "エピソードに"
 
 msgctxt "#30116"
 msgid "For Movies"
-msgstr "ムービーに"
+msgstr "映画"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "拡張アートワークを有効に (カバーアートなど)"
+msgstr "拡張アートワーク (カバーアートなど) を有効に"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -87,7 +87,7 @@ msgstr "再生途中のテレビ番組"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr "最近追加したムービー"
+msgstr "最近追加した映画"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
@@ -95,7 +95,7 @@ msgstr "最近追加したエピソード"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr "再生途中のムービー"
+msgstr "再生途中の映画"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
@@ -107,7 +107,7 @@ msgstr "次のエピソード"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr "お気に入りムービー"
+msgstr "お気に入り映画"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
@@ -179,7 +179,7 @@ msgstr "未視聴のミュージックビデオ"
 
 msgctxt "#30302"
 msgid "Movies"
-msgstr "ムービー"
+msgstr "映画"
 
 msgctxt "#30305"
 msgid "TV Shows"
@@ -395,7 +395,7 @@ msgstr "接続"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr "サーバーまたはポートがからです"
+msgstr "サーバーまたはポートが空です"
 
 msgctxt "#33000"
 msgid "Welcome"
@@ -1037,7 +1037,7 @@ msgstr "次のエピソードまでの最大日数"
 
 msgctxt "#30618"
 msgid "Quick Connect"
-msgstr "クイック接続"
+msgstr "クイックコネクト"
 
 msgctxt "#30619"
 msgid "Enter this code in the Jellyfin app or web interface:"
@@ -1049,11 +1049,11 @@ msgstr "認証を待っています..."
 
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
-msgstr "このサーバーではクイック接続は利用できません"
+msgstr "このサーバーではクイックコネクトは利用できません"
 
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
-msgstr "クイック接続のタイムアウト。再試行してください。"
+msgstr "クイックコネクトのタイムアウト。再試行してください。"
 
 msgctxt "#33208"
 msgid "360"
