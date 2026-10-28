@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-27 18:47+0000\n"
+"PO-Revision-Date: 2026-10-28 19:45+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -195,11 +195,11 @@ msgstr "Įjungti pradžios žinutę"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr "Neseniai pridėti Namų įrašai"
+msgstr "Neseniai pridėti namų įrašai"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr "Neseniai pridėtos Nuotraukos"
+msgstr "Neseniai pridėtos nuotraukos"
 
 msgctxt "#30254"
 msgid "Favourite Photos"
@@ -207,7 +207,7 @@ msgstr "Mėgstamos Nuotraukos"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
-msgstr "Neseniai pridėti Muzikos klipai"
+msgstr "Neseniai pridėti muzikiniai vaizdo įrašai"
 
 msgctxt "#30258"
 msgid "Unwatched Music videos"
@@ -452,7 +452,7 @@ msgstr "Atstatyti muzikos biblioteką?"
 
 msgctxt "#33167"
 msgid "Recently added"
-msgstr "Neseniai pridėta"
+msgstr "Neseniai pridėtai"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
