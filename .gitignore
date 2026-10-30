@@ -75,6 +75,11 @@ pyinstrument/
 # Now managed by templates
 addon.xml
 
+*.zip
+*.db
+*.db-shm
+*.db-wal
+
 *.log
 
 # Addon build files
