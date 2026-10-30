@@ -7,7 +7,11 @@ _PROVIDER_KEYS = {
     "tvshow": {"tvdb": "Tvdb", "imdb": "Imdb", "tmdb": "Tmdb"},
     "episode": {"tvdb": "Tvdb", "imdb": "Imdb", "tmdb": "Tmdb"},
 }
-_DEFAULT_PROVIDER = {"movie": "imdb", "tvshow": "tvdb", "episode": "tvdb"}
+_DEFAULT_PROVIDERS = {
+    "movie": ("imdb", "tmdb"),
+    "tvshow": ("tvdb", "tmdb", "imdb"),
+    "episode": ("tvdb", "tmdb", "imdb"),
+}
 _DEFAULT_ID_COLUMNS = {
     "movie": ("idMovie", "c09"),
     "tvshow": ("idShow", "c12"),
@@ -45,10 +49,34 @@ def _clean_provider_id(provider, value):
     return None
 
 
+def _sync_provider_id(cursor, media_type, media_id, provider, value, previous):
+    """Write one provider's ID and return its row ID."""
+    if value is None:
+        if previous is not None:
+            cursor.execute("DELETE FROM uniqueid WHERE uniqueid_id = ?", (previous[0],))
+        return None
+
+    if previous is None:
+        cursor.execute(
+            "INSERT INTO uniqueid(media_id, media_type, value, type) "
+            "VALUES (?, ?, ?, ?)",
+            (media_id, media_type, value, provider),
+        )
+        return cursor.lastrowid
+
+    if previous[1] != value:
+        cursor.execute(
+            "UPDATE uniqueid SET value = ? WHERE uniqueid_id = ?",
+            (value, previous[0]),
+        )
+    return previous[0]
+
+
 def sync_unique_ids(cursor, media_type, media_id, provider_ids):
     """Sync Jellyfin provider IDs to Kodi.
 
-    Keep IMDb as the default for movies and TVDb for shows and episodes.
+    Prefer IMDb for movies and TVDb for shows and episodes, then fall back
+    to the next available provider in _DEFAULT_PROVIDERS.
     Remove IDs no longer provided by Jellyfin, but leave existing IDs
     unchanged if the provider data is unavailable.
     Return the default ID row, if available.
@@ -88,29 +116,17 @@ def sync_unique_ids(cursor, media_type, media_id, provider_ids):
         else:
             existing[provider] = (unique_id, value)
 
+    synced = {}
     for provider, value in wanted.items():
-        previous = existing.get(provider)
-        if value is None:
-            if previous is not None:
-                cursor.execute(
-                    "DELETE FROM uniqueid WHERE uniqueid_id = ?", (previous[0],)
-                )
-            continue
-        if previous is None:
-            cursor.execute(
-                "INSERT INTO uniqueid(media_id, media_type, value, type) "
-                "VALUES (?, ?, ?, ?)",
-                (media_id, media_type, value, provider),
-            )
-            existing[provider] = (cursor.lastrowid, value)
-        elif previous[1] != value:
-            cursor.execute(
-                "UPDATE uniqueid SET value = ? WHERE uniqueid_id = ?",
-                (value, previous[0]),
-            )
+        synced[provider] = _sync_provider_id(
+            cursor, media_type, media_id, provider, value, existing.get(provider)
+        )
 
     for unique_id in duplicates:
         cursor.execute("DELETE FROM uniqueid WHERE uniqueid_id = ?", (unique_id,))
 
-    default_provider = _DEFAULT_PROVIDER[media_type]
-    return existing[default_provider][0] if wanted[default_provider] else None
+    # Kodi's normal library listings may only load the default ID.
+    for provider in _DEFAULT_PROVIDERS[media_type]:
+        if synced[provider] is not None:
+            return synced[provider]
+    return None
