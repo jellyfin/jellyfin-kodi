@@ -1,7 +1,7 @@
 # LLM and contribution policy
 
 Upstream policy lives in the
-[README's contributing section](https://github.com/jellyfin/jellyfin-kodi#contributing),
+[README's contributing section](https://github.com/jellyfin/jellyfin-kodi#contributing) (local copy at `README.md`, but might be out of date),
 which points to Jellyfin's official LLM policy. The essentials for agents:
 
 ## Human review is mandatory and multi-stage

@@ -8,7 +8,7 @@ Jellyfin HTTP API client and the sync/mapping logic built on top of it.
 ## Environment
 
 - Python 3.8+. Dev setup: `pip install -r requirements-dev.txt` (which pulls in
-  `requirements-test.txt`) or `uv pip sync requirements-dev.txt`.
+  `requirements-test.txt`) or `uv pip install -r requirements-dev.txt`.
 - Runtime is Kodi's bundled Python interpreter: **never add runtime
   dependencies** unless one is already shipped in Kodi's package repos.
   Test-only dependencies are also a maintainer decision — ask first.
@@ -19,7 +19,8 @@ Jellyfin HTTP API client and the sync/mapping logic built on top of it.
 ## Layout
 
 - `jellyfin_kodi/` — most of the source code.
-- Root `*.py` — addon entrypoints. Generated from `.build/template.xml` via
+- Root `*.py` — addon entrypoints (excluding `build.py`).
+- `addon.xml` is generated from `.build/template.xml` via
   `build.py` using `release.yaml`; do not hand-edit generated files.
 - `tests/` — pytest suite.
 - `.github/workflows/`, dependency files, build scripts — off limits (see

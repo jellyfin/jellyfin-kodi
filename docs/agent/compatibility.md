@@ -14,6 +14,7 @@ spec for the versions involved:
 
 - Latest stable: https://api.jellyfin.org/openapi/jellyfin-openapi-stable.json
 - Older versions: https://api.jellyfin.org/openapi/stable/
+- 10.9.0: https://api.jellyfin.org/openapi/stable/jellyfin-openapi-10.9.0.json
 
 Check **both ends** of the supported range when adding or changing API usage:
 what exists in 10.9, and what has changed or been removed by the current
@@ -46,7 +47,7 @@ would ideally be cleaned up over time, but:
 
 - Maintain a layer between raw HTTP and the code that uses it; all endpoint
   URLs, auth headers, serialization, and version differences belong in that
-  layer, not scattered through consumers.
+  layer, not scattered through consumers (where feasible).
 - Do not replace it with a generated OpenAPI client, and do not add new
   abstraction layers on top of the existing ones.
 

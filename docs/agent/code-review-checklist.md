@@ -21,7 +21,7 @@ fix it or explain why in your handoff to the human.
 ## Jellyfin / Kodi compatibility
 
 - [ ] API usage checked against the OpenAPI spec for **both** the support
-      floor (10.9) and current stable (see `docs/agent/compatibility.md`).
+      floor and current stable (see `docs/agent/compatibility.md`).
 - [ ] No new runtime dependencies (Kodi-bundled Python constraint); any new
       test dependency proposed to a maintainer first.
 - [ ] Version/feature gating centralized in utility functions, not scattered
