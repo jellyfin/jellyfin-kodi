@@ -1,7 +1,8 @@
 # LLM and contribution policy
 
 Upstream policy lives in the
-[README's contributing section](https://github.com/jellyfin/jellyfin-kodi#contributing) (local copy at `README.md`, but might be out of date),
+[README's contributing section](https://github.com/jellyfin/jellyfin-kodi#contributing)
+(local copy at `README.md`, but might be out of date),
 which points to Jellyfin's official LLM policy. The essentials for agents:
 
 ## Human review is mandatory and multi-stage
@@ -14,9 +15,16 @@ actually perform that review.
 
 ## Never write prose
 
-PR bodies, comments, commit descriptions, issue text and similar are written
-by the **human**, not the agent. Maintain review anything that reads as
-LLM-written; such PRs are usually rejected outright on principle.
+The **PR body itself must be human-written — never generated.** If a
+generated description is wanted, the maintainer will ask an agent for it
+themselves. The same applies to PR comments, issue text and similar. PRs
+perceived as LLM-written are usually rejected outright on principle.
+
+Automated commits are **not strictly forbidden**, but must be clearly marked
+as such: concise commit messages, with an `Assisted-by:` trailer at the
+bottom carrying model and agent information (user-agent style), for example:
+
+    Assisted-by: some-agent/1.2.3 (model: vendor-model-name)
 
 ## Scope discipline
 
@@ -33,10 +41,20 @@ LLM-written; such PRs are usually rejected outright on principle.
 ## Code quality expectations
 
 - **black is a hard rule**: every commit must be properly formatted.
-- flake8, mypy and SonarQube warnings require judgment — they may not always
-  warrant action, but do not ignore them without a reason you can articulate.
+- flake8 and mypy run locally from the dev requirements — review their
+  warnings and either address them or consciously dismiss them with a reason
+  you can articulate.
+- **SonarQube findings arrive as automated PR comments from CI**; there is
+  no local setup for them. Treat them as what they are: "this might need
+  extra scrutiny" — look at the flagged code and either fix it or be able to
+  say why not. Do not restructure code solely to silence a linter.
 - **Follow the existing code style.** Consistency with the codebase beats
   personal preference.
+- **Code should be self-descriptive; comments are the exception, not the
+  rule.** Never commit rubber-duck-debugging style comments narrating the
+  reasoning or discovery process. A comment earns its place only by
+  explaining something the code cannot (a non-obvious constraint, a
+  workaround and why it exists, a version incompatibility).
 - The **Zen of Python** (`python -c 'import this'`) provides guiding
   principles, but does not override other explicit rules.
 - **Maintainability — human ability to maintain the codebase — has a very

@@ -79,6 +79,10 @@ should be tested end-to-end through the boundaries above.
 - There are few existing recorded Jellyfin API responses. Build fixtures by
   hand from the **OpenAPI spec** for the target versions (see
   `docs/agent/compatibility.md`) rather than capturing from a live server.
+- Fixture key names must match the spec **exactly**: the codebase's silent
+  `dict.get(...) or default` fallbacks will happily mask a misspelled
+  fixture key — the code under test takes its defaults, the test passes,
+  and it has verified nothing.
 - Never include real API keys, tokens, or user data in fixtures.
 - Keep inline fixtures minimal. Larger request/response templates belong in
   a test assets directory (e.g. `tests/assets/`) rather than inline in the

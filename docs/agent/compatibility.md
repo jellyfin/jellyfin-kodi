@@ -2,10 +2,19 @@
 
 ## Jellyfin server
 
-Supported range: **10.9 through the current stable release** (12.4 at time of
-writing; check https://github.com/jellyfin/jellyfin/releases for the current
-one), plus the **kodi-sync-queue plugin**. Direct server upgrades may skip
-versions, so do not assume every intermediate release was ever deployed.
+Support is **tiered**:
+
+- **Primary targets** — the latest patch releases of the current and
+  previous stable major (right now **10.11.11 and 12.4**). These get the
+  most care and scrutiny; check the OpenAPI spec for both before adding or
+  changing API usage.
+- **Best-effort floor: 10.9.0.** Servers down to the floor should keep
+  working, but fixes for them are best-effort — do not let the floor block
+  clean implementations targeting the primary versions.
+
+The versioning dropped the `10.` prefix starting at 12. Direct server
+upgrades may skip versions, so do not assume every intermediate release was
+ever deployed. Also required: the **kodi-sync-queue plugin**.
 
 ### OpenAPI specifications
 
@@ -14,11 +23,13 @@ spec for the versions involved:
 
 - Latest stable: https://api.jellyfin.org/openapi/jellyfin-openapi-stable.json
 - Older versions: https://api.jellyfin.org/openapi/stable/
-- 10.9.0: https://api.jellyfin.org/openapi/stable/jellyfin-openapi-10.9.0.json
+- 10.11.11 (primary target, previous major): https://api.jellyfin.org/openapi/stable/jellyfin-openapi-10.11.11.json
+- 10.9.0 (best-effort floor): https://api.jellyfin.org/openapi/stable/jellyfin-openapi-10.9.0.json
 
-Check **both ends** of the supported range when adding or changing API usage:
-what exists in 10.9, and what has changed or been removed by the current
-stable release.
+Check **both primary targets** when adding or changing API usage: what
+exists in 10.11, and what has changed or been removed by the current stable
+release. When touching code paths that must honor the 10.9 floor, check that
+spec too.
 
 ### Deprecation caveat
 
@@ -31,13 +42,52 @@ part of deprecation-before-removal to steer new implementations away. So:
 - When fixing behavior against older servers, the spec may understate what is
   available — verify against real-world behavior before removing a fallback.
 
-### Feature gating vs version checks
+### Version checks (preferred over feature probing)
 
-Prefer **feature detection** over version comparisons where feasible. Where
-version-based gating is genuinely needed, follow the existing pattern used
-for Kodi versions: centralize the check in a utility function and gate only
-the minimal difference behind it — don't scatter raw version comparisons
-through business logic.
+Prefer explicit **server version checks** over feature detection. The client
+learns the server version during the initial connection (the auth flow
+already fetches it), so comparing a few numbers against known
+incompatibilities is essentially free, deterministic, and reliable. Probing
+endpoints to detect features costs extra requests and is ambiguous — a
+missing endpoint or key can mean "not supported", "renamed", "permission
+denied", or a bug, and side-effectful endpoints cannot be probed safely at
+all.
+
+- Centralize version comparisons in a utility function and compare against
+  the known-incompatibility list; gate only the minimal difference behind
+  them. Don't scatter raw version comparisons through business logic.
+- **Compare parsed numeric tuples, never version strings.** Lexicographic
+  comparison is wrong across the board: `"10.11" < "10.9"` as strings, and
+  the dropped `10.` prefix at 12 breaks naive parsing. Parse to `(major,
+  minor, patch)` once, in one place.
+- Version checks assume upstream Jellyfin. Forks or patched servers may
+  report odd versions — decide explicitly how unknown versions behave
+  (usually: newest known), rather than falling through accidentally.
+
+### Response-shape tolerance (`dict.get` fallbacks)
+
+The codebase relies heavily on `response.get("key") or default_value`. That
+is a **tolerance mechanism for additive server changes, not a versioning
+strategy** — fine for absorbing newly added optional fields, unreliable for
+anything else:
+
+- `or default_value` silently replaces **falsy** values (`0`, `False`, `""`,
+  `None`, `[]`) with the default. Media metadata is full of meaningful zeros
+  (run time ticks, index numbers, parent index numbers for specials). Prefer
+  `response.get("key", default)` or an explicit presence check whenever the
+  value can legitimately be falsy.
+- Silent fallbacks hide real incompatibilities: a renamed or missing key
+  yields subtly wrong synced data instead of an error, and nothing will
+  catch it. For version-dependent behavior, prefer an explicit version
+  check; if a fallback must stay, make it loud (log once) rather than
+  permanently silent.
+- When writing new code, consult the OpenAPI spec for whether a key is
+  genuinely optional. Use `.get(key, default)` for spec-optional keys; do not
+  blanket-copy the defensive style — every unconditional fallback destroys
+  the signal of which accesses are version-sensitive and which are typos.
+- See `docs/agent/testing.md`: silent fallbacks also mask broken test
+  fixtures — the code under test happily takes defaults when a fixture key
+  is misspelled, so the test passes while verifying nothing.
 
 ## The API client layer
 

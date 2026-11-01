@@ -6,11 +6,16 @@ fix it or explain why in your handoff to the human.
 ## Code
 
 - [ ] Every commit is **black-formatted** (hard rule).
-- [ ] flake8 / mypy / SonarQube warnings: reviewed, and either addressed or
-      consciously dismissed with a reason you can articulate.
+- [ ] flake8 / mypy warnings reviewed and addressed or consciously dismissed.
+      SonarQube findings usually arrive later as automated PR comments —
+      expect them as "might need extra scrutiny" prompts, not mandates.
 - [ ] No changes to unrelated code, build scripts, dependencies, or CI.
 - [ ] No refactoring or style-only changes mixed in — only what the task
       asked for.
+- [ ] No rubber-duck-debugging comments; comments only where the code cannot
+      speak for itself.
+- [ ] Automated commits are concise and marked with an `Assisted-by:`
+      trailer.
 - [ ] The diff is as small as it can be while doing the job; if it grew
       large, it should be split into staged PRs.
 - [ ] Existing code style followed; new code prioritizes human
@@ -20,11 +25,13 @@ fix it or explain why in your handoff to the human.
 
 ## Jellyfin / Kodi compatibility
 
-- [ ] API usage checked against the OpenAPI spec for **both** the support
-      floor and current stable (see `docs/agent/compatibility.md`).
+- [ ] API usage checked against the OpenAPI spec for **both primary targets**
+      (latest patch of current and previous stable major), and against the
+      10.9 best-effort floor where applicable (see
+      `docs/agent/compatibility.md`).
 - [ ] No new runtime dependencies (Kodi-bundled Python constraint); any new
       test dependency proposed to a maintainer first.
-- [ ] Version/feature gating centralized in utility functions, not scattered
+- [ ] Version checks centralized in utility functions, not scattered
       comparisons.
 
 ## Tests

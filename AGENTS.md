@@ -20,8 +20,8 @@ Jellyfin HTTP API client and the sync/mapping logic built on top of it.
 
 - `jellyfin_kodi/` — most of the source code.
 - Root `*.py` — addon entrypoints (excluding `build.py`).
-- `addon.xml` is generated from `.build/template.xml` via
-  `build.py` using `release.yaml`; do not hand-edit generated files.
+- `addon.xml` is generated from `.build/template.xml` via `build.py` using
+  `release.yaml`; do not hand-edit generated files.
 - `tests/` — pytest suite.
 - `.github/workflows/`, dependency files, build scripts — off limits (see
   `docs/agent/llm-policy.md`).
@@ -38,8 +38,9 @@ Jellyfin HTTP API client and the sync/mapping logic built on top of it.
 
 ## Hard rules (details in the linked docs)
 
-1. **PR descriptions, comments, and other prose are written by the human, not
-   the agent.** Review `docs/agent/llm-policy.md` before your first change.
+1. **The PR body is human-written, never generated.** Automated commits are
+   permitted but must be concise and clearly marked with an `Assisted-by:`
+   trailer (see `docs/agent/llm-policy.md`).
 2. **black-format every commit.** This is non-negotiable.
 3. **No refactoring unless explicitly asked.** Do not mix refactors into
    unrelated work — it adds review noise.
@@ -50,8 +51,11 @@ Jellyfin HTTP API client and the sync/mapping logic built on top of it.
 6. **Tests: mock only at project boundaries** (the Jellyfin HTTP layer and the
    Kodi Python API) — never monkeypatch internals to isolate mid-stack code.
    Tests are function-style, not class-style. See `docs/agent/testing.md`.
-7. **Jellyfin compatibility is 10.9 through current stable** (12.4 at time of
-   writing). Check the OpenAPI spec for the versions you target before
-   touching API code. See `docs/agent/compatibility.md`.
+7. **Jellyfin support is tiered**: primary focus on the latest patch of the
+   current and previous stable major (10.11.11 and 12.4 at time of writing;
+   the "10." prefix was dropped at 12), with a best-effort floor of 10.9.0.
+   Check the OpenAPI spec for the versions you target before touching API
+   code. See `docs/agent/compatibility.md`.
 8. **Follow the existing code style.** Zen of Python is a guiding principle,
-   but does not override explicit rules.
+   but does not override explicit rules. Code should be self-descriptive;
+   comments are the exception — no rubber-duck-debugging comments.
