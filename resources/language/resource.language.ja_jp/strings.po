@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-11-01 02:57+0000\n"
+"PO-Revision-Date: 2026-11-01 10:21+0000\n"
 "Last-Translator: INOUE Daisuke <inoue.daisuke@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
@@ -726,7 +726,7 @@ msgstr "サーバーを削除"
 
 msgctxt "#33142"
 msgid "Something went wrong. Try again later."
-msgstr "問題が起きました。時間をおいてまたお試しください。"
+msgstr "問題が起きました。時間をおいて、やり直してください。"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
@@ -934,7 +934,7 @@ msgstr "詳細設定"
 
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
-msgstr "すでに同期中です。完了まで待って、再度実行してください。"
+msgstr "すでに同期中です。完了まで待って、やり直してください。"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
@@ -1054,7 +1054,7 @@ msgstr "このサーバーではクイックコネクトは利用できません
 
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
-msgstr "クイックコネクトのタイムアウト。再試行してください。"
+msgstr "クイックコネクトのタイムアウト。やり直してください。"
 
 msgctxt "#33208"
 msgid "360"
