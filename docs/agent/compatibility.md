@@ -66,7 +66,7 @@ all.
 
 ### Response-shape tolerance (`dict.get` fallbacks)
 
-The codebase relies heavily on `response.get("key") or default_value`. That
+The codebase relies heavily on `response.get(key) or default_value`. That
 is a **tolerance mechanism for additive server changes, not a versioning
 strategy** — fine for absorbing newly added optional fields, unreliable for
 anything else:
@@ -74,7 +74,7 @@ anything else:
 - `or default_value` silently replaces **falsy** values (`0`, `False`, `""`,
   `None`, `[]`) with the default. Media metadata is full of meaningful zeros
   (run time ticks, index numbers, parent index numbers for specials). Prefer
-  `response.get("key", default)` or an explicit presence check whenever the
+  `response.get(key, default)` or an explicit presence check whenever the
   value can legitimately be falsy.
 - Silent fallbacks hide real incompatibilities: a renamed or missing key
   yields subtly wrong synced data instead of an error, and nothing will
@@ -85,6 +85,9 @@ anything else:
   genuinely optional. Use `.get(key, default)` for spec-optional keys; do not
   blanket-copy the defensive style — every unconditional fallback destroys
   the signal of which accesses are version-sensitive and which are typos.
+- API endpoints may return a default None value that might need a different
+  default. Verify that None values are stripped before relying on
+  `.get(key, default)`. See the util function `clean_none_dict_values()`.
 - See `docs/agent/testing.md`: silent fallbacks also mask broken test
   fixtures — the code under test happily takes defaults when a fixture key
   is misspelled, so the test passes while verifying nothing.
