@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-27 00:42+0000\n"
+"PO-Revision-Date: 2026-11-02 12:42+0000\n"
 "Last-Translator: ErikNLM <erik2980@pm.me>\n"
 "Language-Team: Danish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/da/>\n"
@@ -173,7 +173,7 @@ msgstr "Usete film"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Samlinger"
+msgstr "Box-sæt"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
