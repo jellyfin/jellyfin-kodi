@@ -96,8 +96,11 @@ class Movies(KodiDb):
         obj["Directors"] = " / ".join(obj["Directors"] or [])
         obj["Plot"] = API.get_overview(obj["Plot"])
         obj["Mpaa"] = API.get_mpaa(obj["Mpaa"])
+        additional_parts = None
+        if (item.get("PartCount") or 0) > 1:
+            additional_parts = self.server.jellyfin.get_additional_parts(item["Id"])
         obj["Resume"] = API.adjust_resume((obj["Resume"] or 0) / 10000000.0)
-        obj["Runtime"] = round(float((obj["Runtime"] or 0) / 10000000.0), 6)
+        obj["Runtime"] = API.get_runtime(additional_parts)
         obj["People"] = API.get_people_artwork(obj["People"])
         obj["DateAdded"] = Local(obj["DateAdded"]).split(".")[0].replace("T", " ")
         obj["DatePlayed"] = (
@@ -361,8 +364,11 @@ class Movies(KodiDb):
         except TypeError:
             return
 
+        additional_parts = None
+        if (item.get("PartCount") or 0) > 1:
+            additional_parts = self.server.jellyfin.get_additional_parts(item["Id"])
         obj["Resume"] = API.adjust_resume((obj["Resume"] or 0) / 10000000.0)
-        obj["Runtime"] = round(float((obj["Runtime"] or 0) / 10000000.0), 6)
+        obj["Runtime"] = API.get_runtime(additional_parts)
         obj["PlayCount"] = API.get_playcount(obj["Played"], obj["PlayCount"])
 
         if obj["DatePlayed"]:
