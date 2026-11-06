@@ -181,6 +181,10 @@ class HTTP(object):
                 try:
                     self.config.data["server-time"] = r.headers.get("Date")
                     elapsed = int(r.elapsed.total_seconds() * 1000)
+
+                    if not r.content:
+                        return
+
                     response = r.json()
                     LOG.debug("---<[ http ][%s ms]", elapsed)
                     LOG.debug(JsonDebugPrinter(response))
