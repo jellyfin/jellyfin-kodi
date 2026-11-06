@@ -30,6 +30,9 @@ indent_style = tab
 indent_size = 2
 indent_style = tab
 
+[*.md]
+indent_style = space
+indent_size = unset
 
 [README.md]
 indent_size = 2
