@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-06 09:08+0000\n"
+"PO-Revision-Date: 2026-11-06 09:15+0000\n"
 "Last-Translator: \"AntV@\" <d.iwowi.b@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
@@ -1266,3 +1266,23 @@ msgstr "Хуткае падключэнне"
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
 msgstr "Хуткае падключэнне недаступна на гэтым серверы"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Час чакання хуткага падключэння мінуў. Паспрабуйце зноў."
+
+msgctxt "#33262"
+msgid "Dismiss"
+msgstr "Адхіліць"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}хв {1}с"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}с"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Уключыць інтэграцыю з дадаткам UpNext"
