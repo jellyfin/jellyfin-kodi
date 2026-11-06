@@ -3,7 +3,7 @@
 import xbmc
 import xbmcgui
 
-from ..helper import LazyLogger, translate
+from ..helper import LazyLogger, settings, translate
 
 LOG = LazyLogger(__name__)
 
@@ -28,16 +28,18 @@ SEGMENT_LABEL_IDS = {
 
 
 def get_player_art():
-    for art in [
-        "thumb",
-        "landscape",
-        "fanart",
-    ]:
-        # Always returns a string.
-        artwork = xbmc.getInfoLabel("Player.Art(%s)" % art)
-        # actions.py uses a whitespace sentinel for missing artwork.
-        if artwork.strip():
-            return artwork
+    mode = int(settings("segmentImageSource") or 0)
+    if mode == 1:
+        for art in [
+            "thumb",
+            "landscape",
+            "fanart",
+        ]:
+            # Always returns a string.
+            artwork = xbmc.getInfoLabel("Player.Art(%s)" % art)
+            # actions.py uses a whitespace sentinel for missing artwork.
+            if artwork.strip():
+                return artwork
     return ""
 
 

@@ -1249,6 +1249,10 @@ msgctxt "#33262"
 msgid "Dismiss"
 msgstr "Dismiss"
 
+msgctxt "#33263"
+msgid "Segment dialog image source"
+msgstr "Segment dialog image source"
+
 msgctxt "#33264"
 msgid "{0}m {1}s"
 msgstr "{0}m {1}s"
@@ -1261,10 +1265,15 @@ msgctxt "#33269"
 msgid "Enable UpNext add-on integration"
 msgstr "Enable UpNext add-on integration"
 
-#. Reserved: 33257, 33258 and 33260
-#. These are currently translated and
-#. reusing them would require removal
-#. across all language files.
-#. Unused: 33263, 33266, 33267, 33268
-#. Please use these next and remove from
-#. this list.
+msgctxt "#33270"
+msgid "Current media"
+msgstr "Current media"
+
+# When adding a new string, check if
+# the id corresponding to a removed
+# string is available. It should be
+# absent from all translation files
+# as well.
+# Potential candidates for reuse are
+# 33257, 33258, 33260, 33266, 33267
+# 33268.
