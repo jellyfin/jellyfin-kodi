@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-06 12:34+0000\n"
+"PO-Revision-Date: 2026-11-06 12:48+0000\n"
 "Last-Translator: Anrijs Vitolins <salixzs@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
@@ -1241,3 +1241,39 @@ msgstr "Aizvērt"
 msgctxt "#33246"
 msgid "Segment Skipping"
 msgstr "Pārlēkšana pa segmentiem"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Iespējot pārlēkšanu pa segmentiem"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Izlaišanas režīms"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automātiskā izlaišana"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Rādīt pārlēkšanas pogu"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Iepazīstināšana"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Priekšskatījums"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Iespējot \"Nākamais\" papildinājuma integrāciju"
