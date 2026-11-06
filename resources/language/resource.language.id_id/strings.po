@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-10 07:47+0000\n"
-"Last-Translator: Lieba Natur Brilian <gingalibadeidara@gmail.com>\n"
+"PO-Revision-Date: 2026-11-04 16:48+0000\n"
+"Last-Translator: Weblate user 23555 <user-"
+"23555@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Indonesian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/id/>\n"
 "Language: id_id\n"
@@ -9,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 2026.11\n"
 
 msgctxt "#30606"
 msgid "Cancel"
@@ -1241,3 +1242,37 @@ msgstr "Lewati intro?"
 msgctxt "#33258"
 msgid "Skip credits?"
 msgstr "Lewati kredit?"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "koneksi cepat"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "masukan kode pada aplikasi jellyfin atau tampilan web"
+
+#, fuzzy
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "koneksi cepat tidak tersedia pada server ini"
+
+msgctxt "#33262"
+msgid "Dismiss"
+msgstr "Abaikan"
+
+#, fuzzy
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}d"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Menunggu otorisasi"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}d"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Aktifkan integrasi Add-on UpNext"

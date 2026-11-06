@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-09-21 13:30+0000\n"
+"PO-Revision-Date: 2026-11-02 12:42+0000\n"
 "Last-Translator: INOUE Daisuke <inoue.daisuke@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
@@ -31,7 +31,7 @@ msgstr "サーバー名"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr "HTTP プレイバックを強制"
+msgstr "HTTP 再生を強制"
 
 msgctxt "#30003"
 msgid "Login method"
@@ -63,15 +63,15 @@ msgstr "再生後に削除を提案"
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr "エピソードに"
+msgstr "エピソード"
 
 msgctxt "#30116"
 msgid "For Movies"
-msgstr "映画に"
+msgstr "映画"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "拡張アートワークを有効に (カバーアートなど)"
+msgstr "拡張アートワーク (カバーアートなど) を有効に"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -151,7 +151,7 @@ msgstr "最近追加したホームビデオ"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr "最近追加した写真"
+msgstr "最近追加したフォト"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
@@ -159,7 +159,7 @@ msgstr "お気に入りホームビデオ"
 
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr "お気に入り写真"
+msgstr "お気に入りフォト"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
@@ -263,7 +263,7 @@ msgstr "シネマモードを有効に"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr "予告を再生するか確認する"
+msgstr "予告編を再生するか確認する"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
@@ -271,7 +271,7 @@ msgstr "削除の確認をスキップする (自己責任で)"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr "つづきを再生する際に戻す秒数"
+msgstr "つづきを再生時に戻す秒数"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
@@ -339,7 +339,7 @@ msgstr "サーバーオフラインで有効に"
 
 msgctxt "#30547"
 msgid "Display message"
-msgstr "メッセージ表示秒数"
+msgstr "メッセージ表示"
 
 msgctxt "#30602"
 msgid "Password"
@@ -395,7 +395,7 @@ msgstr "接続"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr "サーバーまたはポートがからです"
+msgstr "サーバーまたはポートが空です"
 
 msgctxt "#33000"
 msgid "Welcome"
@@ -423,7 +423,7 @@ msgstr "Jellyfin からファイルを削除しますか？"
 
 msgctxt "#33016"
 msgid "Play trailers?"
-msgstr "予告を再生しますか？"
+msgstr "予告編を再生しますか？"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
@@ -453,8 +453,8 @@ msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
 "ご注意！ : ネイティブモードを選択すると、Jellyfin の機能のうち、シネマモード"
-"、直ストリーム・トランスコード設定、ペアレンタルアクセススケジュールなどを使"
-"えなくなります。"
+"、ダイレクトストリーム・トランスコード設定、ペアレンタルアクセススケジュール"
+"などを使えなくなります。"
 
 msgctxt "#33036"
 msgid "Add-on (default)"
@@ -569,8 +569,8 @@ msgstr ""
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
 msgstr ""
-"ネイティブ再生モードが有効で、音楽ライブラリも有効になっています。音楽の評価"
-"をインポートしますか？"
+"ネイティブ再生モードが有効で、音楽ライブラリーも有効になっています。音楽の評"
+"価をインポートしますか？"
 
 msgctxt "#33102"
 msgid "Resume the previous sync?"
@@ -578,7 +578,7 @@ msgstr "前回の同期を再開しますか？"
 
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
-msgstr "詳しくは、Github Wiki 「Create-and-restore-from-backup」をご確認ください。"
+msgstr "詳しくは、GitHub Wiki 「Create-and-restore-from-backup」をご確認ください。"
 
 msgctxt "#33105"
 msgid "Enable the context menu"
@@ -596,7 +596,7 @@ msgstr ""
 
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
-msgstr "動画再生中は通知を遅延します (放送中テレビを除く)。"
+msgstr "動画再生中は通知を延期します ( テレビ放送を除く)。"
 
 msgctxt "#33109"
 msgid "Plugin"
@@ -665,13 +665,13 @@ msgstr "人物を含む (遅くなります)"
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
-"最新のコンテンツの取得中に問題が発生しました。Kodi を再起動するまで、"
-"コンテンツの更新は反映されません。問題が解決されない場合は Jellyfin for Kodi "
-"フォーラムに Kodi のログを添付して報告してください。"
+"最新のコンテンツの取得に失敗しました。Kodi を再起動するまでコンテンツの更新は"
+"反映されません。問題が解決されない場合は Jellyfin for Kodi フォーラムに Kodi "
+"のログを添付して報告してください。"
 
 msgctxt "#33129"
 msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
-msgstr "Jellyfin アドオン > ライブラリーの追加でライブラリーの同期ができます。"
+msgstr "Jellyfin アドオン > ライブラリー追加で、ライブラリーを同期ができます。"
 
 msgctxt "#33130"
 msgid "Select the source"
@@ -687,7 +687,7 @@ msgstr "ライブラリー修復"
 
 msgctxt "#33133"
 msgid "Remove library from Kodi"
-msgstr "Kodi からライブラリを削除"
+msgstr "Kodi からライブラリーを削除"
 
 msgctxt "#33134"
 msgid "Add server"
@@ -699,7 +699,7 @@ msgstr "お使いの Kodi に対応したパッチを適用するため、Kodi �
 
 msgctxt "#33136"
 msgid "Update library"
-msgstr "ライブラリ更新"
+msgstr "ライブラリー更新"
 
 msgctxt "#33137"
 msgid "Enable Kodi Sync Queue"
@@ -708,9 +708,9 @@ msgstr "Kodi Sync Queue を有効に"
 msgctxt "#33138"
 msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr ""
-"Kodi Sync Queue サーバープラグインに頼らず、手動でライブラリを更新することも"
-"できます。アドオンを起動し、ライブラリ更新 (またはライブラリーごと) 。"
-"コンテンツを削除するには、ライブラリの修復が必要です。"
+"Kodi Sync Queue サーバープラグインに頼らず、手動でライブラリーを更新すること"
+"もできます。アドオンを起動し、ライブラリー更新 (またはライブラリーごと) 。"
+"コンテンツを削除するには、ライブラリーの修復が必要です。"
 
 msgctxt "#33139"
 msgid "Update libraries"
@@ -718,19 +718,19 @@ msgstr "ライブラリー更新"
 
 msgctxt "#33140"
 msgid "Repair libraries"
-msgstr "ライブラリ修復"
+msgstr "ライブラリー修復"
 
 msgctxt "#33141"
 msgid "Remove server"
-msgstr "サーバを削除"
+msgstr "サーバーを削除"
 
 msgctxt "#33142"
 msgid "Something went wrong. Try again later."
-msgstr "エラーが起きました。時間をおいてまたお試しください。"
+msgstr "問題が起きました。時間をおいて、やり直してください。"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
-msgstr "削除する設定を有効にする"
+msgstr "削除の選択肢を有効に"
 
 msgctxt "#33144"
 msgid "Removing library"
@@ -739,25 +739,26 @@ msgstr "ライブラリーを削除中"
 msgctxt "#33145"
 msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
 msgstr ""
-"Jellyfin サーバーの Samba (smb) 共有が Kodi インストールにアクセス可能である"
-"こと、およびサーバーにパス置換が構成されていることを確認してください。そうし"
-"ないと、Kodi がファイルを見つけられない可能性があります。"
+"Jellyfin サーバーの Samba (smb) 共有をお使いの Kodi からアクセス可能な設定に"
+"していること、そのうえでサーバーにパス置き換えを設定していることを確認してく"
+"ださい。適切に設定しなければ Kodi がファイルにたどりつけずに失敗するでしょう"
+"。"
 
 msgctxt "#33146"
 msgid "Unable to connect to Jellyfin."
-msgstr "Jellyfinと接続できません。"
+msgstr "Jellyfin と接続できません。"
 
 msgctxt "#33147"
 msgid "Your access to Jellyfin is restricted."
-msgstr "Jellyfinへのアクセスが制限されています。"
+msgstr "あなたは Jellyfin へのアクセスが制限されています。"
 
 msgctxt "#33148"
 msgid "Your access to this server is restricted."
-msgstr "こちらのサーバへのアクセスが制限されています。"
+msgstr "あなたは、このサーバへのアクセスが制限されています。"
 
 msgctxt "#33149"
 msgid "Unable to connect to this server."
-msgstr "こちらのサーバーに接続できません。"
+msgstr "このサーバーに接続できません。"
 
 msgctxt "#33150"
 msgid "Update server information"
@@ -765,27 +766,28 @@ msgstr "サーバー情報を更新"
 
 msgctxt "#33151"
 msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
-msgstr "以前にロードされたのと同じサーバーに再接続します。別のサーバーを使用する場合"
-"は、ユーザー情報を含むローカル データベースをリセットします。"
+msgstr ""
+"以前に読み込んだのと同じサーバーに再接続します。別のサーバーを使う場合は、"
+"ユーザー情報を含むローカル データベースをリセットしてください。"
 
 msgctxt "#33152"
 msgid "Unable to locate TV Tunes in Kodi."
-msgstr "KodiにTVチューナーが見つかりません。"
+msgstr "Kodi にテレビチューナーが見つかりません。"
 
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
-msgstr "KodiにJellyfinのテーマメディアが同期されました"
+msgstr "Jellyfin のテーマメディアを Kodi に 同期しました"
 
 msgctxt "#33154"
 msgid "Add libraries"
-msgstr "ライブラリーを追加"
+msgstr "ライブラリー追加"
 
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
 msgstr ""
-"現在のJellyfin for Kodiの修正パッチが破損しています。"
-"解決しなかったらJellyfin for Kodiの掲示板に報告してください。至急に修正パッチ"
-"を提供できるようにご協力ください。"
+"適用した Jellyfin for Kodi のパッチが破損しています。問題が解決しない場合は、"
+"Jellyfin for Kodi フォーラムに報告してください。なるべく早く修正できるようご"
+"協力ください。"
 
 msgctxt "#33156"
 msgid "A patch has been applied!"
@@ -801,23 +803,23 @@ msgstr "字幕のみ"
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr "音声・字幕の選択を有効にする"
+msgstr "音声・字幕の選択を有効に"
 
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
-msgstr "問題を避けるためこちらのJellyfin for Kodiのバージョンに更新してください "
+msgstr "エラーを避けるため、Jellyfin for Kodi を更新してください。最新バージョン : "
 
 msgctxt "#33162"
 msgid "Reset the music library?"
-msgstr "音楽ライブラリをリセットしますか？"
+msgstr "音楽ライブラリーをリセットしますか？"
 
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
-msgstr "ログにセンシティブな情報を伏せます(Kodiのログには適応しません)"
+msgstr "ログのセンシティブな情報をマスクする (Kodi のログには適用しません)"
 
 msgctxt "#33165"
 msgid "Failed to create backup"
-msgstr "バックアップ作成が失敗しました"
+msgstr "バックアップ作成に失敗"
 
 msgctxt "#33166"
 msgid "(dynamic)"
@@ -825,7 +827,7 @@ msgstr "(動的)"
 
 msgctxt "#33167"
 msgid "Recently added"
-msgstr "最近追加された"
+msgstr "最近追加"
 
 msgctxt "#33168"
 msgid "Favourites"
@@ -833,7 +835,7 @@ msgstr "お気に入り"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr "視聴中"
+msgstr "再生途中"
 
 msgctxt "#33170"
 msgid "Unwatched"
@@ -841,18 +843,18 @@ msgstr "未視聴"
 
 msgctxt "#33171"
 msgid "By first letter"
-msgstr "頭文字で"
+msgstr "最初の文字で"
 
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
 msgstr ""
-"{number} 件の更新が保留中です。新しいコンテンツが表示されるまでに少し時間がか"
-"かる場合があります。 Jellyfin アドオンを起動してライブラリを更新し、ライブラ"
-"リを更新する方が速い場合があります。とにかく続行しますか？"
+"{number} 件の更新を保留しています。新しいコンテンツの表示までに少し時間がかか"
+"る場合があります。より速く更新するには Jellyfin アドオン > ライブラリー更新を"
+"起動してください。このまま更新を進めますか？"
 
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
-msgstr "前の同期を無視しますか？推奨はしません。"
+msgstr "前の同期を無視しますか？　推奨しません。"
 
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
@@ -860,16 +862,17 @@ msgstr "ページング - ダウンロード スレッド (デフォルト: 3)"
 
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
-msgstr "ページングのヒント: 各ダウンロード スレッドは、同時に Jellyfin "
-"にアイテムの最大値を要求します。"
+msgstr ""
+"ページングのヒント: 各ダウンロード スレッドは、同時に Jellyfin に最大アイテム"
+"数を要求します。"
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
-msgstr "以下の更新を適用するためにはライブラリーを更新、または修復してください。"
+msgstr "以下の変更を反映するには、ライブラリーを更新または修復してください。"
 
 msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
-msgstr "更新数が次の値を超えた場合に進行状況バーを表示します"
+msgstr "プログレスバーを表示する更新数のしきい値 :"
 
 msgctxt "#33178"
 msgid "Processing updates"
@@ -877,15 +880,15 @@ msgstr "更新を処理中"
 
 msgctxt "#33179"
 msgid "Force transcode"
-msgstr "トランスコードを強制する"
+msgstr "トランスコードを強制"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr "Jellyfin for Kodiを再起動"
+msgstr "Jellyfin for Kodi を再起動"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
-msgstr "修正パッチを適用するため再起動しています"
+msgstr "パッチを適用するため再起動中"
 
 msgctxt "#33182"
 msgid "Play with cinema mode"
@@ -893,7 +896,7 @@ msgstr "シネマモードで再生"
 
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
-msgstr "「シネマモードで再生」を有効にする"
+msgstr "「シネマモードで再生」設定を有効に"
 
 msgctxt "#33184"
 msgid "Remove libraries"
@@ -901,16 +904,17 @@ msgstr "ライブラリーを削除"
 
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
-msgstr "再生中の同期を有効にする(遅延が発生する場合がある)"
+msgstr "再生中の同期を有効に (ラグ発生の可能性あり)"
 
 msgctxt "#33186"
 msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
-msgstr "Kodi Sync Queueは起動時の同期を早くできます。その他の同期はサーバーのイベント"
-"で処理されます。"
+msgstr ""
+"Kodi Sync Queue は起動時の同期を速くします。それ以外の同期はサーバーの"
+"イベントで処理をはじめます。"
 
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
-msgstr "こちらの変更を適用するためにJellyfin for Kodiを再起動しますか？"
+msgstr "この変更を反映するために Jellyfin for Kodi を再起動しますか？"
 
 msgctxt "#33193"
 msgid "Restarting..."
@@ -918,19 +922,19 @@ msgstr "再起動中…"
 
 msgctxt "#33194"
 msgid "Manage libraries"
-msgstr "ライブラリーを管理"
+msgstr "ライブラリー管理"
 
 msgctxt "#33195"
 msgid "Enable Jellyfin for Kodi"
-msgstr "Jellyfin for Kodiを有効にする"
+msgstr "Jellyfin for Kodi を有効に"
 
 msgctxt "#33196"
 msgid "Advanced options"
-msgstr "高度な設定"
+msgstr "詳細設定"
 
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
-msgstr "同期中です。完了後に再度お試しください。"
+msgstr "すでに同期中です。完了まで待って、やり直してください。"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
@@ -942,7 +946,7 @@ msgstr "MPEG2 をトランスコード"
 
 msgctxt "#30163"
 msgid "Audio bitrate"
-msgstr "オーディオビットレート"
+msgstr "音声ビットレート"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
@@ -954,11 +958,11 @@ msgstr "トランスコード設定"
 
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
-msgstr "H265/HEVC RExtをトランスコード"
+msgstr "H265/HEVC RExt をトランスコード"
 
 msgctxt "#30161"
 msgid "Preferred video codec"
-msgstr "優先動画コーデック"
+msgstr "優先映像コーデック"
 
 msgctxt "#30162"
 msgid "Preferred audio codec"
@@ -978,7 +982,7 @@ msgstr "リモコンを有効に"
 
 msgctxt "#33163"
 msgid "Disabled/Media default"
-msgstr "無効、またはメディアのデフォルト"
+msgstr "無効・メディアのデフォルト"
 
 msgctxt "#33161"
 msgid "Update password"
@@ -1022,11 +1026,11 @@ msgstr "ローカルパス"
 
 msgctxt "#33203"
 msgid "Manage path replacements"
-msgstr "パスの置換を管理する"
+msgstr "パスの置き換え管理"
 
 msgctxt "#33205"
 msgid "New Path Replacement"
-msgstr "新しいパスの置換"
+msgstr "新しいパスの置き換え"
 
 msgctxt "#30538"
 msgid "Max days in next episodes"
@@ -1034,7 +1038,7 @@ msgstr "次のエピソードまでの最大日数"
 
 msgctxt "#30618"
 msgid "Quick Connect"
-msgstr "クイック接続"
+msgstr "クイックコネクト"
 
 msgctxt "#30619"
 msgid "Enter this code in the Jellyfin app or web interface:"
@@ -1046,11 +1050,11 @@ msgstr "認証を待っています..."
 
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
-msgstr "このサーバーではクイック接続は利用できません"
+msgstr "このサーバーではクイックコネクトは利用できません"
 
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
-msgstr "クイック接続のタイムアウト。再試行してください。"
+msgstr "クイックコネクトのタイムアウト。やり直してください。"
 
 msgctxt "#33208"
 msgid "360"
@@ -1071,3 +1075,231 @@ msgstr "720"
 msgctxt "#33212"
 msgid "1080"
 msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "無制限 [デフォルト]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [デフォルト]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "最大"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "セグメント スキップ"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "セグメント スキップを有効に"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "スキップモード"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "自動スキップ"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "スキップボタンを表示"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "つねに確認"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "イントロ"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "クレジット"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "これまでのあらすじ"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "次回予告"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "スキップ"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "イントロをスキップ？"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "クレジットをスキップ？"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "CM"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "SELECT を押してスキップ"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "オフ"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "{0}をスキップ ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0} 分 {1} 秒"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0} 秒"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "イントロ"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "エンディング"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "広告"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "UpNext アドオンとの連携を有効に"
+
+msgctxt "#33262"
+msgid "Dismiss"
+msgstr "閉じる"

@@ -11,7 +11,12 @@ else:
 
 import pytest
 
-from jellyfin_kodi.helper.utils import values, convert_to_local, strip_credentials
+from jellyfin_kodi.helper.utils import (
+    convert_to_date,
+    convert_to_local,
+    strip_credentials,
+    values,
+)
 
 item1 = {"foo": 123, "bar": 456, "baz": 789}
 
@@ -72,6 +77,18 @@ def test_values(item, keys, expected):
 )
 def test_convert_to_local(utctime, timezone, expected):
     assert convert_to_local(utctime, timezone=zoneinfo.ZoneInfo(timezone)) == expected
+
+
+@pytest.mark.parametrize(
+    "timestamp,expected",
+    [
+        ("2023-10-31T00:00:00.0000000Z", "2023-10-31"),
+        ("2023-10-31T00:00:00-07:00", "2023-10-31"),
+        ("18081222 183000+0105", "1808-12-22"),
+    ],
+)
+def test_convert_to_date(timestamp, expected):
+    assert convert_to_date(timestamp) == expected
 
 
 @pytest.mark.parametrize(

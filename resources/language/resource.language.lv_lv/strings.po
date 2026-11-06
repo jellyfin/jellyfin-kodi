@@ -1,8 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-07 08:34+0000\n"
-"Last-Translator: \"ℂ𝕠𝕠𝕠𝕝 (𝕘𝕚𝕥𝕙𝕦𝕓.𝕔𝕠𝕞/ℂ𝕠𝕠𝕠𝕝)\" "
-"<translate.jellyfin.org@coool.id.lv>\n"
+"PO-Revision-Date: 2026-11-06 12:48+0000\n"
+"Last-Translator: Anrijs Vitolins <salixzs@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
 "Language: lv_lv\n"
@@ -11,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 2026.11\n"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
@@ -1234,3 +1233,47 @@ msgstr "Reklāma"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Izslēgts"
+
+msgctxt "#33262"
+msgid "Dismiss"
+msgstr "Aizvērt"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Pārlēkšana pa segmentiem"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Iespējot pārlēkšanu pa segmentiem"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Izlaišanas režīms"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automātiskā izlaišana"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Rādīt pārlēkšanas pogu"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Iepazīstināšana"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Priekšskatījums"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Iespējot \"Nākamais\" papildinājuma integrāciju"

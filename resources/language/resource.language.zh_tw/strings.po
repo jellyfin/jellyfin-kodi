@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-20 10:04+0000\n"
-"Last-Translator: \"李恩霆 (Lee,EN-TING)\" <timothylee0802@outlook.com>\n"
+"PO-Revision-Date: 2026-10-27 04:28+0000\n"
+"Last-Translator: Keith Chan <keithchan921@hotmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant/>\n"
 "Language: zh_tw\n"
@@ -210,7 +210,7 @@ msgstr "關於電影"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "啟用增強的藝術作品（即封面藝術）"
+msgstr "啟用增強型圖片 (例如封面圖片)"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
@@ -1225,3 +1225,19 @@ msgstr "此伺服器不支援快速連結"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "快速連結逾時，請再試一次。"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}分 {1}秒"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}秒"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "啟用 UpNext 插件集成"
+
+msgctxt "#33262"
+msgid "Dismiss"
+msgstr "退出"

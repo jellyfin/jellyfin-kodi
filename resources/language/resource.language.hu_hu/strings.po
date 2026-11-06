@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-14 11:38+0000\n"
+"PO-Revision-Date: 2026-09-28 07:59+0000\n"
 "Last-Translator: Szilki077 <szilkimappa@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
@@ -1276,3 +1276,31 @@ msgstr "Nyomja meg a KIVÁLASZTÁS gombot a kihagyáshoz"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Ki"
+
+msgctxt "#33262"
+msgid "Skip {0} ({1})"
+msgstr "Kihagyás: {0} ({1})"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}m {1}s"
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}s"
+
+msgctxt "#33266"
+msgid "Intro"
+msgstr "Bevezetés"
+
+msgctxt "#33267"
+msgid "Outro"
+msgstr "Levezetés"
+
+msgctxt "#33268"
+msgid "Ad"
+msgstr "Hirdetés"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Az UpNext kiegészítő integrációjának engedélyezése"
