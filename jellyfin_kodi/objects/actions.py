@@ -569,7 +569,7 @@ class Actions(object):
             tag.setResumePoint(obj["Resume"] or 0, obj["Runtime"] or 0)
             if obj["Resume"] and item.get("resumePlayback"):
                 listitem.setProperty("StartOffset", str(obj["Resume"]))
-            else:
+            elif item.get("resumePlayback") is False:
                 listitem.setProperty("StartOffset", "0")
                 listitem.setProperty("StartPercent", "0")
 
