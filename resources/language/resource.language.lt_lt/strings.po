@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-05 09:47+0000\n"
+"PO-Revision-Date: 2026-11-10 11:15+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -494,7 +494,7 @@ msgstr "Vietinis (tiesioginiai keliai)"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ignoruoti specialiuosius epizodus tolesnėse serijose"
+msgstr "Ignoruoti specialias serijas tolesnėse serijose"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
