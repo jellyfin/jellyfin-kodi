@@ -1,8 +1,11 @@
-from unittest.mock import Mock
+import queue
+import threading
+from unittest.mock import MagicMock, Mock
 
 import pytest
 
 import jellyfin_kodi.library as library_module
+from jellyfin_kodi.helper.exceptions import LibraryException
 
 SYNC_TIME = "Mon, 19 Oct 2026 14:48:05 GMT"
 OLD_WATERMARK = "2026-10-14T00:00:00Z"
@@ -161,3 +164,149 @@ def test_periodic_fast_sync_survives_errors(store):
 
     # Must not raise, or the library thread's run loop would exit
     lib.periodic_fast_sync()
+
+
+class FakeWriter:
+    def __init__(self, is_done=True, failed=False):
+        self.is_done = is_done
+        self.failed = failed
+
+
+def run_service(monkeypatch, lib, **writers):
+    """Run one pass of the real service() loop with the workers stubbed out."""
+    monkeypatch.setattr(library_module, "window", lambda *args, **kwargs: None)
+    monkeypatch.setattr(library_module, "get_screensaver", lambda: "screensaver")
+    monkeypatch.setattr(library_module, "set_screensaver", Mock())
+    monkeypatch.setattr(library_module.xbmc, "executebuiltin", Mock())
+    monkeypatch.setattr(library_module.xbmc, "getCondVisibility", lambda cond: False)
+    for worker in (
+        "worker_downloads",
+        "worker_sort",
+        "worker_updates",
+        "worker_userdata",
+        "worker_remove",
+        "worker_notify",
+    ):
+        setattr(lib, worker, Mock())
+    lib.download_threads = []
+    lib.writer_threads = {"updated": [], "userdata": [], "removed": []}
+    lib.writer_threads.update({name: list(w) for name, w in writers.items()})
+    lib.pending_refresh = True
+    lib.total_updates = 0
+    lib.progress_updates = None
+    lib.screensaver = None
+    lib.progress_display = 50
+    # service() is wrapped by @stop, which needs a running Kodi
+    library_module.Library.service.__wrapped__(lib)
+
+
+def test_service_commits_watermark_when_writers_finish(store, monkeypatch):
+    lib = make_library(queue_result(added=["new-episode"]))
+    assert lib.fast_sync()
+
+    run_service(monkeypatch, lib, updated=[FakeWriter()])
+
+    assert store["LastIncrementalSync"] == "2026-10-19T14:46:05Z"
+    assert lib.pending_sync_time is None
+    assert not lib.pending_refresh
+
+
+@pytest.mark.parametrize("name", ["updated", "userdata", "removed"])
+def test_service_keeps_watermark_while_writer_is_running(store, monkeypatch, name):
+    lib = make_library(queue_result(added=["new-episode"], removed=["old-episode"]))
+    assert lib.fast_sync()
+
+    run_service(monkeypatch, lib, **{name: [FakeWriter(is_done=False)]})
+
+    assert store["LastIncrementalSync"] == OLD_WATERMARK
+    assert lib.pending_sync_time is not None
+    assert lib.pending_refresh
+
+
+@pytest.mark.parametrize("name", ["updated", "userdata", "removed"])
+def test_service_keeps_watermark_when_a_writer_failed(store, monkeypatch, name):
+    lib = make_library(queue_result(added=["new-episode"], removed=["old-episode"]))
+    assert lib.fast_sync()
+
+    # One writer failed on an item, another finished cleanly
+    writers = {"updated": [FakeWriter()]}
+    writers[name] = writers.get(name, []) + [FakeWriter(failed=True)]
+    run_service(monkeypatch, lib, **writers)
+
+    assert store["LastIncrementalSync"] == OLD_WATERMARK
+    assert lib.pending_sync_time is None
+    assert not lib.pending_refresh
+
+
+def test_failed_writer_does_not_block_the_next_fast_sync(store, monkeypatch):
+    lib = make_library(queue_result(added=["new-episode"]))
+    assert lib.fast_sync()
+    run_service(monkeypatch, lib, updated=[FakeWriter(failed=True)])
+    assert store["LastIncrementalSync"] == OLD_WATERMARK
+
+    assert lib.fast_sync()
+    run_service(monkeypatch, lib, updated=[FakeWriter()])
+
+    assert store["LastIncrementalSync"] == "2026-10-19T14:46:05Z"
+
+
+def mock_database(monkeypatch):
+    """Replace the Kodi database with a mock that opens as the video database."""
+    database = MagicMock()
+    database.return_value.__enter__.return_value.db_file = "video"
+    monkeypatch.setattr(library_module, "Database", database)
+    monkeypatch.setattr(library_module, "window", lambda *args, **kwargs: None)
+
+
+@pytest.mark.parametrize(
+    "worker_name,item,target",
+    [
+        ("UpdateWorker", {"Type": "Movie", "Name": "x"}, "movie"),
+        ("UserDataWorker", {"Type": "Movie"}, "userdata"),
+        ("RemovedWorker", {"Type": "Movie", "Id": "x"}, "remove"),
+    ],
+)
+@pytest.mark.parametrize("error", [RuntimeError("boom"), LibraryException("bad")])
+def test_writer_marks_failed_when_an_item_raises(
+    monkeypatch, worker_name, item, target, error
+):
+    mock_database(monkeypatch)
+    handler = Mock(side_effect=error)
+    for cls in ("Movies", "TVShows", "MusicVideos", "Music"):
+        monkeypatch.setattr(library_module, cls, Mock())
+    monkeypatch.setattr(
+        library_module, "Movies", Mock(return_value=Mock(**{target: handler}))
+    )
+    work = queue.Queue()
+    work.put(item)
+    kwargs = {"direct_path": False, "server": Mock()}
+    if worker_name == "UpdateWorker":
+        worker = library_module.UpdateWorker(
+            work, queue.Queue(), threading.Lock(), "video", **kwargs
+        )
+    else:
+        worker_class = getattr(library_module, worker_name)
+        worker = worker_class(work, threading.Lock(), "video", **kwargs)
+
+    worker.run()
+
+    handler.assert_called_once()
+    assert worker.failed
+    assert worker.is_done
+
+
+def test_writer_not_marked_failed_on_success(monkeypatch):
+    mock_database(monkeypatch)
+    movies = Mock()
+    monkeypatch.setattr(library_module, "Movies", Mock(return_value=movies))
+    monkeypatch.setattr(library_module, "TVShows", Mock())
+    work = queue.Queue()
+    work.put({"Type": "Movie", "Id": "x"})
+    worker = library_module.RemovedWorker(
+        work, threading.Lock(), "video", server=Mock(), direct_path=False
+    )
+
+    worker.run()
+
+    movies.remove.assert_called_once_with("x")
+    assert not worker.failed

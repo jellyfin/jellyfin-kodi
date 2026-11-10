@@ -34,6 +34,7 @@ DTHREADS = int(settings("limitThreads") or 3)
 TARGET_DB_VERSION = 1
 # Poll the sync queue even while the websocket is connected: a socket can go
 # silent without closing, and any change it drops is otherwise never fetched.
+# In seconds (10 minutes).
 FAST_SYNC_INTERVAL = 600
 
 ##################################################################################################
@@ -51,6 +52,9 @@ class Library(threading.Thread):
     # Server time of the last fast sync, saved as LastIncrementalSync once the
     # updates it queued are written. Websocket updates never move the watermark.
     pending_sync_time = None
+    # Set when a writer thread failed on an item, so the watermark stays put and
+    # the next fast sync fetches that item again
+    sync_failed = False
     last_fast_sync = 0.0
 
     def __init__(self, monitor):
@@ -152,15 +156,13 @@ class Library(threading.Thread):
         self.download_threads = [
             thread for thread in self.download_threads if not thread.is_done
         ]
-        self.writer_threads["updated"] = [
-            thread for thread in self.writer_threads["updated"] if not thread.is_done
-        ]
-        self.writer_threads["userdata"] = [
-            thread for thread in self.writer_threads["userdata"] if not thread.is_done
-        ]
-        self.writer_threads["removed"] = [
-            thread for thread in self.writer_threads["removed"] if not thread.is_done
-        ]
+        for name, threads in self.writer_threads.items():
+            self.sync_failed = self.sync_failed or any(
+                thread.is_done and thread.failed for thread in threads
+            )
+            self.writer_threads[name] = [
+                thread for thread in threads if not thread.is_done
+            ]
 
         if (
             not self.player.isPlayingVideo()
@@ -573,8 +575,12 @@ class Library(threading.Thread):
     def commit_pending_sync(self):
         """Advance LastIncrementalSync to the last fast sync, if one is pending."""
         if self.pending_sync_time is not None:
-            self.save_last_sync(self.pending_sync_time)
+            if self.sync_failed:
+                LOG.warning("Writing updates failed, keeping the last sync time")
+            else:
+                self.save_last_sync(self.pending_sync_time)
             self.pending_sync_time = None
+        self.sync_failed = False
 
     def save_last_sync(self, raw_time=None):
         _raw_time = raw_time or self.server.config.data["server-time"]
@@ -745,6 +751,7 @@ class Library(threading.Thread):
 class UpdateWorker(threading.Thread):
 
     is_done = False
+    failed = False
 
     def __init__(
         self, queue, notify, lock, database, server=None, direct_path=None, *args
@@ -813,10 +820,12 @@ class UpdateWorker(threading.Thread):
                     # TODO: Fixme; We're catching all LibraryException here,
                     # but silently ignoring any that isn't the exit condition.
                     # Investigate what would be appropriate behavior here.
+                    self.failed = True
                     if isinstance(error, LibraryExitException):
                         break
                     LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
+                    self.failed = True
                     LOG.exception(error)
 
                 self.queue.task_done()
@@ -831,6 +840,7 @@ class UpdateWorker(threading.Thread):
 class UserDataWorker(threading.Thread):
 
     is_done = False
+    failed = False
 
     def __init__(self, queue, lock, database, server, direct_path):
 
@@ -882,10 +892,12 @@ class UserDataWorker(threading.Thread):
                     # TODO: Fixme; We're catching all LibraryException here,
                     # but silently ignoring any that isn't the exit condition.
                     # Investigate what would be appropriate behavior here.
+                    self.failed = True
                     if isinstance(error, LibraryExitException):
                         break
                     LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
+                    self.failed = True
                     LOG.exception(error)
 
                 self.queue.task_done()
@@ -952,6 +964,7 @@ class SortWorker(threading.Thread):
 class RemovedWorker(threading.Thread):
 
     is_done = False
+    failed = False
 
     def __init__(self, queue, lock, database, server, direct_path):
 
@@ -1006,10 +1019,12 @@ class RemovedWorker(threading.Thread):
                     # TODO: Fixme; We're catching all LibraryException here,
                     # but silently ignoring any that isn't the exit condition.
                     # Investigate what would be appropriate behavior here.
+                    self.failed = True
                     if isinstance(error, LibraryExitException):
                         break
                     LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
+                    self.failed = True
                     LOG.exception(error)
                 finally:
                     self.queue.task_done()
