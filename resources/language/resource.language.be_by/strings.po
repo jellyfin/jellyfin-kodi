@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-06 09:15+0000\n"
-"Last-Translator: \"AntV@\" <d.iwowi.b@gmail.com>\n"
+"PO-Revision-Date: 2026-11-11 09:48+0000\n"
+"Last-Translator: \"Troj@\" <d.iwowi.b@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
 "Language: be_by\n"
@@ -1261,15 +1261,15 @@ msgstr "Чаканне аўтарызацыі..."
 
 msgctxt "#30618"
 msgid "Quick Connect"
-msgstr "Хуткае падключэнне"
+msgstr "Quick Connect"
 
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
-msgstr "Хуткае падключэнне недаступна на гэтым серверы"
+msgstr "Quick Connect недаступны на гэтым серверы"
 
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
-msgstr "Час чакання хуткага падключэння мінуў. Паспрабуйце зноў."
+msgstr "Час чакання Quick Connect мінуў. Калі ласка, паспрабуйце яшчэ раз."
 
 msgctxt "#33262"
 msgid "Dismiss"
