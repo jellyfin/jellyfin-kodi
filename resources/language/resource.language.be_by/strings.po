@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-11 09:48+0000\n"
+"PO-Revision-Date: 2026-11-11 11:56+0000\n"
 "Last-Translator: \"Troj@\" <d.iwowi.b@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
@@ -392,7 +392,7 @@ msgstr "Перакадзіраваць Hi10P"
 
 msgctxt "#30539"
 msgid "Login"
-msgstr "Увайсці"
+msgstr "Уваход"
 
 msgctxt "#30540"
 msgid "Manual login"
