@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-11 11:56+0000\n"
+"PO-Revision-Date: 2026-11-12 11:04+0000\n"
 "Last-Translator: \"Troj@\" <d.iwowi.b@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
@@ -547,7 +547,7 @@ msgstr "Выканаць скід лакальнай базы даных"
 
 msgctxt "#33060"
 msgid "Sync theme media"
-msgstr "Сінхранізацыя медыя-тэмы"
+msgstr "Сінхранізаваць фонавыя медыя"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
@@ -818,7 +818,7 @@ msgstr "Немагчыма знайсці ТБ-мелодыі ў Kodi."
 
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
-msgstr "Ваш медыяфайл з тэмай Jellyfin быў сінхранізаваны з Kodi"
+msgstr "Вашы фонавыя медыя Jellyfin былі сінхранізаваны з Kodi"
 
 msgctxt "#33154"
 msgid "Add libraries"
