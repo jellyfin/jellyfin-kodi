@@ -3,6 +3,7 @@
 ##################################################################################################
 
 import threading
+import time
 from datetime import datetime, timedelta
 
 import queue
@@ -31,6 +32,10 @@ LOG = LazyLogger(__name__)
 LIMIT = int(settings("limitIndex") or 15)
 DTHREADS = int(settings("limitThreads") or 3)
 TARGET_DB_VERSION = 1
+# Poll the sync queue even while the websocket is connected: a socket can go
+# silent without closing, and any change it drops is otherwise never fetched.
+# In seconds (10 minutes).
+FAST_SYNC_INTERVAL = 600
 
 ##################################################################################################
 
@@ -44,6 +49,13 @@ class Library(threading.Thread):
     screensaver = None
     progress_updates = None
     total_updates = 0
+    # Server time of the last fast sync, saved as LastIncrementalSync once the
+    # updates it queued are written. Websocket updates never move the watermark.
+    pending_sync_time = None
+    # Set when a writer thread failed on an item, so the watermark stays put and
+    # the next fast sync fetches that item again
+    sync_failed = False
+    last_fast_sync = 0.0
 
     def __init__(self, monitor):
 
@@ -96,6 +108,7 @@ class Library(threading.Thread):
 
             try:
                 self.service()
+                self.periodic_fast_sync()
             except LibraryException as error:
                 LOG.warning(error)
                 break
@@ -143,15 +156,13 @@ class Library(threading.Thread):
         self.download_threads = [
             thread for thread in self.download_threads if not thread.is_done
         ]
-        self.writer_threads["updated"] = [
-            thread for thread in self.writer_threads["updated"] if not thread.is_done
-        ]
-        self.writer_threads["userdata"] = [
-            thread for thread in self.writer_threads["userdata"] if not thread.is_done
-        ]
-        self.writer_threads["removed"] = [
-            thread for thread in self.writer_threads["removed"] if not thread.is_done
-        ]
+        for name, threads in self.writer_threads.items():
+            self.sync_failed = self.sync_failed or any(
+                thread.is_done and thread.failed for thread in threads
+            )
+            self.writer_threads[name] = [
+                thread for thread in threads if not thread.is_done
+            ]
 
         if (
             not self.player.isPlayingVideo()
@@ -226,7 +237,7 @@ class Library(threading.Thread):
             and not self.writer_threads["removed"]
         ):
             self.pending_refresh = False
-            self.save_last_sync()
+            self.commit_pending_sync()
             self.total_updates = 0
             window("jellyfin_sync", clear=True)
 
@@ -424,7 +435,7 @@ class Library(threading.Thread):
 
                 return True
 
-            if settings("SyncInstallRunDone.bool") and settings("kodiCompanion.bool"):
+            if self.fast_sync_enabled():
                 # None == Unknown
                 if self.server.jellyfin.check_companion_enabled() is not False:
 
@@ -461,8 +472,29 @@ class Library(threading.Thread):
 
         return False
 
+    def fast_sync_enabled(self):
+        return settings("SyncInstallRunDone.bool") and settings("kodiCompanion.bool")
+
+    def periodic_fast_sync(self):
+        """Run fast_sync every FAST_SYNC_INTERVAL seconds while idle."""
+        if time.monotonic() - self.last_fast_sync < FAST_SYNC_INTERVAL:
+            return
+
+        if not self.fast_sync_enabled():
+            return
+
+        if self.pending_refresh or self.player.isPlayingVideo():
+            return
+
+        try:
+            self.fast_sync()
+        except Exception as error:
+            # Never let a failed poll take down the library thread
+            LOG.exception(error)
+
     def fast_sync(self):
         """Movie and userdata not provided by server yet."""
+        self.last_fast_sync = time.monotonic()
         last_sync = settings("LastIncrementalSync")
         include = []
         filters = ["tvshows", "boxsets", "musicvideos", "music", "movies"]
@@ -493,6 +525,10 @@ class Library(threading.Thread):
             if result is None:
                 return True
 
+            # Date header of the sync queue response, captured before any
+            # other request overwrites it
+            sync_time = self.server.config.data.get("server-time")
+
             updated = []
             userdata = []
             removed = []
@@ -515,12 +551,19 @@ class Library(threading.Thread):
                     yeslabel=translate(106),
                 ):
                     LOG.warning("Large updates skipped.")
+                    self.save_last_sync(sync_time)
 
                     return True
 
             self.updated(updated)
             self.userdata(userdata)
             self.removed(removed)
+
+            if updated or userdata or removed:
+                # Saved by service() once the queued updates are written
+                self.pending_sync_time = sync_time
+            else:
+                self.save_last_sync(sync_time)
 
         except Exception as error:
             LOG.exception(error)
@@ -529,8 +572,18 @@ class Library(threading.Thread):
 
         return True
 
-    def save_last_sync(self):
-        _raw_time = self.server.config.data["server-time"]
+    def commit_pending_sync(self):
+        """Advance LastIncrementalSync to the last fast sync, if one is pending."""
+        if self.pending_sync_time is not None:
+            if self.sync_failed:
+                LOG.warning("Writing updates failed, keeping the last sync time")
+            else:
+                self.save_last_sync(self.pending_sync_time)
+            self.pending_sync_time = None
+        self.sync_failed = False
+
+    def save_last_sync(self, raw_time=None):
+        _raw_time = raw_time or self.server.config.data["server-time"]
 
         try:
             import email.utils
@@ -698,6 +751,7 @@ class Library(threading.Thread):
 class UpdateWorker(threading.Thread):
 
     is_done = False
+    failed = False
 
     def __init__(
         self, queue, notify, lock, database, server=None, direct_path=None, *args
@@ -766,10 +820,12 @@ class UpdateWorker(threading.Thread):
                     # TODO: Fixme; We're catching all LibraryException here,
                     # but silently ignoring any that isn't the exit condition.
                     # Investigate what would be appropriate behavior here.
+                    self.failed = True
                     if isinstance(error, LibraryExitException):
                         break
                     LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
+                    self.failed = True
                     LOG.exception(error)
 
                 self.queue.task_done()
@@ -784,6 +840,7 @@ class UpdateWorker(threading.Thread):
 class UserDataWorker(threading.Thread):
 
     is_done = False
+    failed = False
 
     def __init__(self, queue, lock, database, server, direct_path):
 
@@ -835,10 +892,12 @@ class UserDataWorker(threading.Thread):
                     # TODO: Fixme; We're catching all LibraryException here,
                     # but silently ignoring any that isn't the exit condition.
                     # Investigate what would be appropriate behavior here.
+                    self.failed = True
                     if isinstance(error, LibraryExitException):
                         break
                     LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
+                    self.failed = True
                     LOG.exception(error)
 
                 self.queue.task_done()
@@ -905,6 +964,7 @@ class SortWorker(threading.Thread):
 class RemovedWorker(threading.Thread):
 
     is_done = False
+    failed = False
 
     def __init__(self, queue, lock, database, server, direct_path):
 
@@ -959,10 +1019,12 @@ class RemovedWorker(threading.Thread):
                     # TODO: Fixme; We're catching all LibraryException here,
                     # but silently ignoring any that isn't the exit condition.
                     # Investigate what would be appropriate behavior here.
+                    self.failed = True
                     if isinstance(error, LibraryExitException):
                         break
                     LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
+                    self.failed = True
                     LOG.exception(error)
                 finally:
                     self.queue.task_done()
