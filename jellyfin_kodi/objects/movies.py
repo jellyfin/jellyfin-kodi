@@ -22,6 +22,7 @@ from ..helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import Movies as KodiDb, queries as QU
+from .kodi.uniqueids import sync_unique_ids, sync_savepoint
 
 ##################################################################################################
 
@@ -147,18 +148,21 @@ class Movies(KodiDb):
 
     def movie_add(self, obj):
         """Add object to kodi."""
-        obj["RatingId"] = self.create_entry_rating()
-        self.add_ratings(*values(obj, QU.add_rating_movie_obj))
+        with sync_savepoint(self.cursor):
+            obj["RatingId"] = self.create_entry_rating()
+            self.add_ratings(*values(obj, QU.add_rating_movie_obj))
 
-        obj["Unique"] = self.create_entry_unique_id()
-        self.add_unique_id(*values(obj, QU.add_unique_id_movie_obj))
+            obj["Unique"] = sync_unique_ids(
+                self.cursor, "movie", obj["MovieId"], obj["ProviderIds"]
+            )
 
-        obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
-        obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
-        obj["VideoVersionItemType"] = self.itemtype
+            obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
+            obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
+            obj["VideoVersionItemType"] = self.itemtype
 
-        self.add(*values(obj, QU.add_movie_obj))
-        self.add_videoversion(*values(obj, QU.add_video_version_obj))
+            self.add(*values(obj, QU.add_movie_obj))
+            self.add_videoversion(*values(obj, QU.add_video_version_obj))
+
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_movie_obj))
         LOG.debug(
             "ADD movie [%s/%s/%s] %s: %s",
@@ -174,8 +178,9 @@ class Movies(KodiDb):
         obj["RatingId"] = self.get_rating_id(*values(obj, QU.get_rating_movie_obj))
         self.update_ratings(*values(obj, QU.update_rating_movie_obj))
 
-        obj["Unique"] = self.get_unique_id(*values(obj, QU.get_unique_id_movie_obj))
-        self.update_unique_id(*values(obj, QU.update_unique_id_movie_obj))
+        obj["Unique"] = sync_unique_ids(
+            self.cursor, "movie", obj["MovieId"], obj["ProviderIds"]
+        )
 
         self.update(*values(obj, QU.update_movie_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
