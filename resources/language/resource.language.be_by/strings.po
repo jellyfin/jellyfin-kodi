@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-12 12:50+0000\n"
+"PO-Revision-Date: 2026-11-13 11:03+0000\n"
 "Last-Translator: \"Troj@\" <d.iwowi.b@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
@@ -887,7 +887,7 @@ msgstr "Абранае"
 
 msgctxt "#33170"
 msgid "Unwatched"
-msgstr "Непрагледжаны"
+msgstr "Непрагледжаныя"
 
 msgctxt "#33171"
 msgid "By first letter"
