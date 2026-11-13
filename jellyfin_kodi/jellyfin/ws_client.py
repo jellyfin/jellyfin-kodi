@@ -46,7 +46,6 @@ class WSClient(threading.Thread):
 
     def run(self):
 
-        monitor = xbmc.Monitor()
         server = self.client.config.data["auth.server"]
         server = (
             server.replace("https://", "wss://")
@@ -84,7 +83,9 @@ class WSClient(threading.Thread):
 
             self.wsc.run_forever(ping_interval=10, reconnect=10)
 
-            if not self.stop and monitor.waitForAbort(5):
+            # Short-lived Monitor: one held across run_forever() is never pumped,
+            # so Kodi would queue its callbacks forever.
+            if not self.stop and xbmc.Monitor().waitForAbort(5):
                 break
 
     def on_error(self, ws, error):
