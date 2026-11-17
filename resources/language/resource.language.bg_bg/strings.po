@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-24 01:29+0000\n"
-"Last-Translator: aleks <alexboom519@gmail.com>\n"
+"PO-Revision-Date: 2026-11-11 20:21+0000\n"
+"Last-Translator: Nikolay Trifonov <trifonov88@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/bg/>\n"
 "Language: bg_bg\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 2026.11\n"
 
 msgctxt "#30506"
 msgid "Sync"
@@ -1273,3 +1273,19 @@ msgstr "Бърза Връзка не е налична на този сървъ�
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "Времето за Бърна Връзка изтече. Моля, опитайте отново."
+
+msgctxt "#33262"
+msgid "Dismiss"
+msgstr "Отхвърли"
+
+msgctxt "#33264"
+msgid "{0}m {1}s"
+msgstr "{0}мин. {1}сек."
+
+msgctxt "#33265"
+msgid "{0}s"
+msgstr "{0}сек."
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Активиране на интеграцията на добавката UpNext"

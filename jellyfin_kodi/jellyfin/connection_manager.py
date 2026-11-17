@@ -320,7 +320,7 @@ class ConnectionManager(object):
         # Update configs
         self.config.data["auth.server"] = server["address"]
         self.config.data["auth.server-name"] = server["Name"]
-        self.config.data["auth.server=id"] = server["Id"]
+        self.config.data["auth.server-id"] = server["Id"]
         self.config.data["auth.ssl"] = options.get("ssl", self.config.data["auth.ssl"])
 
         # Connected
