@@ -86,24 +86,9 @@ Detailed installation instructions can be found in the [Jellyfin Client Document
 
 #### AI/LLM
 
-Please see [Jellyfin's official LLM policy](https://jellyfin.org/docs/general/contributing/llm-policies).
-
-Any PR, issue or comment that is primarily LLM generated will be rejected outright on principle.
-
-Machine translation as a communication aid is allowed,
-but requires disclosure and that you also include the original language text.
-
-LLM generated code has a high probability of getting rejected.
-Relatively low effort AI contributions put an unsustainable
-and unproportional extra burden on project maintainers,
-which during the review process need to understand the suggested changes,
-and evaluate whether they are good changes, whether there are better alternatives and so on.
-
-LLM can be a decent tool to get up to speed and learn about the code-base,
-but is highly likely to generate subpar code.
-
-Fine for debugging, research and proof of concept,
-but not currently suitable for production code.
+All LLM contributions are banned.
+Please see [#1266](https://github.com/jellyfin/jellyfin-kodi/pull/1266#pullrequestreview-5858172971).
+No new LLM contributions will be accepted.
 
 #### Dev environment
 
