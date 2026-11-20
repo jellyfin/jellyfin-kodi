@@ -21,7 +21,7 @@ WHERE       parent_id = ?
 AND         media_type = ?
 """
 get_item_by_media_folder = """
-SELECT      jellyfin_id, jellyfin_type
+SELECT      jellyfin_id, jellyfin_type, jellyfin_parent_id
 FROM        jellyfin
 WHERE       media_folder = ?
 """
@@ -37,6 +37,12 @@ FROM        jellyfin
 WHERE       jellyfin_id LIKE ?
 """
 get_item_by_wild_obj = ["{Id}"]
+get_item_by_file_id = """
+SELECT      jellyfin_id, parent_id, media_folder, jellyfin_type, checksum
+FROM        jellyfin
+WHERE       kodi_fileid = ?
+AND         media_type = ?
+"""
 get_item_by_kodi = """
 SELECT      jellyfin_id, parent_id, media_folder, jellyfin_type, checksum
 FROM        jellyfin
