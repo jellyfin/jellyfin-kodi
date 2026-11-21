@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-10 11:15+0000\n"
+"PO-Revision-Date: 2026-11-21 19:47+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -115,7 +115,7 @@ msgstr "Įrenginio pavadinimas"
 
 msgctxt "#30024"
 msgid "Username"
-msgstr "Vartotojo vardas"
+msgstr "Naudotojo vardas"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -383,7 +383,7 @@ msgstr "Pabaigta:"
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr "Vartotojo vardas ar e-paštas"
+msgstr "Naudotojo vardas ar e-paštas"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
@@ -403,7 +403,7 @@ msgstr "Pranešimai (sekundemis)"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr "Vartotojo vardas arba slaptažodis negali būti tušti"
+msgstr "Naudotojo vardas arba slaptažodis negali būti tušti"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
@@ -427,7 +427,7 @@ msgstr "Serveris persikrauna"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr "Neteisingas vartotojo vardas arba slaptažodis"
+msgstr "Neteisingas naudotojo vardas arba slaptažodis"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
@@ -474,7 +474,7 @@ msgstr "Vaizdo įrašų bibliotekos iškylančio lango trukmė"
 
 msgctxt "#30615"
 msgid "Host"
-msgstr "Hostas"
+msgstr "Serveris"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
@@ -518,7 +518,7 @@ msgstr "Sinchronizuoti temos mediją"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
-msgstr "Pridėti / pašalinti vartotoją iš sesijos"
+msgstr "Pridėti / pašalinti naudotoją iš sesijos"
 
 msgctxt "#33062"
 msgid "Add user"
@@ -902,7 +902,7 @@ msgstr ""
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr "Pridėti vartotoją prie sesijos"
+msgstr "Pridėti naudotoją prie sesijos"
 
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
@@ -921,8 +921,8 @@ msgstr "Įjungti transkodavimo parinktį"
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
 msgstr ""
-"Prie sesijos pridėti vartotojai (be tarpų tarp vartotojų) (pvz., vartotojo "
-"vardas, vartotojo vardas2)"
+"Prie sesijos pridėti naudotojai (be tarpų tarp naudotojų) (pvz., naudotojo "
+"vardas, naudotojo vardas2)"
 
 msgctxt "#33115"
 msgid "Transcode options"
