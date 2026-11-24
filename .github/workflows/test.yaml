@@ -16,11 +16,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        py_version: ["3.9", "3.11", "3.12", "3.13", "3.14"]
+        py_version: ["3.11", "3.12", "3.13", "3.14"]
         os: [ubuntu-latest, windows-latest]
         include:
           - py_version: "3.8"
             os: windows-latest
+          - py_version: "3.9"
+            os: windows-latest
+          - py_version: "3.9"
+            os: ubuntu-24.04
 
     runs-on: ${{ matrix.os }}
     steps:
