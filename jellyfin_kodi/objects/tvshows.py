@@ -24,6 +24,7 @@ from ..helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import TVShows as KodiDb, queries as QU
+from .kodi.uniqueids import sync_unique_ids, sync_savepoint
 
 ##################################################################################################
 
@@ -190,30 +191,33 @@ class TVShows(KodiDb):
 
     def tvshow_add(self, obj):
         """Add object to kodi."""
-        obj["RatingId"] = self.create_entry_rating()
-        self.add_ratings(*values(obj, QU.add_rating_tvshow_obj))
+        with sync_savepoint(self.cursor):
+            obj["RatingId"] = self.create_entry_rating()
+            self.add_ratings(*values(obj, QU.add_rating_tvshow_obj))
 
-        obj["Unique"] = self.create_entry_unique_id()
-        self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
+            obj["Unique"] = sync_unique_ids(
+                self.cursor, "tvshow", obj["ShowId"], obj["ProviderIds"]
+            )
 
-        obj["TopPathId"] = self.add_path(obj["TopLevel"])
+            obj["TopPathId"] = self.add_path(obj["TopLevel"])
 
-        if self.direct_path:
-            # Normal way, we use the actual top path
-            self.update_path(*values(obj, QU.update_path_toptvshow_obj))
-        else:
-            # Hack to allow cast information in add-on mode
-            # We create a path on top of all others that holds mediaType and scrapper
-            self.update_path(*values(obj, QU.update_path_toptvshow_addon_obj))
-            temp_obj = dict()
-            temp_obj["TopLevel"] = "plugin://plugin.video.jellyfin/"
-            temp_obj["TopPathId"] = self.add_path(temp_obj["TopLevel"])
-            self.update_path(*values(temp_obj, QU.update_path_toptvshow_obj))
-            self.update_path_parent_id(obj["TopPathId"], temp_obj["TopPathId"])
+            if self.direct_path:
+                # Normal way, we use the actual top path
+                self.update_path(*values(obj, QU.update_path_toptvshow_obj))
+            else:
+                # Hack to allow cast information in add-on mode
+                # We create a path on top of all others that holds mediaType and scrapper
+                self.update_path(*values(obj, QU.update_path_toptvshow_addon_obj))
+                temp_obj = dict()
+                temp_obj["TopLevel"] = "plugin://plugin.video.jellyfin/"
+                temp_obj["TopPathId"] = self.add_path(temp_obj["TopLevel"])
+                self.update_path(*values(temp_obj, QU.update_path_toptvshow_obj))
+                self.update_path_parent_id(obj["TopPathId"], temp_obj["TopPathId"])
 
-        obj["PathId"] = self.add_path(*values(obj, QU.get_path_obj))
+            obj["PathId"] = self.add_path(*values(obj, QU.get_path_obj))
 
-        self.add(*values(obj, QU.add_tvshow_obj))
+            self.add(*values(obj, QU.add_tvshow_obj))
+
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
         LOG.debug(
             "ADD tvshow [%s/%s/%s] %s: %s",
@@ -231,8 +235,9 @@ class TVShows(KodiDb):
         obj["RatingId"] = self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_ratings(*values(obj, QU.update_rating_tvshow_obj))
 
-        obj["Unique"] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
-        self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
+        obj["Unique"] = sync_unique_ids(
+            self.cursor, "tvshow", obj["ShowId"], obj["ProviderIds"]
+        )
 
         obj["TopPathId"] = self.get_path(obj["TopLevel"])
 
@@ -456,21 +461,23 @@ class TVShows(KodiDb):
 
     def episode_add(self, obj):
         """Add object to kodi."""
-        obj["RatingId"] = self.create_entry_rating()
-        self.add_ratings(*values(obj, QU.add_rating_episode_obj))
-
-        obj["Unique"] = self.create_entry_unique_id()
-        self.add_unique_id(*values(obj, QU.add_unique_id_episode_obj))
-
-        obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
-        obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
-
         try:
-            self.add_episode(*values(obj, QU.add_episode_obj))
-        except sqlite3.IntegrityError:
-            LOG.error("IntegrityError for %s", obj)
-            obj["EpisodeId"] = self.create_entry_episode()
+            with sync_savepoint(self.cursor):
+                obj["RatingId"] = self.create_entry_rating()
+                self.add_ratings(*values(obj, QU.add_rating_episode_obj))
 
+                obj["Unique"] = sync_unique_ids(
+                    self.cursor, "episode", obj["EpisodeId"], obj["ProviderIds"]
+                )
+
+                obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
+                obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
+                self.add_episode(*values(obj, QU.add_episode_obj))
+        except sqlite3.IntegrityError:
+            if self.get_episode(obj["EpisodeId"]) is None:
+                raise
+            LOG.warning("Kodi episode ID %s already exists, retrying", obj["EpisodeId"])
+            obj["EpisodeId"] = self.create_entry_episode()
             return self.episode_add(obj)
 
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
@@ -501,8 +508,9 @@ class TVShows(KodiDb):
         obj["RatingId"] = self.get_rating_id(*values(obj, QU.get_rating_episode_obj))
         self.update_ratings(*values(obj, QU.update_rating_episode_obj))
 
-        obj["Unique"] = self.get_unique_id(*values(obj, QU.get_unique_id_episode_obj))
-        self.update_unique_id(*values(obj, QU.update_unique_id_episode_obj))
+        obj["Unique"] = sync_unique_ids(
+            self.cursor, "episode", obj["EpisodeId"], obj["ProviderIds"]
+        )
 
         self.update_episode(*values(obj, QU.update_episode_obj))
 
