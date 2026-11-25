@@ -208,7 +208,11 @@ class Player(xbmc.Player):
                 and len(self.getAvailableAudioStreams()) > 1
                 and audio in kodi_audio_stream_indexes
             ):
-                self.setAudioStream(kodi_audio_stream_indexes.index(audio))
+                stream = kodi_audio_stream_indexes.index(audio)
+                # Kodi closes and reopens the audio stream and seeks to resync
+                # on every setAudioStream call, even for the active stream.
+                if stream != self.get_current_audio_stream():
+                    self.setAudioStream(stream)
 
             if subtitle is None or subtitle == -1:
                 self.showSubtitles(False)
@@ -228,6 +232,16 @@ class Player(xbmc.Player):
                     self.setSubtitleStream(len(mapping) + subtitle - tracks - 1)
             else:
                 self.setSubtitleStream(subtitle - tracks - 1)
+
+    def get_current_audio_stream(self):
+        """Kodi ordinal of the active audio stream, or None if unknown."""
+        params = {"playerid": 1, "properties": ["currentaudiostream"]}
+
+        try:
+            result = JSONRPC("Player.GetProperties").execute(params)
+            return result["result"]["currentaudiostream"]["index"]
+        except (ValueError, KeyError, TypeError):
+            return None
 
     def detect_audio_subs(self, item):
 
